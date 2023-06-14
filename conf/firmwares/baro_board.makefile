@@ -18,6 +18,10 @@ ifeq ($(BOARD), lisa_l)
 else ifeq ($(BOARD), ardrone)
   BARO_BOARD_SRCS += $(SRC_BOARD)/baro_board.c
 
+# Swing baro
+else ifeq ($(BOARD), swing)
+  BARO_BOARD_SRCS += $(SRC_BOARD)/baro_board.c
+
 # Bebop baro
 else ifeq ($(BOARD), bebop)
   BARO_BOARD_CFLAGS += -DBARO_BOARD=BARO_MS5611_I2C
