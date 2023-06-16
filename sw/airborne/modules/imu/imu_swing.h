@@ -31,7 +31,6 @@
 
 #include "generated/airframe.h"
 #include "modules/imu/imu.h"
-
 #include "peripherals/mpu60x0_i2c.h"
 
 #ifndef SWING_GYRO_RANGE

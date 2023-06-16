@@ -25,6 +25,7 @@
  * Driver for the Swing accelerometer and gyroscope
  */
 
+#include "modules/imu/imu_swing.h"
 #include "modules/imu/imu.h"
 #include "modules/core/abi.h"
 #include "mcu_periph/i2c.h"
@@ -59,11 +60,11 @@ PRINT_CONFIG_VAR(SWING_LOWPASS_FILTER)
 PRINT_CONFIG_VAR(SWING_GYRO_RANGE)
 PRINT_CONFIG_VAR(SWING_ACCEL_RANGE)
 
-/** Basic Navstik IMU data */
+/** Basic IMU data */
 struct ImuSwing imu_swing;
 
 /**
- * Navstik IMU initializtion of the MPU-60x0 and HMC58xx
+ * IMU initializtion of the MPU
  */
 void imu_swing_init(void)
 {
@@ -73,10 +74,15 @@ void imu_swing_init(void)
   imu_swing.mpu.config.dlpf_cfg = SWING_LOWPASS_FILTER;
   imu_swing.mpu.config.gyro_range = SWING_GYRO_RANGE;
   imu_swing.mpu.config.accel_range = SWING_ACCEL_RANGE;
+
+    // Set the default scaling
+  imu_set_defaults_gyro(IMU_BOARD_ID, NULL, NULL, MPU60X0_GYRO_SENS_FRAC[SWING_GYRO_RANGE]);
+  imu_set_defaults_accel(IMU_BOARD_ID, NULL, NULL, MPU60X0_ACCEL_SENS_FRAC[SWING_ACCEL_RANGE]);
+
 }
 
 /**
- * Handle all the periodic tasks of the Navstik IMU components.
+ * Handle all the periodic tasks of the IMU components.
  * Read the MPU60x0 every periodic call
  */
 void imu_swing_periodic(void)
@@ -86,33 +92,32 @@ void imu_swing_periodic(void)
 }
 
 /**
- * Handle all the events of the Navstik IMU components.
+ * Handle all the events of the IMU components.
  * When there is data available convert it to the correct axis and save it in the imu structure.
  */
 void imu_swing_event(void)
 {
   uint32_t now_ts = get_sys_time_usec();
 
-  /* MPU-60x0 event taks */
+  /* MPU-60x0 event tasks */
   mpu60x0_i2c_event(&imu_swing.mpu);
 
   if (imu_swing.mpu.data_available) {
-    /* default orientation of the MPU is upside down and in plane mode
-     * turn it to have rotorcraft mode by default */
-    RATES_ASSIGN(imu.gyro_unscaled,
+    /* set correct orientation here */
+    struct Int32Rates gyro;
+    struct Int32Vect3 accel;
+
+    RATES_ASSIGN(gyro,
         -imu_swing.mpu.data_rates.rates.r,
         -imu_swing.mpu.data_rates.rates.q,
         -imu_swing.mpu.data_rates.rates.p);
-    VECT3_ASSIGN(imu.accel_unscaled,
+    VECT3_ASSIGN(accel,
         -imu_swing.mpu.data_accel.vect.z,
         -imu_swing.mpu.data_accel.vect.y,
         -imu_swing.mpu.data_accel.vect.x);
 
     imu_swing.mpu.data_available = false;
-    imu_scale_gyro(&imu);
-    imu_scale_accel(&imu);
-    AbiSendMsgIMU_GYRO_INT32(IMU_BOARD_ID, now_ts, &imu.gyro);
-    AbiSendMsgIMU_ACCEL_INT32(IMU_BOARD_ID, now_ts, &imu.accel);
+    AbiSendMsgIMU_GYRO_RAW(IMU_BOARD_ID, now_ts, &gyro, 1, imu_swing.mpu.temp);
+    AbiSendMsgIMU_ACCEL_RAW(IMU_BOARD_ID, now_ts, &accel, 1, imu_swing.mpu.temp);
   }
 }
-

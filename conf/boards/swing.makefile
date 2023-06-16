@@ -18,7 +18,7 @@ ARCH_CFLAGS = -march=armv5
 
 # -----------------------------------------------------------------------
 USER=foobar
-HOST?=192.168.4.1
+HOST?=192.168.3.1
 SUB_DIR=paparazzi
 FTP_DIR=/data/edu
 TARGET_DIR=$(FTP_DIR)/$(SUB_DIR)
