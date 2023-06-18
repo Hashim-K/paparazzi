@@ -22,8 +22,8 @@
 from __future__ import print_function
 from parrot_utils import ParrotUtils
 
-class Swing(ParrotUtils):
-    uav_name = 'Swing'
+class ParrotMinidrone(ParrotUtils):
+    uav_name = 'Minidrone'
     address = '192.168.3.1'
     version_file = None
     upload_path = '/data/edu/'
@@ -42,7 +42,7 @@ class Swing(ParrotUtils):
 
 
 if __name__ == "__main__":
-    swing = Swing()
-    swing.parse_args()
+    parrot_minidrone = ParrotMinidrone()
+    parrot_minidrone.parse_args()
     exit(0)
 

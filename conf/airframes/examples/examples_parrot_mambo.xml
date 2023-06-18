@@ -1,11 +1,12 @@
 <!DOCTYPE airframe SYSTEM "../airframe.dtd">
 
-<airframe name="mambo">
+<airframe name="swing">
 
   <firmware name="rotorcraft">
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
-    <configure name="USE_BARO_BOARD" value="TRUE"/>
-    <target name="ap" board="mambo"/>
+ <!--<configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>-->
+ <configure name="USE_BARO_BOARD" value="FALSE"/>
+    <target name="ap" board="swing"/>
 
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
@@ -17,7 +18,7 @@
     <module name="telemetry" type="transparent_udp"/>
     <module name="motor_mixing"/>
     <module name="actuators" type="swing"/>
-    <module name="imu" type="swing"/>
+    <module name="imu" type="parrot_minidrone"/>
     <module name="gps" type="datalink"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat"/>
