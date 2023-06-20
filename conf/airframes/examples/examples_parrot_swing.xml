@@ -4,7 +4,6 @@
 
   <firmware name="rotorcraft">
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
-    <!--<configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>-->
     <configure name="USE_BARO_BOARD" value="FALSE"/>
     <target name="ap" board="parrot_minidrone"/>
 
