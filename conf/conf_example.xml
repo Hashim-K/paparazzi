@@ -88,7 +88,7 @@
    gui_color="white"
   />
   <aircraft
-   name="ardrone2"
+   name="ARDrone2"
    ac_id="31"
    airframe="airframes/examples/ardrone2.xml"
    radio="radios/dummy.xml"
@@ -99,7 +99,7 @@
    gui_color="red"
   />
   <aircraft
-   name="swing"
+   name="Swing"
    ac_id="34"
    airframe="airframes/examples/examples_parrot_swing.xml"
    radio="radios/dummy.xml"
@@ -110,7 +110,7 @@
    gui_color="yellow"
   />
   <aircraft
-   name="mambo"
+   name="Mambo"
    ac_id="35"
    airframe="airframes/examples/examples_parrot_mambo.xml"
    radio="radios/dummy.xml"
@@ -121,7 +121,7 @@
    gui_color="white"
   />
   <aircraft
-   name="bebop2"
+   name="Bebop2"
    ac_id="203"
    airframe="airframes/examples/bebop2_indi.xml"
    radio="radios/dummy.xml"
@@ -132,7 +132,7 @@
    gui_color="red"
   />
   <aircraft
-   name="bebop2_opticflow"
+   name="Bebop2_opticflow"
    ac_id="3"
    airframe="airframes/examples/bebop2_opticflow.xml"
    radio="radios/dummy.xml"
@@ -154,7 +154,7 @@
    gui_color="#5eb6d9dd4484"
   />
   <aircraft
-   name="trashcan"
+   name="Trashcan"
    ac_id="1"
    airframe="airframes/examples/trashcan.xml"
    radio="radios/FrSky_Taranis_X9Dplus_TAERMK.xml"
