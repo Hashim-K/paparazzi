@@ -25,10 +25,10 @@ TARGET_DIR=$(FTP_DIR)/$(SUB_DIR)
 # -----------------------------------------------------------------------
 
 # The datalink default uses UDP
-MODEM_HOST         ?= 192.168.4.255
+MODEM_HOST         ?= 192.168.3.255
 
 # The GPS sensor is connected internally
-GPS_PORT           ?= UART1
+GPS_PORT           ?= UART2
 GPS_BAUD           ?= B230400
 
 # handle linux signals by hand

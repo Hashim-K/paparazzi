@@ -7,7 +7,7 @@
     <!-- to be able to compile a specific compiler needs to e used -->
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
 
-    <configure name="USE_BARO_BOARD" value="TRUE"/>
+    <!-- <configure name="USE_BARO_BOARD" value="TRUE"/> -->
 
     <target name="ap" board="parrot_minidrone">
       <module name="actuators" type="parrot_minidrone"/>
@@ -18,18 +18,88 @@
 
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
+      <define name="JSBSIM_MODEL" value="simple_x_quad_ccw" type="string"/>
+      <define name="SENSORS_PARAMS" value="nps_sensors_params_default.h" type="string"/>
     </target>
 
-    <!--define name="USE_SONAR" value="TRUE"/-->
+        <!-- debugging -->
+    <!-- <define name="ACTUATORS_PARROT_MINIDRONE_DEBUG" value="TRUE"/> -->
+
+    <define name="USE_SONAR" value="TRUE"/>
+    <!-- <define name="USE_BARO" value="FALSE"/> -->
+    <configure name="USE_MAGNETOMETER" value="FALSE"/><!-- Note there is none buid in but external would be possible -->
 
     <module name="radio_control" type="datalink"/>
     <module name="telemetry" type="transparent_udp"/>
     <module name="motor_mixing"/>
 
-    
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat"/>
     <module name="ins"/>
+    <!-- <module name="ins"           type="extended"/> -->
+
+    <!-- <module name="sonar" type="parrot_minidrone">
+      <define name="SENSOR_SYNC_SEND_SONAR"/>
+    </module> -->
+
+    <module name="video_thread">
+      <define name="VIDEO_FILTER_DEBAYER" value="0"/>
+      <define name="VIDEO_THREAD_MAX_CAMERAS" value="1"/>
+      <!--  <define name="VIDEO_THREAD_NICE_LEVEL" value="5"/>-->
+      <!-- <define name="SYS_TIME_THREAD_PRIO" value="2"/>-->
+    </module>
+
+   <!--   <module name="cv_colorfilter">
+     <define name="COLORFILTER_CAMERA" value="bottom_camera"/>
+    </module>-->
+     
+    <module name="video_rtp_stream">
+   
+       <!--  <define name="VIEWVIDEO_DEVICE" value="/dev/video0"/>
+      <define name="VIEWVIDEO_SUBDEV" value="/dev/v4l-subdev0"/>-->
+      
+      <!--  <define name="VIEWVIDEO_NICE_LEVEL" value="0"/>-->
+
+      <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
+      <define name="VIEWVIDEO_DOWNSIZE_FACTOR" value="4"/>
+      <define name="VIEWVIDEO_QUALITY_FACTOR" value="40"/>
+      <define name="VIEWVIDEO_DEVICE_BUFFERS" value="1"/>
+ 
+      <define name="VIEWVIDEO_DEVICE_SIZE" value="320,240"/>
+
+      <configure name="VIEWVIDEO_HOST" value="192.168.3.2" />
+      <configure name="VIEWVIDEO_BROADCAST" value="TRUE" />
+      
+      <define name="VIEWVIDEO_FPS" value="5" />
+
+      <define name="VIEWVIDEO_STREAM_VIDEO" value="TRUE" />
+      <define name="VIEWVIDEO_SHOT_PATH" value="/data/edu/paparazzi"/>
+      <define name="VIEWVIDEO_VIDEO_FILE" value="DoTheMambo" />
+      <define name="VIEWVIDEO_WRITE_VIDEO" value="FALSE" />
+     </module>
+
+
+    <!--<module name="video_usb_logger"/>
+      <define name="LOG_ON_USB" value="TRUE"/>-->
+      <!-- if one wants to log on e.g. USB stick stuffed into your Parrot Bebop, not possible with Parrot Minidrones -->
+      <!-- <define name="VIDEO_USB_LOGGER_PATH" value="/data/video/usb0/myphotologs"/>
+    </module>-->
+    
+    <!-- <module name="video_capture">
+      <define name="VIDEO_CAPTURE_CAMERA" value="bottom_camera"/>
+      <define name="VIDEO_CAPTURE_PATH" value="/data/edu/paparazzi"/>
+      <define name="VIDEO_CAPTURE_JPEG_QUALITY" value="75"/>
+    </module> -->
+    
+    <!--  
+    <module name="pose_history">
+    </module>
+    
+    <module name="cv_opticflow">
+      <define name="OPTICFLOW_CAMERA" value="bottom_camera"/>
+    </module>
+    <module name="opticflow_hover"/-->
+
   </firmware>
 
   <commands>
@@ -192,9 +262,20 @@
   </section>
 
   <section name="BAT">
+    <define name="MILLIAMP_AT_IDLE_THROTTLE" value="200"/> <!-- TODO: Measure -->
+    <define name="MILLIAMP_AT_FULL_THROTTLE" value="4000"/> <!-- TODO: Measure -->
     <define name="CATASTROPHIC_BAT_LEVEL" value="3.1" unit="V"/>
     <define name="CRITIC_BAT_LEVEL" value="3.3" unit="V"/>
     <define name="LOW_BAT_LEVEL" value="3.5" unit="V"/>
-    <define name="MAX_BAT_LEVEL" value="4.1" unit="V"/>
+    <define name="MAX_BAT_LEVEL" value="4.2" unit="V"/>
   </section>
+
+  <section name="GCS">
+    <define name="SPEECH_NAME" value="Mambo"/>
+    <define name="AC_ICON" value="quadrotor_x"/>
+    <define name="ALT_SHIFT_PLUS_PLUS" value="2"/>
+    <define name="ALT_SHIFT_PLUS" value="1"/>
+    <define name="ALT_SHIFT_MINUS" value="-1"/>
+  </section>
+
 </airframe>
