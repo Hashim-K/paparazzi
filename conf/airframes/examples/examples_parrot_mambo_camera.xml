@@ -7,8 +7,6 @@
     <!-- to be able to compile a specific compiler needs to e used -->
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
 
-    <!-- <configure name="USE_BARO_BOARD" value="TRUE"/> -->
-
     <target name="ap" board="parrot_minidrone">
       <module name="actuators" type="parrot_minidrone"/>
       <module name="imu" type="parrot_minidrone"/>

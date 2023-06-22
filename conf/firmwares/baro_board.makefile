@@ -22,6 +22,10 @@ else ifeq ($(BOARD), ardrone)
 else ifeq ($(BOARD), swing)
   BARO_BOARD_SRCS += $(SRC_BOARD)/baro_board.c
 
+# Parrot Minidrone baro
+else ifeq ($(BOARD), parrot_minidrone)
+  BARO_BOARD_SRCS += $(SRC_BOARD)/baro_board.c
+
 # Bebop baro
 else ifeq ($(BOARD), bebop)
   BARO_BOARD_CFLAGS += -DBARO_BOARD=BARO_MS5611_I2C

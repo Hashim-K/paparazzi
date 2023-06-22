@@ -20,7 +20,7 @@
 
 /**
  * @file boards/parrot_minidrone/baro_board.c
- * Paparazzi Swing Baro Sensor implementation.
+ * Paparazzi Parrot minidrone Baro Sensor implementation.
  * Sensor is LPS22HB (I2C) from ST but is accessed through sysfs interface
  */
 

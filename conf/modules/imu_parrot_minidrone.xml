@@ -11,9 +11,6 @@
     <depends>i2c,imu_common</depends>
     <provides>imu</provides>
   </dep>
-  <!-- <autoload name="imu_nps"/>
-  <autoload name="imu_sim"/> -->
-  <!--autoload name="sonar_bebop"/-->
   <header>
     <file name="imu_parrot_minidrone.h"/>
   </header>
@@ -29,7 +26,7 @@
     <test>
       <define name="IMU_TYPE_H" value="modules/imu/imu_parrot_minidrone.h" type="string"/>
       <define name="USE_I2C0"/>
-      <define name="PERIODIC_FREQUENCY" value="512"/>
+      <define name="PERIODIC_FREQUENCY" value="500"/>
     </test>
   </makefile>
 </module>

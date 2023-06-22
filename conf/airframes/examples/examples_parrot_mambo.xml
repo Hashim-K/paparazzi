@@ -4,10 +4,8 @@
 
   <firmware name="rotorcraft">
 
-    <!-- to be able to compile a specific compiler needs to e used -->
+    <!-- Sad, but to be able to cross-compile a specific compiler needs to be used because of glibc link issues-->
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
-
-    <configure name="USE_BARO_BOARD" value="TRUE"/>
 
     <target name="ap" board="parrot_minidrone">
       <module name="actuators" type="parrot_minidrone"/>
@@ -26,7 +24,6 @@
     <module name="telemetry" type="transparent_udp"/>
     <module name="motor_mixing"/>
 
-    
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat"/>
     <module name="ins"/>
