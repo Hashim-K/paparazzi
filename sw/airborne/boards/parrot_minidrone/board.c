@@ -21,13 +21,12 @@
 /**
  * @file boards/parrot_minidrone/board.c
  *
- * Swing specific board initialization function.
+ * Parrot Minidrone board initialization functions.
  *
  */
 
-#include "boards/parrot_minidrone.h"
-#include "mcu.h"
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
@@ -35,6 +34,8 @@
 #include <pthread.h>
 #include <linux/input.h>
 #include "modules/energy/electrical.h"
+#include "mcu.h"
+#include "boards/parrot_minidrone.h"
 
 /**
  * Battery reading thread
@@ -53,6 +54,7 @@ static void *bat_read(void *data __attribute__((unused)))
       /* Read the output a line at a time - output it. */
       while (fgets(path, sizeof(path) - 1, fp) != NULL) {
         int raw_bat = atoi(path);
+        // convert to decivolt
         // from /bin/mcu_vbat.sh: MILLIVOLTS_VALUE=$(( ($RAW_VALUE * 4250) / 1023 ))
         electrical.vsupply = (float)((raw_bat * 4250) / 1023) / 1000.f;
       }
@@ -86,8 +88,12 @@ static void *button_read(void *data __attribute__((unused)))
   while (TRUE) {
     /* Check power button (read is blocking) */
     n = read(fd_button, &ev, sizeof(ev));
+
+    //printf("Read n: %d", n);
+    //printf("Read type, code, value: %d,%d,%d\n", ev.type, ev.code, ev.value);
+
     if (n == sizeof(ev) && ev.type == EV_KEY && ev.code == KEY_POWER && ev.value > 0) {
-      printf("Stopping Paparazzi from power button and rebooting\n");
+      //printf("Stopping Paparazzi from power button and rebooting\n");
       usleep(1000);
       int ret __attribute__((unused)) = system("reboot.sh");
       exit(0);
@@ -105,27 +111,62 @@ void board_init(void)
    *
    */
   int ret __attribute__((unused));
+
   ret = system("pstop delosd");
   ret = system("pstop dragon-prog");
+
+  //Set busybox "ulimit -s 512" (or to determine best stack value ATM so we do not get out of memory for video or other threads
+  //Note that we should investigate setting via thread attributte     pthread_attr_setstacksize(&attr, stacksize);
+  //bassic issue is stack size of threads.. see https://linux.die.net/man/3/pthread_attr_setstacksize
+  //but for now setting stack limit oOS wide should do the trick
+
+  //const rlim_t kStackSize = 64L * 1024L * 1024L;   // min stack size = 64 Mb
+  //const rlim_t kStackSize = 512L * 1024L;//512Kb
+  //struct rlimit rl;
+  //long result=0;
+
+  //result = getrlimit(RLIMIT_STACK, &rl);
+  //printf("The soft limit is %llu\n", rl.rlim_cur);
+  //printf("The hard limit is %llu\n", rl.rlim_max);
+
+  //if(getrlimit(RLIMIT_STACK, &rl) !=0)
+  //{
+  //printf("The soft limit is %llu\n", rl.rlim_cur);
+  //printf("The hard limit is %llu\n", rl.rlim_max);
+  //if (rl.rlim_cur < kStackSize)
+  //{
+  //rl.rlim_cur = kStackSize;
+  //if (setrlimit(RLIMIT_STACK, &rl) != 0)
+  //{
+  //  fprintf(stderr, "Setrlimit failed with errno=%d\n", errno);
+  //}
+  //}
+  //}
+
   usleep(50000); /* Give 50ms time to end on a busy system */
 
-  /* Start bat reading thread */
+  /* Start battery reading thread*/ //TODO make it optional, a module? howevr indeed most of the time you do want this value
   pthread_t bat_thread;
   if (pthread_create(&bat_thread, NULL, bat_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create battery reading thread!\n");
   }
-  pthread_setname_np(bat_thread, "pprz_bat_thread");
+  //pthread_setname_np(bat_thread, "pprz_bat_thread");
 
-  /* Start button reading thread */
+  /* Start button reading thread */ //TODO: Not optional but add option to disable?
   pthread_t button_thread;
   if (pthread_create(&button_thread, NULL, button_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create button reading thread!\n");
   }
-  pthread_setname_np(button_thread, "pprz_button_thread");
+  //pthread_setname_np(button_thread, "pprz_button_thread");
 
-}
+  /* Start baro reading thread */ //TODO: make it optional, a module?
+  //pthread_t baro_thread;
+  //if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {
+  //  printf("[parrot_minidrone_board] Could not create baro reading thread!\n");
+  //}
 
-void board_init2(void)
-{
+  /* NOTE: Ultra sonic ranging sensor reading is handled by optional ranging/sonar module */
+
+  /* NOTE: Bottom_camera reading is handled by optional module "Video thread" */
 }
 

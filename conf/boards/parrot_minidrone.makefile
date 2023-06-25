@@ -2,10 +2,11 @@
 #
 # parrot_minidrone.makefile
 #
-# http://wiki.paparazziuav.org/wiki/ParrotMinidrones
+# https://wiki.paparazziuav.org/wiki/Ap.parrot_minidrone
 #
 
 BOARD=parrot_minidrone
+BOARD_VERSION=
 BOARD_CFG=\"boards/$(BOARD).h\"
 
 ARCH=linux
@@ -27,9 +28,9 @@ TARGET_DIR=$(FTP_DIR)/$(SUB_DIR)
 # The datalink default uses UDP
 MODEM_HOST         ?= 192.168.3.255
 
-# The GPS sensor is connected internally
+# If an external GPS sensor is used via USB to serial interface
 GPS_PORT           ?= UART2
-GPS_BAUD           ?= B230400
+GPS_BAUD           ?= B38400
 
 # handle linux signals by hand
 $(TARGET).CFLAGS += -DUSE_LINUX_SIGNAL -D_GNU_SOURCE

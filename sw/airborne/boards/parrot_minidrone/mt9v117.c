@@ -41,6 +41,9 @@
 #ifdef BOARD_DISCO
 #include "boards/disco.h"
 #else
+#ifdef BOARD_PARROT_MINIDRONE
+#include "boards/parrot_minidrone.h"
+#else
 #include "boards/bebop.h"
 #endif
 

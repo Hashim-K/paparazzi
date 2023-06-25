@@ -98,8 +98,13 @@ static void *video_thread_function(void *data)
 
   // create the images
   if (vid->filters & VIDEO_FILTER_DEBAYER) {
-    // fixme: don't hardcode size, works for Bebop front camera for now
-#define IMG_FLT_SIZE 272
+    // fixme: don't hardcode size, works for bebop front camera for now
+    #ifdef BOARD_BEBOP
+    #define IMG_FLT_SIZE 272
+    #else
+    //#ifdef BOARD_PARROT_MINIDRONE //FIXME but currently no need have no debayer AFIAK
+    #define IMG_FLT_SIZE 100
+    #endif
     image_create(&img_color, IMG_FLT_SIZE, IMG_FLT_SIZE, IMAGE_YUV422);
   }
 
@@ -140,6 +145,7 @@ static void *video_thread_function(void *data)
 
     // Run selected filters
     if (vid->filters & VIDEO_FILTER_DEBAYER) {
+      fprintf(stderr, "[%s] using BayerToYUV first\n", print_tag);
       BayerToYUV(&img, &img_color, 0, 0);
       // use color image for further processing
       img_final = &img_color;

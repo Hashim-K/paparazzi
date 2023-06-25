@@ -44,6 +44,8 @@
 #include "boards/bebop.h"
 #endif
 
+#include "boards/parrot_minidrone.h"
+
 
 /* Camera structure */
 struct video_config_t bottom_camera = {

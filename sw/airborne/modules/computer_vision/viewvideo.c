@@ -30,8 +30,8 @@
  */
 
 // Own header
-#include "modules/computer_vision/viewvideo.h"
-#include "modules/computer_vision/cv.h"
+
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,13 +40,16 @@
 #include <sys/time.h>
 #include <math.h>
 
+#include BOARD_CONFIG
+
 // Video
 #include "lib/vision/image.h"
 #include "lib/encoding/jpeg.h"
 #include "lib/encoding/rtp.h"
 #include "udp_socket.h"
 
-#include BOARD_CONFIG
+#include "modules/computer_vision/viewvideo.h"
+#include "modules/computer_vision/cv.h"
 
 // Downsize factor for video stream
 #ifndef VIEWVIDEO_DOWNSIZE_FACTOR
@@ -139,6 +142,7 @@ static struct image_t *viewvideo_function(struct UdpSocket *viewvideo_socket, st
 #endif
 
   if (viewvideo.is_streaming) {
+
     // Only resize when needed
     if (viewvideo.downsize_factor > 1) {
       image_yuv422_downsample(img, img_small, viewvideo.downsize_factor);
@@ -187,6 +191,9 @@ static struct image_t *viewvideo_function(struct UdpSocket *viewvideo_socket, st
 #endif
   }
 
+  // Free all buffers
+  //TODO REMOVE? image_free(&img_jpeg);
+  //TODO REMOVE? image_free(&img_small);
   return NULL; // No new images were created
 }
 
@@ -262,14 +269,12 @@ void viewvideo_init(void)
 #endif
 
 #ifdef VIEWVIDEO_CAMERA
-  cv_add_to_device_async(&VIEWVIDEO_CAMERA, viewvideo_function1,
-                         VIEWVIDEO_NICE_LEVEL, VIEWVIDEO_FPS, 0);
+  cv_add_to_device_async(&VIEWVIDEO_CAMERA, viewvideo_function1, VIEWVIDEO_NICE_LEVEL, VIEWVIDEO_FPS, 0);
   fprintf(stderr, "[viewvideo] Added asynchronous video streamer listener for CAMERA1 at %u FPS \n", VIEWVIDEO_FPS);
 #endif
 
 #ifdef VIEWVIDEO_CAMERA2
-  cv_add_to_device_async(&VIEWVIDEO_CAMERA2, viewvideo_function2,
-                         VIEWVIDEO_NICE_LEVEL, VIEWVIDEO_FPS, 1);
+  cv_add_to_device_async(&VIEWVIDEO_CAMERA2, viewvideo_function2, VIEWVIDEO_NICE_LEVEL, VIEWVIDEO_FPS, 1);
   fprintf(stderr, "[viewvideo] Added asynchronous video streamer listener for CAMERA2 at %u FPS \n", VIEWVIDEO_FPS);
 #endif
 }

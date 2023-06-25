@@ -743,6 +743,7 @@ void image_show_flow(struct image_t *img, struct flow_t *vectors, uint16_t point
 void image_show_flow_color(struct image_t *img, struct flow_t *vectors, uint16_t points_cnt, uint8_t subpixel_factor,
                            const uint8_t *color, const uint8_t *bad_color)
 {
+  //TESTING? static uint8_t color[4] = {255, 255, 255, 255};//TODO Where used?
   static int size_crosshair = 5;
 
   // Go through all the points
@@ -778,7 +779,7 @@ void image_gradient_pixel(struct image_t *img, struct point_t *loc, int method, 
 {
   // create the simple and sobel filter only once:
 
-  int gradient_x, gradient_y, index;
+  int gradient_x, gradient_y, p_index;
   gradient_x = 0;
   gradient_y = 0;
 
@@ -796,15 +797,15 @@ void image_gradient_pixel(struct image_t *img, struct point_t *loc, int method, 
       // *************
 
       // dx:
-      index = loc->y * img->w * pixel_width + (loc->x - 1) * pixel_width;
-      gradient_x -= (int) img_buf[index + add_ind];
-      index = loc->y * img->w * pixel_width + (loc->x + 1) * pixel_width;
-      gradient_x += (int) img_buf[index + add_ind];
+      p_index = loc->y * img->w * pixel_width + (loc->x - 1) * pixel_width;
+      gradient_x -= (int) img_buf[p_index + add_ind];
+      p_index = loc->y * img->w * pixel_width + (loc->x + 1) * pixel_width;
+      gradient_x += (int) img_buf[p_index + add_ind];
       // dy:
-      index = (loc->y - 1) * img->w * pixel_width + loc->x * pixel_width;
-      gradient_y -= (int) img_buf[index + add_ind];
-      index = (loc->y + 1) * img->w * pixel_width + loc->x * pixel_width;
-      gradient_y += (int) img_buf[index + add_ind];
+      p_index = (loc->y - 1) * img->w * pixel_width + loc->x * pixel_width;
+      gradient_y -= (int) img_buf[p_index + add_ind];
+      p_index = (loc->y + 1) * img->w * pixel_width + loc->x * pixel_width;
+      gradient_y += (int) img_buf[p_index + add_ind];
     } else {
 
       // *****
@@ -817,13 +818,13 @@ void image_gradient_pixel(struct image_t *img, struct point_t *loc, int method, 
       int filt_ind_x;
       for (int x = -1; x <= 1; x++) {
         for (int y = -1; y <= 1; y++) {
-          index = (loc->y + y) * img->w * pixel_width + (loc->x + x) * pixel_width;
+          p_index = (loc->y + y) * img->w * pixel_width + (loc->x + x) * pixel_width;
           if (x != 0) {
             filt_ind_x = (x + 1) % 3 + (y + 1) * 3;
-            gradient_x += Sobel[filt_ind_x] * (int) img_buf[index + add_ind];
+            gradient_x += Sobel[filt_ind_x] * (int) img_buf[p_index + add_ind];
           }
           if (y != 0) {
-            gradient_y += Sobel[filt_ind_y] * (int) img_buf[index + add_ind];
+            gradient_y += Sobel[filt_ind_y] * (int) img_buf[p_index + add_ind];
           }
           filt_ind_y++;
         }
@@ -916,8 +917,8 @@ void image_draw_crosshair(struct image_t *img, struct point_t *loc, const uint8_
  */
 void image_draw_line(struct image_t *img, struct point_t *from, struct point_t *to)
 {
-  static uint8_t color[4] = {255, 255, 255, 255};
-  image_draw_line_color(img, from, to, color);
+  static uint8_t zcolor[4] = {255, 255, 255, 255};//TODO: for testing?
+  image_draw_line_color(img, from, to, zcolor);
 }
 
 

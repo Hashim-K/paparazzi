@@ -27,11 +27,9 @@
 #define BOARD_PARROT_MINIDRONE
 
 #include "std.h"
+#include "peripherals/video_device.h"
 
-/** uart connected to GPS internally */
-#define UART1_DEV /dev/ttyPA1
-#define GPS_UBX_ENABLE_NMEA_DATA_MASK 0xff
-/** FTDI cable for stereoboard or external GPS */
+/** FTDI cable for external GPS or other periferals */
 #define UART2_DEV /dev/ttyUSB0
 
 /* Default actuators driver */
@@ -39,6 +37,9 @@
 #define ActuatorDefaultSet(_x,_y) ActuatorsParrotMinidroneSet(_x,_y)
 #define ActuatorsDefaultInit() ActuatorsParrotMinidroneInit()
 #define ActuatorsDefaultCommit() ActuatorsParrotMinidroneCommit()
+
+/* Cameras */
+extern struct video_config_t bottom_camera;
 
 /* by default activate onboard baro */
 #ifndef USE_BARO_BOARD

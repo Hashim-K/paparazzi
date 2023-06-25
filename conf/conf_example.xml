@@ -112,7 +112,7 @@
   <aircraft
    name="Mambo"
    ac_id="35"
-   airframe="airframes/examples/examples_parrot_mambo.xml"
+   airframe="airframes/examples/examples_parrot_mambo_maxedout.xml"
    radio="radios/dummy.xml"
    telemetry="telemetry/default_rotorcraft.xml"
    flight_plan="flight_plans/rotorcraft_basic.xml"

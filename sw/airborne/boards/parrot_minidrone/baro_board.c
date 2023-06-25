@@ -24,16 +24,17 @@
  * Sensor is LPS22HB (I2C) from ST but is accessed through sysfs interface
  */
 
-#include "modules/sensors/baro.h"
-#include "modules/core/abi.h"
-#include "baro_board.h"
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>
 #include <linux/input.h>
+#include "modules/sensors/baro.h"
+#include "modules/core/abi.h"
+#include "baro_board.h"
 
 static bool baro_parrot_minidrone_available;
 static int32_t baro_parrot_minidrone_raw;
@@ -48,15 +49,18 @@ static void *baro_read(void *data __attribute__((unused)))
   struct input_event ev;
   ssize_t n;
 
-  int fd_sonar = open("/dev/input/baro_event", O_RDONLY);
-  if (fd_sonar == -1) {
+  int fd_baro = open("/dev/input/baro_event", O_RDONLY);
+  printf("fd_baro value: %d\n", fd_baro);
+  if (fd_baro == -1) {
     printf("Unable to open baro event to read pressure\n");
     return NULL;
+  } else {
+	printf("Open baro event fd succes\n");
   }
 
   while (TRUE) {
     /* Check new pressure */
-    n = read(fd_sonar, &ev, sizeof(ev));
+    n = read(fd_baro, &ev, sizeof(ev));
     if (n == sizeof(ev) && ev.type == EV_ABS && ev.code == ABS_PRESSURE) {
       pthread_mutex_lock(&baro_parrot_minidrone_mutex);
       baro_parrot_minidrone_available = true;
@@ -65,7 +69,7 @@ static void *baro_read(void *data __attribute__((unused)))
     }
 
     // Wait 100ms
-    //usleep(100000);
+    usleep(10000); //100Hz
   }
 
   return NULL;
@@ -73,12 +77,13 @@ static void *baro_read(void *data __attribute__((unused)))
 
 void baro_init(void)
 {
+  printf("[parrot_minidrone_board] Enter baro_init...\n");
   baro_parrot_minidrone_available = false;
   baro_parrot_minidrone_raw = 0;
 
   /* Start baro reading thread */
   pthread_t baro_thread;
-  if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {
+  if (pthread_create(&baro_thread, NULL, baro_read, NULL) != NULL) {
     printf("[parrot_minidrone_board] Could not create baro reading thread!\n");
   }
   pthread_setname_np(baro_thread, "pprz_baro_thread");

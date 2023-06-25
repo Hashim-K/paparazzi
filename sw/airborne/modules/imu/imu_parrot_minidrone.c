@@ -107,6 +107,7 @@ void imu_parrot_minidrone_event(void)
     struct Int32Rates gyro;
     struct Int32Vect3 accel;
 
+#if defined(IS_SWING)
     RATES_ASSIGN(gyro,
         -imu_parrot_minidrone.mpu.data_rates.rates.r,
         -imu_parrot_minidrone.mpu.data_rates.rates.q,
@@ -115,6 +116,16 @@ void imu_parrot_minidrone_event(void)
         -imu_parrot_minidrone.mpu.data_accel.vect.z,
         -imu_parrot_minidrone.mpu.data_accel.vect.y,
         -imu_parrot_minidrone.mpu.data_accel.vect.x);
+#else
+    RATES_ASSIGN(gyro,
+        imu_parrot_minidrone.mpu.data_rates.rates.p,
+        -imu_parrot_minidrone.mpu.data_rates.rates.q,
+        -imu_parrot_minidrone.mpu.data_rates.rates.r);
+    VECT3_ASSIGN(accel,
+        imu_parrot_minidrone.mpu.data_accel.vect.x,
+        -imu_parrot_minidrone.mpu.data_accel.vect.y,
+        -imu_parrot_minidrone.mpu.data_accel.vect.z);
+#endif
 
     imu_parrot_minidrone.mpu.data_available = false;
     AbiSendMsgIMU_GYRO_RAW(IMU_BOARD_ID, now_ts, &gyro, 1, imu_parrot_minidrone.mpu.temp);

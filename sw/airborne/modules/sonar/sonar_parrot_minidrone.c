@@ -26,7 +26,6 @@
  *  This file contains the driver for the default sonar on a Parrot Minidrone
  */
 
-#include "sonar_parrot_minidrone.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -39,7 +38,7 @@
 #include <linux/input.h>
 #include <errno.h> //Remove after it not needed anymore
 
-// #include "sonar_parrot_minidrone.h"
+#include "sonar_parrot_minidrone.h"
 #include "generated/airframe.h"
 #include "mcu_periph/adc.h"
 #include "mcu_periph/spi.h"
@@ -55,7 +54,6 @@
 #ifdef SITL
 #include "state.h"
 #endif
-
 
 static int verbose = 1; //Set it to 1 For debugging purpose e.g. of Debugging the ultra sound code
 

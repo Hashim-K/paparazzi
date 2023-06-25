@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015
+ * Copyright (C) 2015 Paparazzi Team
  *
  * This file is part of Paparazzi.
  *
@@ -44,7 +44,7 @@
 #endif
 
 #ifndef VIDEO_CAPTURE_JPEG_QUALITY
-#define VIDEO_CAPTURE_JPEG_QUALITY 99
+#define VIDEO_CAPTURE_JPEG_QUALITY 99  ///<Defaults to minimum compression
 #endif
 
 #ifndef VIDEO_CAPTURE_FPS
@@ -80,7 +80,9 @@ void video_capture_init(void)
   // This prevents empty folders if nothing is actually recorded.
 
   // Add function to computer vision pipeline
-  cv_add_to_device(&VIDEO_CAPTURE_CAMERA, video_capture_func, VIDEO_CAPTURE_FPS, 0);
+  
+  //TODO Fixme cv_add_to_device(&VIDEO_CAPTURE_CAMERA, video_capture_func, VIDEO_CAPTURE_FPS, 0);
+
 }
 
 
