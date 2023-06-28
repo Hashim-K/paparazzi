@@ -80,8 +80,7 @@ void video_capture_init(void)
   // This prevents empty folders if nothing is actually recorded.
 
   // Add function to computer vision pipeline
-  
-  //TODO Fixme cv_add_to_device(&VIDEO_CAPTURE_CAMERA, video_capture_func, VIDEO_CAPTURE_FPS, 0);
+  cv_add_to_device(&VIDEO_CAPTURE_CAMERA, video_capture_func, VIDEO_CAPTURE_FPS, 0);
 
 }
 

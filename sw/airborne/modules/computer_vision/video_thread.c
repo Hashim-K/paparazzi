@@ -40,8 +40,9 @@
 
 #include "mcu_periph/sys_time.h"
 
-// include board for bottom_camera and front_camera on ARDrone2, Bebop and Disco
+// include board for bottom_camera and/or front_camera on Parrot ARDrone2, Bebop, Disco and Minidrone
 #include BOARD_CONFIG
+//PRINT_CONFIG_VAR(BOARD_CONFIG)
 
 // Bebop and Disco can use the ISP (Image Signal Processors) to speed up things
 #if defined(BOARD_BEBOP) || defined(BOARD_DISCO)

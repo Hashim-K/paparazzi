@@ -112,36 +112,39 @@ void board_init(void)
    */
   int ret __attribute__((unused));
 
+
+  ret = system("ulimit -s 512");
+
   ret = system("pstop delosd");
   ret = system("pstop dragon-prog");
 
   //Set busybox "ulimit -s 512" (or to determine best stack value ATM so we do not get out of memory for video or other threads
   //Note that we should investigate setting via thread attributte     pthread_attr_setstacksize(&attr, stacksize);
-  //bassic issue is stack size of threads.. see https://linux.die.net/man/3/pthread_attr_setstacksize
+  //basic issue is stack size of threads.. see https://linux.die.net/man/3/pthread_attr_setstacksize
   //but for now setting stack limit oOS wide should do the trick
 
-  //const rlim_t kStackSize = 64L * 1024L * 1024L;   // min stack size = 64 Mb
-  //const rlim_t kStackSize = 512L * 1024L;//512Kb
-  //struct rlimit rl;
-  //long result=0;
+  // const rlim_t kStackSize = 64L * 1024L * 1024L;   // min stack size = 64 Mb
+  // const rlim_t kStackSize = 512L * 1024L;//512Kb
+  // struct rlimit rl;
+  // long result=0;
 
-  //result = getrlimit(RLIMIT_STACK, &rl);
-  //printf("The soft limit is %llu\n", rl.rlim_cur);
-  //printf("The hard limit is %llu\n", rl.rlim_max);
+  // result = getrlimit(RLIMIT_STACK, &rl);
+  // printf("The soft limit is %llu\n", rl.rlim_cur);
+  // printf("The hard limit is %llu\n", rl.rlim_max);
 
-  //if(getrlimit(RLIMIT_STACK, &rl) !=0)
-  //{
-  //printf("The soft limit is %llu\n", rl.rlim_cur);
-  //printf("The hard limit is %llu\n", rl.rlim_max);
-  //if (rl.rlim_cur < kStackSize)
-  //{
-  //rl.rlim_cur = kStackSize;
-  //if (setrlimit(RLIMIT_STACK, &rl) != 0)
-  //{
+  // if(getrlimit(RLIMIT_STACK, &rl) !=0)
+  // {
+  // printf("The soft limit is %llu\n", rl.rlim_cur);
+  // printf("The hard limit is %llu\n", rl.rlim_max);
+  // if (rl.rlim_cur < kStackSize)
+  // {
+  // rl.rlim_cur = kStackSize;
+  // if (setrlimit(RLIMIT_STACK, &rl) != 0)
+  // {
   //  fprintf(stderr, "Setrlimit failed with errno=%d\n", errno);
-  //}
-  //}
-  //}
+  // }
+  // }
+  // }
 
   usleep(50000); /* Give 50ms time to end on a busy system */
 
@@ -150,20 +153,20 @@ void board_init(void)
   if (pthread_create(&bat_thread, NULL, bat_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create battery reading thread!\n");
   }
-  //pthread_setname_np(bat_thread, "pprz_bat_thread");
+  pthread_setname_np(bat_thread, "pprz_bat_thread");
 
   /* Start button reading thread */ //TODO: Not optional but add option to disable?
   pthread_t button_thread;
   if (pthread_create(&button_thread, NULL, button_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create button reading thread!\n");
   }
-  //pthread_setname_np(button_thread, "pprz_button_thread");
+  pthread_setname_np(button_thread, "pprz_button_thread");
 
   /* Start baro reading thread */ //TODO: make it optional, a module?
-  //pthread_t baro_thread;
-  //if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {
+  // pthread_t baro_thread;
+  // if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {
   //  printf("[parrot_minidrone_board] Could not create baro reading thread!\n");
-  //}
+  // }
 
   /* NOTE: Ultra sonic ranging sensor reading is handled by optional ranging/sonar module */
 

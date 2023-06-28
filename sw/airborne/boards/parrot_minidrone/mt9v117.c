@@ -38,15 +38,14 @@
 #include <linux/v4l2-mediabus.h>
 
 #include "generated/airframe.h"
-#ifdef BOARD_DISCO
-#include "boards/disco.h"
-#else
-#ifdef BOARD_PARROT_MINIDRONE
+// #ifdef BOARD_DISCO
+// #include "boards/disco.h"
+// #else
+// #ifdef BOARD_PARROT_MINIDRONE
 #include "boards/parrot_minidrone.h"
-#else
-#include "boards/bebop.h"
-#endif
-
+// #else
+// #include "boards/bebop.h"
+// #endif
 
 /* Camera structure */
 struct video_config_t bottom_camera = {
@@ -468,7 +467,7 @@ void mt9v117_init(struct mt9v117_t *mt)
       }
 
       // Successfully configured!
-      //printf("[MT9V117] Switching config OK\r\n");
+      printf("[MT9V117] Switching config OK\r\n");
       return;
     }
   }

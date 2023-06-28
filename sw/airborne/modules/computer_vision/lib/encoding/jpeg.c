@@ -594,7 +594,11 @@ static void jpeg_DCT(int16_t *data)
   }
 }
 
-//#pragma GCC diagnostic ignored "-Wmisleading-indentation"
+//Sometimes a specific older compiler needs to be used for crosscompiling for fixed version of glibc linking to succeed
+//To avoid a "warning: unknown option" emit from pragma for older GCC we disable this specific pragma
+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 6)
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#endif
 
 #define PUTBITS    \
   {    \

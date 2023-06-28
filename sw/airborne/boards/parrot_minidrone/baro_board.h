@@ -24,12 +24,12 @@
  * Sensor is LPS22HB (I2C) from ST but is accessed through sysfs interface
  */
 
-#ifndef BOARDS_SWING_BARO_H
-#define BOARDS_SWING_BARO_H
+#ifndef BOARDS_PARROT_MINIDRONE_BARO_H
+#define BOARDS_PARROT_MINIDRONE_BARO_H
 
 // Only for printing the baro type during compilation
 #ifndef BARO_BOARD
-#define BARO_BOARD BARO_SWING
+#define BARO_BOARD BARO_PARROT_MINIDRONE
 #endif
 
 extern void baro_event(void);

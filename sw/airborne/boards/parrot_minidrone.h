@@ -29,16 +29,31 @@
 #include "std.h"
 #include "peripherals/video_device.h"
 
-/** FTDI cable for external GPS or other periferals */
+/** For using serial devices via USB to serial converter electronics
+ *  E.g. a XBee modem, a 3DR radio modem, Serial Stereocam etc. etc.
+ */
+#ifndef UART2_DEV
 #define UART2_DEV /dev/ttyUSB0
+#endif
+#ifndef UART4_DEV
+#define UART4_DEV /dev/ttyUSB1
+#endif
+#ifndef UART5_DEV
+#define UART5_DEV /dev/ttyACM0
+#endif
+#ifndef UART6_DEV
+#define UART6_DEV /dev/ttyACM1
+#endif
 
 /* Default actuators driver */
+#ifndef DEFAULT_ACTUATORS
 #define DEFAULT_ACTUATORS "boards/parrot_minidrone/actuators.h"
 #define ActuatorDefaultSet(_x,_y) ActuatorsParrotMinidroneSet(_x,_y)
 #define ActuatorsDefaultInit() ActuatorsParrotMinidroneInit()
 #define ActuatorsDefaultCommit() ActuatorsParrotMinidroneCommit()
+#endif
 
-/* Cameras */
+/* Camera */
 extern struct video_config_t bottom_camera;
 
 /* by default activate onboard baro */

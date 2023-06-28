@@ -16,15 +16,15 @@
       <module name="imu" type="parrot_minidrone"/>
       <module name="gps" type="datalink"/>
       <module name="air_data"/>
+      <module name="radio_control" type="datalink"/>
     </target>
 
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
+      <module name="radio_control" type="datalink"/>
     </target>
 
     <!--define name="USE_SONAR" value="TRUE"/-->
-
-    <module name="radio_control" type="datalink"/>
     <module name="telemetry" type="transparent_udp"/>
     <module name="motor_mixing"/>
 

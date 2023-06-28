@@ -36,8 +36,6 @@
     </program>
     <program name="Hardware in the Loop" command="sw/simulator/simhitl"/>
     <program name="Environment Simulator" command="sw/simulator/gaia"/>
-
-
     <program name="Attitude Visualizer" command="sw/tools/attitude_viz.py"/>
     <program name="App Server" command="sw/ground_segment/tmtc/app_server"/>
     <program name="Ivy2Nmea" command="sw/ground_segment/tmtc/ivy2nmea">
@@ -248,13 +246,11 @@
       </program>
       <program name="Server"/>
     </session>
-
     <session name="Forward Skywalker to C172 over ttyUSB1">
       <program name="IvySerialBridge">
         <arg flag="8" constant="/dev/ttyUSB1"/>
       </program>
     </session>
-
     <session name="Messages and Settings">
       <program name="Data Link">
         <arg flag="-d" constant="/dev/ttyUSB0"/>
@@ -397,6 +393,43 @@
         <arg flag="-udp"/>
       </program>
       <program name="Real-time Plotter"/>
+    </session>
+    <session name="ParrotMinidroneTest">
+      <program name="Server"/>
+      <program name="GCS">
+        <arg flag="-speech"/>
+        <arg flag="-maps_fill"/>
+        <arg flag="-mercator"/>
+        <arg flag="-maps_no_http"/>
+        <arg flag="-track_size" constant="200"/>
+        <arg flag="-zoom" constant="0.6"/>
+      </program>
+      <program name="Messages"/>
+      <program name="Data Link">
+        <arg flag="-udp"/>
+      </program>
+      <program name="Real-time Plotter"/>
+      <program name="Joystick">
+        <arg flag="-ac" constant="Mambo"/>
+        <arg flag="sm600.xml"/>
+      </program>
+    </session>
+    <session name="ParrotMiniDroneSimulationNPS">
+      <program name="Simulator">
+        <arg flag="-t" constant="nps"/>
+        <arg flag="-a" constant="Mambo"/>
+      </program>
+      <program name="Data Link">
+        <arg flag="-udp"/>
+        <arg flag="-udp_broadcast"/>
+      </program>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
+      <program name="GCS">
+        <arg flag="-speech"/>
+      </program>
+      <program name="Environment Simulator"/>
     </session>
   </section>
 </control_panel>
