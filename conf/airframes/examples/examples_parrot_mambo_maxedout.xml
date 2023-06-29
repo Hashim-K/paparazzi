@@ -9,6 +9,17 @@
     <define name="USE_BARO_BOARD" value="FALSE"/>
 
     <target name="ap" board="parrot_minidrone">
+          <!-- <define name="VIDEO_CAPTURE_PATH" value="/data/ftp/internal_000/images"/>
+      <define name="LOGGER_FILE_PATH" value="/data/ftp/internal_000/log"/> -->
+      <define name="MT9V117_TARGET_FPS" value="20"/>
+      
+      <!-- Detect orange -->
+      <define name="COLOR_OBJECT_DETECTOR_LUM_MIN1" value="30"/>
+      <define name="COLOR_OBJECT_DETECTOR_LUM_MAX1" value="190"/>
+      <define name="COLOR_OBJECT_DETECTOR_CB_MIN1" value="70"/>
+      <define name="COLOR_OBJECT_DETECTOR_CB_MAX1" value="130"/>
+      <define name="COLOR_OBJECT_DETECTOR_CR_MIN1" value="150"/>
+      <define name="COLOR_OBJECT_DETECTOR_CR_MAX1" value="190"/>
 
       <configure name="PERIODIC_FREQUENCY"  value="500"/>
        
@@ -61,8 +72,8 @@
     </module>
 
     <module name="video_rtp_stream">
-      <!-- <define name="VIEWVIDEO_DEVICE" value="/dev/video0"/> -->
-      <!-- <define name="VIEWVIDEO_SUBDEV" value="/dev/v4l-subdev0"/> -->
+      <define name="VIEWVIDEO_DEVICE" value="/dev/video0"/>
+      <define name="VIEWVIDEO_SUBDEV" value="/dev/v4l-subdev0"/>
       <!-- <define name="VIEWVIDEO_NICE_LEVEL" value="0"/> -->
       <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
       <define name="VIEWVIDEO_DOWNSIZE_FACTOR" value="8"/>
@@ -87,11 +98,11 @@
       <define name="VIDEO_CAPTURE_FPS" value="4"/>
     </module>
 
-    <!--   
-    <module name="cv_colorfilter">
+      
+    <!-- <module name="cv_colorfilter">
       <define name="COLORFILTER_CAMERA" value="bottom_camera"/>
-    </module>
-    -->
+    </module> -->
+   
 
     <!-- <module name="pose_history"/> -->
 
