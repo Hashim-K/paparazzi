@@ -18,11 +18,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-/**
-* @file boards/bebop/mt9v117.h
-*
-* Initialization and configuration of the MT9V117 CMOS Chip
-*/
+ /**
+ * @file boards/parrot_minidrone/mt9v117.h
+ *
+ * Initialization and configuration of the MT9V117 CMOS Chip
+ */
 
 #ifndef MT9V117_H
 #define MT9V117_H
@@ -60,7 +60,7 @@ struct mt9v117_t {
   struct i2c_transaction i2c_trans;   ///< I2C transaction for comminication with CMOS chip
 };
 
-extern struct mt9v117_t mt9v117;
+//extern struct mt9v117_t mt9v117;
 
 void mt9v117_init(struct mt9v117_t *mt);
 

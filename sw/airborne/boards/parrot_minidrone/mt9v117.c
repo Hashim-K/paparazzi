@@ -27,16 +27,6 @@
 #include "std.h"
 #include "mt9v117.h"
 #include "mt9v117_regs.h"
-#include "peripherals/video_device.h"
-
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/i2c-dev.h>
-#include <linux/videodev2.h>
-#include <linux/v4l2-mediabus.h>
-
 #include "generated/airframe.h"
 // #ifdef BOARD_DISCO
 // #include "boards/disco.h"
@@ -46,6 +36,15 @@
 // #else
 // #include "boards/bebop.h"
 // #endif
+#include "peripherals/video_device.h"
+
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <linux/videodev2.h>
+#include <linux/v4l2-mediabus.h>
 
 /* Camera structure */
 struct video_config_t bottom_camera = {
@@ -235,6 +234,9 @@ static void write_reg(struct mt9v117_t *mt, uint16_t addr, uint32_t val, uint16_
 
   // Transmit the buffer
   i2c_blocking_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
+ //TODO: mabet this way i2c_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
+
+
 }
 
 /**
@@ -248,6 +250,7 @@ static uint32_t read_reg(struct mt9v117_t *mt, uint16_t addr, uint16_t len)
 
   // Transmit the buffer and receive back
   i2c_blocking_transceive(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, 2, len);
+  //TODO: Maybe use this from oldcode i2c_transceive(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, 2, len);
 
   /* Fix sigdness */
   for (uint8_t i = 0; i < len; i++) {
@@ -306,6 +309,8 @@ static inline void mt9v117_write_patch(struct mt9v117_t *mt)
 
     // Transmit the buffer
     i2c_blocking_transmit(mt->i2c_periph, &mt->i2c_trans, mt->i2c_trans.slave_addr, mt9v117_patch_lines[i].len);
+    //TODO: mabe use: i2c_transmit(mt->i2c_periph, &mt->i2c_trans, mt->i2c_trans.slave_addr, mt9v117_patch_lines[i].len);
+ 
   }
 
   write_reg(mt, MT9V117_LOGICAL_ADDRESS_ACCESS, 0x0000, 2);
@@ -374,6 +379,10 @@ static inline void mt9v117_config(struct mt9v117_t *mt)
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YSTART_OFFSET, 2, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 63, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 47, 2);
+// OR write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 65, 2);
+// OR  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 49, 2);
+}
+
 }
 
 /**
@@ -417,8 +426,7 @@ void mt9v117_init(struct mt9v117_t *mt)
   /* See if the device is there and correct */
   uint16_t chip_id = read_reg(mt, MT9V117_CHIP_ID, 2);
   if (chip_id != MT9V117_CHIP_ID_RESP) {
-    printf("[MT9V117] Didn't get correct response from CHIP_ID (expected: 0x%04X, got: 0x%04X)\r\n", MT9V117_CHIP_ID_RESP,
-           chip_id);
+    printf("[MT9V117] Didn't get correct response from CHIP_ID (expected: 0x%04X, got: 0x%04X)\r\n", MT9V117_CHIP_ID_RESP, chip_id);
     return;
   }
 
@@ -448,6 +456,7 @@ void mt9v117_init(struct mt9v117_t *mt)
             MT9V117_CAM_OUTPUT_FORMAT_BT656_ENABLE, 2);
 
   /* Set autoexposure luma */
+//TODO: NEW line below
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_AE_LUMA, MT9V117_TARGET_LUMA, 2);
 
   /* Apply the configuration */
