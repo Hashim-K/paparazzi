@@ -8,25 +8,19 @@
     <!-- <define name="BOARD_CONFIG" value="boards/parrot_minidrone.h"/> -->
     <define name="USE_BARO_BOARD" value="FALSE"/>
 
+<!-- <define name="AIR_DATA_BARO_ABS_ID" value="BARO_BOARD_SENDER_ID"/> -->
+
     <target name="ap" board="parrot_minidrone">
           <!-- <define name="VIDEO_CAPTURE_PATH" value="/data/ftp/internal_000/images"/>
       <define name="LOGGER_FILE_PATH" value="/data/ftp/internal_000/log"/> -->
       <define name="MT9V117_TARGET_FPS" value="20"/>
       
-      <!-- Detect orange -->
-      <define name="COLOR_OBJECT_DETECTOR_LUM_MIN1" value="30"/>
-      <define name="COLOR_OBJECT_DETECTOR_LUM_MAX1" value="190"/>
-      <define name="COLOR_OBJECT_DETECTOR_CB_MIN1" value="70"/>
-      <define name="COLOR_OBJECT_DETECTOR_CB_MAX1" value="130"/>
-      <define name="COLOR_OBJECT_DETECTOR_CR_MIN1" value="150"/>
-      <define name="COLOR_OBJECT_DETECTOR_CR_MAX1" value="190"/>
-
       <configure name="PERIODIC_FREQUENCY"  value="500"/>
        
       <module name="actuators" type="parrot_minidrone"/>
       <module name="imu" type="parrot_minidrone"/>
       <module name="gps" type="datalink"/>
-      <module name="air_data"/>
+      <!-- <module name="air_data"/> -->
       <module name="radio_control" type="datalink"/>
       <module name="telemetry" type="transparent_udp">
         <!-- <define name="DOWNLINK_DEVICE" value="udp0"/>
@@ -61,19 +55,26 @@
     <module name="ins"/>
     <!-- <module name="ins" type="extended"/> -->
 
-    <module name="parrot_minidrone_cam"/>
+    <!-- <module name="parrot_minidrone_cam"/> -->
 
     <module name="video_thread">
-      <define name="VIDEO_THREAD_VERBOS" value="TRUE"/>
+      <define name="VIDEO_THREAD_VERBOSE" value="TRUE"/>
       <define name="VIDEO_FILTER_DEBAYER" value="0"/>
-      <define name="VIDEO_THREAD_MAX_CAMERAS" value="1"/>
+      <!-- <define name="VIDEO_THREAD_MAX_CAMERAS" value="1"/> -->
       <!-- <define name="VIDEO_THREAD_NICE_LEVEL" value="5"/>-->
       <!-- <define name="SYS_TIME_THREAD_PRIO" value="2"/>-->
     </module>
 
+    <module name="video_capture">
+      <define name="VIDEO_CAPTURE_CAMERA" value="bottom_camera"/>
+      <define name="VIDEO_CAPTURE_PATH" value="/data/edu/paparazzi"/>
+      <define name="VIDEO_CAPTURE_JPEG_QUALITY" value="75"/>
+      <define name="VIDEO_CAPTURE_FPS" value="4"/>
+    </module>
+
     <module name="video_rtp_stream">
-      <define name="VIEWVIDEO_DEVICE" value="/dev/video0"/>
-      <define name="VIEWVIDEO_SUBDEV" value="/dev/v4l-subdev0"/>
+     <!-- <define name="VIEWVIDEO_DEVICE" value="/dev/video0"/>
+      <define name="VIEWVIDEO_SUBDEV" value="/dev/v4l-subdev0"/> NA on Mambo-->
       <!-- <define name="VIEWVIDEO_NICE_LEVEL" value="0"/> -->
       <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
       <define name="VIEWVIDEO_DOWNSIZE_FACTOR" value="8"/>
@@ -91,14 +92,7 @@
       <define name="VIEWVIDEO_WRITE_VIDEO" value="TRUE" />
     </module>
 
-    <module name="video_capture">
-      <define name="VIDEO_CAPTURE_CAMERA" value="bottom_camera"/>
-      <define name="VIDEO_CAPTURE_PATH" value="/data/edu/paparazzi"/>
-      <define name="VIDEO_CAPTURE_JPEG_QUALITY" value="75"/>
-      <define name="VIDEO_CAPTURE_FPS" value="4"/>
-    </module>
-
-      
+ 
     <!-- <module name="cv_colorfilter">
       <define name="COLORFILTER_CAMERA" value="bottom_camera"/>
     </module> -->
@@ -154,7 +148,7 @@
   <section name="AIR_DATA" prefix="AIR_DATA_">
     <define name="CALC_AIRSPEED" value="FALSE"/>
     <define name="CALC_TAS_FACTOR" value="FALSE"/>
-    <define name="CALC_AMSL_BARO" value="TRUE"/>
+    <define name="CALC_AMSL_BARO" value="FALSE"/>
   </section>
 
   <section name="IMU" prefix="IMU_">

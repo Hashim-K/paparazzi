@@ -29,7 +29,7 @@
 
 #include "std.h"
 #include "mcu_periph/i2c.h"
-// #include "generated/airframe.h"
+#include "generated/airframe.h"
 
 #ifndef MT9V117_TARGET_FPS
 #define MT9V117_TARGET_FPS 0
@@ -60,7 +60,7 @@ struct mt9v117_t {
   struct i2c_transaction i2c_trans;   ///< I2C transaction for comminication with CMOS chip
 };
 
-//extern struct mt9v117_t mt9v117;
+extern struct mt9v117_t mt9v117;
 
 void mt9v117_init(struct mt9v117_t *mt);
 

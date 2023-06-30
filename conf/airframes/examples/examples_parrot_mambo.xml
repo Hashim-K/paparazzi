@@ -9,13 +9,13 @@
 
     <!-- <define name="BOARD_CONFIG" value="boards/parrot_minidrone.h"/> -->
 
-    <define name="USE_BARO_BOARD" value="FALSE"/>
+    <!-- <define name="USE_BARO_BOARD" value="FALSE"/> -->
 
     <target name="ap" board="parrot_minidrone">
       <module name="actuators" type="parrot_minidrone"/>
       <module name="imu" type="parrot_minidrone"/>
       <module name="gps" type="datalink"/>
-      <module name="air_data"/>
+      <!-- <module name="air_data"/> -->
       <module name="radio_control" type="datalink"/>
     </target>
 

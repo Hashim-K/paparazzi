@@ -24,7 +24,8 @@
  * Parrot Minidrone board initialization functions.
  *
  */
-
+#include "boards/parrot_minidrone.h"
+#include "mcu.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -33,68 +34,57 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <linux/input.h>
+#include "modules/energy/electrical.h"
 
 #include <sys/resource.h>// for setrlimit
 #include <errno.h> //Remove if not needed anymore
 
-#include "mcu.h"
-
 // not used atm but thingy below #include <linux/videodev2.h>
 #include "modules/computer_vision/lib/v4l/v4l2.h"
-//#include "peripherals/video_device.h"
+#include "peripherals/video_device.h"
 
-#include "boards/parrot_minidrone.h"
-
-#include "modules/energy/electrical.h"
-
-// not used atm but thingy below #include <linux/videodev2.h>
-#include "modules/computer_vision/lib/v4l/v4l2.h"
-//#include "peripherals/video_device.h"
-
-#include "boards/parrot_minidrone.h"
-
-//#include "modules/sensors/baro.h"
-//#include "modules/abi.h"
+// #include "modules/sensors/baro.h"
+// #include "modules/core/abi.h"
 
 //By default on a Parrot Minidrone there is no front camera available rherefore bottom and front are set as the same device
-struct video_config_t front_camera = {
-  .output_size = {
-    .w = 640,
-    .h = 480
-  },
-  .sensor_size = {
-    .w = 640,
-    .h = 480
-  },
-  .crop = {
-    .x = 0,
-    .y = 0,
-    .w = 640,
-    .h = 480
-  },
-  .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
-  .subdev_name = NULL,
-  .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support
-  .buf_cnt = 60,
-  .filters = 0,
-  .cv_listener = NULL,
-  .fps = 0
-};
+// struct video_config_t front_camera = {
+//   .output_size = {
+//     .w = 640,
+//     .h = 480
+//   },
+//   .sensor_size = {
+//     .w = 640,
+//     .h = 480
+//   },
+//   .crop = {
+//     .x = 0,
+//     .y = 0,
+//     .w = 640,
+//     .h = 480
+//   },
+//   .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
+//   .subdev_name = NULL,
+//   .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support
+//   .buf_cnt = 60,
+//   .filters = 0,
+//   .cv_listener = NULL,
+//   .fps = 0
+// };
 
 struct video_config_t bottom_camera = {
   .output_size = {
-    .w = 640,
-    .h = 480
+    .w = 320,
+    .h = 240
   },
   .sensor_size = {
-    .w = 640,
-    .h = 480
+    .w = 320,
+    .h = 240
   },
   .crop = {
     .x = 0,
     .y = 0,
-    .w = 640,
-    .h = 480
+    .w = 320,
+    .h = 240
   },
   .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
   .subdev_name = NULL,
@@ -174,37 +164,36 @@ static void *button_read(void *data __attribute__((unused)))
 /**
  * Baro reading thread
  */
-static void *baro_read(void *data __attribute__((unused)))
-{
-  static int32_t baro_parrot_minidrone_raw;
-  struct input_event ev;
-  ssize_t n;
+// static void *baro_read(void *data __attribute__((unused)))
+// {
+//   static int32_t baro_parrot_minidrone_raw;
+//   struct input_event ev;
+//   ssize_t n;
 
-  /* Open Baro event sysfs file */
-  int fd_baro = open("/dev/input/baro_event", O_RDONLY);
-  if (fd_baro == -1) {
-    printf("Unable to open baro_event to read baro state\n");
-    return NULL;
-  }
+//   /* Open Baro event sysfs file */
+//   int fd_baro = open("/dev/input/baro_event", O_RDONLY);
+//   if (fd_baro == -1) {
+//     printf("Unable to open baro_event to read baro state\n");
+//     return NULL;
+//   }
 
-  while (TRUE) {
-    /* Check new pressure (read is blocking?) */
-    n = read(fd_baro, &ev, sizeof(ev));
-    if (n == sizeof(ev) && ev.type == EV_ABS && ev.code == ABS_PRESSURE) {
-      baro_parrot_minidrone_raw = ev.value;
-      //printf("Read Baro RAW: %d\n", baro_parrot_minidrone_raw);
-      // From datasheet: raw_pressure / 4096 -> pressure in hPa
-      // send data in Pa
-      float pressure = 100.f * ((float)baro_parrot_minidrone_raw) / 4096.f;
-      //printf("Baro pressure: %f\n", pressure);
-      AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, pressure);
-    }
-  }
+//   while (TRUE) {
+//     /* Check new pressure (read is blocking?) */
+//     n = read(fd_baro, &ev, sizeof(ev));
+//     if (n == sizeof(ev) && ev.type == EV_ABS && ev.code == ABS_PRESSURE) {
+//       baro_parrot_minidrone_raw = ev.value;
+//       //printf("Read Baro RAW: %d\n", baro_parrot_minidrone_raw);
+//       // From datasheet: raw_pressure / 4096 -> pressure in hPa
+//       // send data in Pa
+//       float pressure = 100.f * ((float)baro_parrot_minidrone_raw) / 4096.f;
+//       //printf("Baro pressure: %f\n", pressure);
+//       //TODO: fixme AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, pressure);
+//       //AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, now_ts, pressure);
+//     }
+//   }
 
-  return NULL;
-}
-
-
+//   return NULL;
+// }
 
 void board_init(void)
 {
