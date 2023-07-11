@@ -207,33 +207,26 @@ void board_init(void)
   ret = system("pstop delosd");
   ret = system("pstop dragon-prog");
 
-  //Set busybox "ulimit -s 512" (or to determine best stack value ATM so we do not get out of memory for video or other threads
-  //Note that we should investigate setting via thread attributte     pthread_attr_setstacksize(&attr, stacksize);
-  //basic issue is stack size of threads.. see https://linux.die.net/man/3/pthread_attr_setstacksize
-  //but for now setting stack limit oOS wide should do the trick
+  //If our OS stack size is not set correctly, we cannot start the UDP thread, so we dynamically set it here
+  char os_commandline[200] = "ulimit -s ";
+  char response[6] = "";
+  FILE *fp;
 
-  // const rlim_t kStackSize = 64L * 1024L * 1024L;   // min stack size = 64 Mb
-  // const rlim_t kStackSize = 512L * 1024L;//512Kb
-  // struct rlimit rl;
-  // long result=0;
+  fflush(NULL);
+  fp = popen(os_commandline, "r");
+  if (fp != NULL) {
+    fgets(response, sizeof(response) - 1, fp);
+    fflush(fp);
+    pclose(fp);
+  } else {
+    printf("ERROR: Could not set stacksize\n");
+    exit(1);
+  } 
 
-  // result = getrlimit(RLIMIT_STACK, &rl);
-  // printf("The soft limit is %llu\n", rl.rlim_cur);
-  // printf("The hard limit is %llu\n", rl.rlim_max);
-
-  // if(getrlimit(RLIMIT_STACK, &rl) !=0)
-  // {
-  // printf("The soft limit is %llu\n", rl.rlim_cur);
-  // printf("The hard limit is %llu\n", rl.rlim_max);
-  // if (rl.rlim_cur < kStackSize)
-  // {
-  // rl.rlim_cur = kStackSize;
-  // if (setrlimit(RLIMIT_STACK, &rl) != 0)
-  // {
-  //  fprintf(stderr, "Setrlimit failed with errno=%d\n", errno);
-  // }
-  // }
-  // }
+  if(atoi(response)>512) {
+    ret = system("ulimit -s 512 && /data/edu/paparazzi/ap.elf");
+    exit(ret);
+  }
 
   usleep(50000); /* Give 50ms time to end on a busy system */
 

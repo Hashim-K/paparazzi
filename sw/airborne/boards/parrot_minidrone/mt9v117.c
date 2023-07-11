@@ -53,11 +53,11 @@ struct video_config_t bottom_camera = {
     .h = 240
   },
   .sensor_size = {
-    .w = 640,
-    .h = 480,
+    .w = 320,
+    .h = 240,
   },
   .crop = {
-    .x = 40,
+    .x = 0,
     .y = 0,
     .w = 320,
     .h = 240
@@ -233,8 +233,8 @@ static void write_reg(struct mt9v117_t *mt, uint16_t addr, uint32_t val, uint16_
   }
 
   // Transmit the buffer
-  i2c_blocking_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
- //TODO: mabet this way i2c_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
+  //TODO both OK? i2c_blocking_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
+  i2c_transmit(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, len + 2);
 
 
 }
@@ -249,8 +249,10 @@ static uint32_t read_reg(struct mt9v117_t *mt, uint16_t addr, uint16_t len)
   mt->i2c_trans.buf[1] = addr & 0xFF;
 
   // Transmit the buffer and receive back
+  //
   i2c_blocking_transceive(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, 2, len);
-  //TODO: Maybe use this from oldcode i2c_transceive(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, 2, len);
+  //TODO: Maybe use this from oldcode 
+  //i2c_transceive(mt->i2c_periph, &mt->i2c_trans, MT9V117_ADDRESS, 2, len);
 
   /* Fix sigdness */
   for (uint8_t i = 0; i < len; i++) {
@@ -308,8 +310,10 @@ static inline void mt9v117_write_patch(struct mt9v117_t *mt)
     }
 
     // Transmit the buffer
+    //
     i2c_blocking_transmit(mt->i2c_periph, &mt->i2c_trans, mt->i2c_trans.slave_addr, mt9v117_patch_lines[i].len);
-    //TODO: mabe use: i2c_transmit(mt->i2c_periph, &mt->i2c_trans, mt->i2c_trans.slave_addr, mt9v117_patch_lines[i].len);
+    //TODO: mabe use: 
+    //i2c_transmit(mt->i2c_periph, &mt->i2c_trans, mt->i2c_trans.slave_addr, mt9v117_patch_lines[i].len);
  
   }
 
@@ -377,10 +381,10 @@ static inline void mt9v117_config(struct mt9v117_t *mt)
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AWB_HG_WINDOW_YEND_OFFSET, 239, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XSTART_OFFSET, 2, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YSTART_OFFSET, 2, 2);
-  // write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 63, 2);
-  // write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 47, 2);
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 65, 2);
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 49, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 63, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 47, 2);
+  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 65, 2);
+  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 49, 2);
 }
 
 }
@@ -457,7 +461,7 @@ void mt9v117_init(struct mt9v117_t *mt)
 
   /* Set autoexposure luma */
 //TODO: NEW line below
-  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_AE_LUMA, MT9V117_TARGET_LUMA, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_AE_LUMA, MT9V117_TARGET_LUMA, 2);
 
   /* Apply the configuration */
   write_var(mt, MT9V117_SYSMGR_VAR, MT9V117_SYSMGR_NEXT_STATE_OFFSET, MT9V117_SYS_STATE_ENTER_CONFIG_CHANGE, 1);

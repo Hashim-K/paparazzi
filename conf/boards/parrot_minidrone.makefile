@@ -40,8 +40,8 @@ $(TARGET).srcs += $(SRC_BOARD)/board.c
 
 # Link static (Done for GLIBC)
 $(TARGET).CFLAGS += -DLINUX_LINK_STATIC
+$(TARGET).CFLAGS += -Wl,--stack,4296474128
 $(TARGET).LDFLAGS += -static
-
 # -----------------------------------------------------------------------
 
 # default LED configuration
