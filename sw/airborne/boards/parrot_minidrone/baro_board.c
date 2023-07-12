@@ -42,29 +42,28 @@ static pthread_mutex_t baro_parrot_minidrone_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * Check baro thread
- * TODO something better ?
  */
 static void *baro_read(void *data __attribute__((unused)))
 {
   struct input_event ev;
   ssize_t n;
 
+  /* Open Baro event sysfs file */
   int fd_baro = open("/dev/input/baro_event", O_RDONLY);
   printf("fd_baro value: %d\n", fd_baro);
   if (fd_baro == -1) {
     printf("Unable to open baro event to read pressure\n");
     return NULL;
-  } else {
-	printf("Open baro event fd succes\n");
-  }
+  } 
 
   while (TRUE) {
     /* Check new pressure */
     n = read(fd_baro, &ev, sizeof(ev));
     if (n == sizeof(ev) && ev.type == EV_ABS && ev.code == ABS_PRESSURE) {
       pthread_mutex_lock(&baro_parrot_minidrone_mutex);
-      baro_parrot_minidrone_available = true;
       baro_parrot_minidrone_raw = ev.value;
+      baro_parrot_minidrone_available = true;
+      //printf("Read Baro RAW: %d\n", baro_parrot_minidrone_raw);
       pthread_mutex_unlock(&baro_parrot_minidrone_mutex);
     }
 
@@ -77,33 +76,34 @@ static void *baro_read(void *data __attribute__((unused)))
 
 void baro_init(void)
 {
-  printf("[parrot_minidrone_board] Enter baro_init...\n");
+  //printf("[parrot_minidrone_board] Enter baro_init...\n");
   baro_parrot_minidrone_available = false;
   baro_parrot_minidrone_raw = 0;
 
   /* Start baro reading thread */
   pthread_t baro_thread;
-  if (pthread_create(&baro_thread, NULL, baro_read, NULL) != NULL) {
+  if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {// NULL?
     printf("[parrot_minidrone_board] Could not create baro reading thread!\n");
   }
   pthread_setname_np(baro_thread, "pprz_baro_thread");
-
 }
 
-void baro_periodic(void) {}
-
+void baro_periodic(void) 
+{
+  /* Periodic reading not used, only event */
+}
 
 void baro_event(void)
 {
   pthread_mutex_lock(&baro_parrot_minidrone_mutex);
   if (baro_parrot_minidrone_available) {
+    uint32_t now_ts = get_sys_time_usec();
     // From datasheet: raw_pressure / 4096 -> pressure in hPa
     // send data in Pa
-    uint32_t now_ts = get_sys_time_usec();
     float pressure = 100.f * ((float)baro_parrot_minidrone_raw) / 4096.f;
+    //printf("Baro pressure: %f\n", pressure);
     AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, now_ts, pressure);
     baro_parrot_minidrone_available = false;
   }
   pthread_mutex_unlock(&baro_parrot_minidrone_mutex);
 }
-

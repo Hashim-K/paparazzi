@@ -39,6 +39,8 @@
 #include <sys/resource.h>// for setrlimit
 #include <errno.h> //Remove if not needed anymore
 
+#define MAXPATHLEN 200   /* make this larger if you need to. */
+
 // not used atm but thingy below #include <linux/videodev2.h>
 #include "modules/computer_vision/lib/v4l/v4l2.h"
 #include "peripherals/video_device.h"
@@ -161,45 +163,11 @@ static void *button_read(void *data __attribute__((unused)))
   return NULL;
 }
 
-/**
- * Baro reading thread
- */
-// static void *baro_read(void *data __attribute__((unused)))
-// {
-//   static int32_t baro_parrot_minidrone_raw;
-//   struct input_event ev;
-//   ssize_t n;
-
-//   /* Open Baro event sysfs file */
-//   int fd_baro = open("/dev/input/baro_event", O_RDONLY);
-//   if (fd_baro == -1) {
-//     printf("Unable to open baro_event to read baro state\n");
-//     return NULL;
-//   }
-
-//   while (TRUE) {
-//     /* Check new pressure (read is blocking?) */
-//     n = read(fd_baro, &ev, sizeof(ev));
-//     if (n == sizeof(ev) && ev.type == EV_ABS && ev.code == ABS_PRESSURE) {
-//       baro_parrot_minidrone_raw = ev.value;
-//       //printf("Read Baro RAW: %d\n", baro_parrot_minidrone_raw);
-//       // From datasheet: raw_pressure / 4096 -> pressure in hPa
-//       // send data in Pa
-//       float pressure = 100.f * ((float)baro_parrot_minidrone_raw) / 4096.f;
-//       //printf("Baro pressure: %f\n", pressure);
-//       //TODO: fixme AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, pressure);
-//       //AbiSendMsgBARO_ABS(BARO_BOARD_SENDER_ID, now_ts, pressure);
-//     }
-//   }
-
-//   return NULL;
-// }
-
 void board_init(void)
 {
   /*
    *  Stop original processes using pstop/ptart commands
-   *  Don't kill to avoid automatic restart
+   *  Don't kill as to avoid automatic restart of the processes
    *
    */
   int ret __attribute__((unused));
@@ -207,8 +175,9 @@ void board_init(void)
   ret = system("pstop delosd");
   ret = system("pstop dragon-prog");
 
-  //If our OS stack size is not set correctly, we cannot start the UDP thread, so we dynamically set it here
-  char os_commandline[200] = "ulimit -s ";
+  /* If our OS stack size is not set correctly, we cannot start the UDP thread, so we dynamically set it here
+  an option would be to set it in an init script, but it would require a reboot to take effect */
+  char os_commandline[MAXPATHLEN] = "ulimit -s ";
   char response[6] = "";
   FILE *fp;
 
@@ -219,39 +188,49 @@ void board_init(void)
     fflush(fp);
     pclose(fp);
   } else {
-    printf("ERROR: Could not set stacksize\n");
-    exit(1);
+    fprintf(stderr,"Error getting current OS stack size.\n");
+    exit(EXIT_FAILURE);
   } 
 
   if(atoi(response)>512) {
-    ret = system("ulimit -s 512 && /data/edu/paparazzi/ap.elf");
+    ret = readlink("/proc/self/exe", os_commandline, sizeof(os_commandline));
+    if (ret < 0) {
+        fprintf(stderr, "Error resolving symlink /proc/self/exe.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (ret >= MAXPATHLEN) {
+        fprintf(stderr, "Path too long. Truncated.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    os_commandline[ret] = '\0';  //remove @ from end of line
+    char full_commandline[MAXPATHLEN] = "ulimit -s 512 && ";
+    strcat(full_commandline, os_commandline);
+    //printf("Full commandline is: %s\n", full_commandline);
+    ret = system(full_commandline);
     exit(ret);
   }
 
   usleep(50000); /* Give 50ms time to end on a busy system */
 
-  /* Start battery reading thread*/ //TODO make it optional, a module? howevr indeed most of the time you do want this value
+  /* Start battery reading thread*/
   pthread_t bat_thread;
   if (pthread_create(&bat_thread, NULL, bat_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create battery reading thread!\n");
   }
   pthread_setname_np(bat_thread, "pprz_bat_thread");
 
-  /* Start button reading thread */ //TODO: Not optional but add option to disable?
+  /* Start button reading thread */
   pthread_t button_thread;
   if (pthread_create(&button_thread, NULL, button_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create button reading thread!\n");
   }
   pthread_setname_np(button_thread, "pprz_button_thread");
 
-  /* Start baro reading thread */ //TODO: make it optional, a module?
-  // pthread_t baro_thread;
-  // if (pthread_create(&baro_thread, NULL, baro_read, NULL) != 0) {
-  //  printf("[parrot_minidrone_board] Could not create baro reading thread!\n");
-  // }
+  /* NOTE Baro senor reading is added via common baro */
 
-  /* NOTE: Ultra sonic ranging sensor reading is handled by optional ranging/sonar module */
+  /* NOTE: Ultrasonic ranging sensor reading is handled by optional ranging/sonar module */
 
-  /* NOTE: Bottom_camera reading is handled by optional module "Video thread" */
+  /* NOTE: Mainboard default camera reading is handled by optional module "Video thread" */
 }
 

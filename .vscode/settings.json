@@ -10,7 +10,9 @@
     },
     "files.associations": {
         "Makefile.*": "makefile",
-        "rtp.h": "c"
+        "rtp.h": "c",
+        "string_view": "c",
+        "regex": "c"
     },
     "C_Cpp.dimInactiveRegions": false,
     "esbonio.sphinx.confDir": "",

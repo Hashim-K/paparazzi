@@ -32,7 +32,9 @@
 #define BARO_BOARD BARO_PARROT_MINIDRONE
 #endif
 
-extern void baro_event(void);
+//#define BaroPeriodic baro_periodic
+//#define BaroInit baro_init
 #define BaroEvent baro_event
+extern void baro_event(void);
 
 #endif /* BOARDS_PARROT_MINIDRONE_BARO_H */

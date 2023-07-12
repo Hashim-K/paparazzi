@@ -3,14 +3,12 @@
 <airframe name="Mambo">
 
   <firmware name="rotorcraft">
-    <!-- To be able to cross-compile a specific compiler needs to avoid glibc link issues-->
+    <!-- To be able to cross-compile a specific compiler is needed to avoid glibc link issues-->
     <configure name="PREFIX" value="/opt/arm-2012.03/bin/arm-none-linux-gnueabi-"/>
-    <!-- <define name="BOARD_CONFIG" value="boards/parrot_minidrone.h"/> -->
-    <define name="USE_BARO_BOARD" value="FALSE"/>
-
 <!-- <define name="AIR_DATA_BARO_ABS_ID" value="BARO_BOARD_SENDER_ID"/> -->
 
     <target name="ap" board="parrot_minidrone">
+      <!-- <define name="USE_BARO_BOARD" value="TRUE"/> -->
           <!-- <define name="VIDEO_CAPTURE_PATH" value="/data/ftp/internal_000/images"/>
       <define name="LOGGER_FILE_PATH" value="/data/ftp/internal_000/log"/> -->
       <define name="MT9V117_TARGET_FPS" value="20"/>
@@ -20,7 +18,7 @@
       <module name="actuators" type="parrot_minidrone"/>
       <module name="imu" type="parrot_minidrone"/>
       <module name="gps" type="datalink"/>
-      <!-- <module name="air_data"/> -->
+      <module name="air_data"/>
       <module name="radio_control" type="datalink"/>
       <module name="telemetry" type="transparent_udp">
         <!-- <define name="DOWNLINK_DEVICE" value="udp0"/>
@@ -54,7 +52,6 @@
 
     <module name="ins"/>
     <!-- <module name="ins" type="extended"/> -->
-
     <!-- <module name="parrot_minidrone_cam"/> -->
 
     <module name="video_thread">
@@ -92,12 +89,10 @@
       <define name="VIEWVIDEO_WRITE_VIDEO" value="FALSE" />
     </module>
 
- 
     <!-- <module name="cv_colorfilter">
       <define name="COLORFILTER_CAMERA" value="bottom_camera"/>
     </module> -->
    
-
     <!-- <module name="pose_history"/> -->
 
     <!-- <module name="cv_opticflow">
@@ -148,7 +143,7 @@
   <section name="AIR_DATA" prefix="AIR_DATA_">
     <define name="CALC_AIRSPEED" value="FALSE"/>
     <define name="CALC_TAS_FACTOR" value="FALSE"/>
-    <define name="CALC_AMSL_BARO" value="FALSE"/>
+    <define name="CALC_AMSL_BARO" value="TRUE"/>
   </section>
 
   <section name="IMU" prefix="IMU_">
