@@ -36,8 +36,8 @@
 #include <linux/input.h>
 #include "modules/energy/electrical.h"
 
-#include <sys/resource.h>// for setrlimit
-#include <errno.h> //Remove if not needed anymore
+#include <sys/resource.h>// for setrlimit, not use ATM
+#include <errno.h> //Remove after it is not needed anymore debugging
 
 #define MAXPATHLEN 200   /* make this larger if you need to. */
 
@@ -47,31 +47,6 @@
 
 // #include "modules/sensors/baro.h"
 // #include "modules/core/abi.h"
-
-//By default on a Parrot Minidrone there is no front camera available rherefore bottom and front are set as the same device
-// struct video_config_t front_camera = {
-//   .output_size = {
-//     .w = 640,
-//     .h = 480
-//   },
-//   .sensor_size = {
-//     .w = 640,
-//     .h = 480
-//   },
-//   .crop = {
-//     .x = 0,
-//     .y = 0,
-//     .w = 640,
-//     .h = 480
-//   },
-//   .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
-//   .subdev_name = NULL,
-//   .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support
-//   .buf_cnt = 60,
-//   .filters = 0,
-//   .cv_listener = NULL,
-//   .fps = 0
-// };
 
 struct video_config_t bottom_camera = {
   .output_size = {
@@ -91,10 +66,19 @@ struct video_config_t bottom_camera = {
   .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
   .subdev_name = NULL,
   .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support
+  //.format = V4L2_PIX_FMT_UYVY,
+  //.subdev_format = V4L2_MBUS_FMT_UYVY8_2X8,
   .buf_cnt = 60,
   .filters = 0,
   .cv_listener = NULL,
-  .fps = 0
+  .fps = MT9V117_TARGET_FPS,
+    .camera_intrinsics = {
+    .focal_x = MT9V117_FOCAL_X,
+    .focal_y = MT9V117_FOCAL_Y,
+    .center_x = MT9V117_CENTER_X,
+    .center_y = MT9V117_CENTER_Y,
+    .Dhane_k = MT9V117_DHANE_K
+  }
 };
 
 /**

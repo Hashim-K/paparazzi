@@ -81,7 +81,7 @@ void image_free(struct image_t *img)
 }
 
 /**
- * Copy an image from inut to output
+ * Copy an image from input to output
  * This will only work if the formats are the same
  * @param[in] *input The input image to copy from
  * @param[out] *output The out image to copy to
@@ -616,7 +616,7 @@ uint32_t image_difference(struct image_t *img_a, struct image_t *img_b, struct i
     diff_buf = (int16_t *)diff->buf;
   }
 
-  // Go trough the imagge pixels and calculate the difference
+  // Go trough the image pixels and calculate the difference
   for (uint16_t x = 0; x < img_b->w; x++) {
     for (uint16_t y = 0; y < img_b->h; y++) {
       int16_t diff_c = img_a_buf[(y + 1) * img_a->w + (x + 1)] - img_b_buf[y * img_b->w + x];

@@ -54,7 +54,6 @@
 #ifndef MT9V117_TARGET_LUMA
 #define MT9V117_TARGET_LUMA 18000
 #endif
-
 struct mt9v117_t {
   struct i2c_periph *i2c_periph;      ///< I2C peripheral used to communicate over
   struct i2c_transaction i2c_trans;   ///< I2C transaction for comminication with CMOS chip

@@ -27,7 +27,9 @@
 #define BOARD_PARROT_MINIDRONE
 
 #include "std.h"
-#include "peripherals/video_device.h"
+
+/** UART connected to ? internally */
+#define UART1_DEV /dev/ttyPA1
 
 /** For using serial devices via USB to serial converter electronics
  *  E.g. a XBee modem, a 3DR radio modem, Serial Stereocam etc. etc.
@@ -53,8 +55,13 @@
 #define ActuatorsDefaultCommit() ActuatorsParrotMinidroneCommit()
 #endif
 
-/* Camera */
+#include "peripherals/video_device.h"
+
+#include "boards/parrot_minidrone/mt9v117.h"
 extern struct video_config_t bottom_camera;
+
+//#include "boards/parrot_minidrone/mt9f002.h"
+//extern struct video_config_t front_camera;
 
 /* by default activate onboard baro */
 #ifndef USE_BARO_BOARD

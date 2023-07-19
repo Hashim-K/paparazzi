@@ -11,10 +11,14 @@
       <!-- <define name="USE_BARO_BOARD" value="TRUE"/> -->
           <!-- <define name="VIDEO_CAPTURE_PATH" value="/data/ftp/internal_000/images"/>
       <define name="LOGGER_FILE_PATH" value="/data/ftp/internal_000/log"/> -->
-      <define name="MT9V117_TARGET_FPS" value="20"/>
-      
+ 
       <configure name="PERIODIC_FREQUENCY"  value="500"/>
-       
+
+      <!-- <configure name="NAVIGATION_FREQUENCY" value="16"/> -->
+      <!-- <configure name="CONTROL_FREQUENCY" value="120"/> -->
+      <define name="TELEMETRY_FREQUENCY" value="60"/>
+      <!-- <configure name="MODULES_FREQUENCY" value="500"/> -->
+
       <module name="actuators" type="parrot_minidrone"/>
       <module name="imu" type="parrot_minidrone"/>
       <module name="gps" type="datalink"/>
@@ -29,6 +33,10 @@
         <configure name="MODEM_PORT_IN" value="4243"/>
         <configure name="MODEM_BROADCAST" value="TRUE"/> -->
       </module>
+      <module name="sys_mon"/><!-- Enable if one want to check processor load for higher loop, nav, module etc. frequencies -->
+
+      <define name="MT9V117_TARGET_FPS" value="1"/>
+      <define name="CV_ALLOW_VIDEO_TO_CHANGE_SIZE" value="TRUE"/>
 
     </target>
 
@@ -55,18 +63,18 @@
     <!-- <module name="parrot_minidrone_cam"/> -->
 
     <module name="video_thread">
-      <define name="VIDEO_THREAD_VERBOSE" value="TRUE"/>
+      <define name="VIDEO_THREAD_VERBOSE" value="FALSE"/>
       <define name="VIDEO_FILTER_DEBAYER" value="0"/>
-      <!-- <define name="VIDEO_THREAD_MAX_CAMERAS" value="1"/> -->
-      <!-- <define name="VIDEO_THREAD_NICE_LEVEL" value="5"/>-->
-      <!-- <define name="SYS_TIME_THREAD_PRIO" value="2"/>-->
+      <define name="VIDEO_THREAD_MAX_CAMERAS" value="1"/>
+      <!-- <define name="VIDEO_THREAD_NICE_LEVEL" value="3"/> -->
+      <!-- <define name="SYS_TIME_THREAD_PRIO" value="2"/> -->
     </module>
 
     <module name="video_capture">
       <define name="VIDEO_CAPTURE_CAMERA" value="bottom_camera"/>
       <define name="VIDEO_CAPTURE_PATH" value="/data/edu/paparazzi"/>
-      <define name="VIDEO_CAPTURE_JPEG_QUALITY" value="75"/>
-      <define name="VIDEO_CAPTURE_FPS" value="30"/>
+      <define name="VIDEO_CAPTURE_JPEG_QUALITY" value="55"/>
+      <define name="VIDEO_CAPTURE_FPS" value="1"/>
     </module>
 
     <module name="video_rtp_stream">
@@ -75,13 +83,13 @@
       <!-- <define name="VIEWVIDEO_NICE_LEVEL" value="0"/> -->
       <define name="VIEWVIDEO_CAMERA" value="bottom_camera"/>
       <define name="VIEWVIDEO_DOWNSIZE_FACTOR" value="2"/>
-      <define name="VIEWVIDEO_QUALITY_FACTOR" value="75"/>
-      <define name="VIEWVIDEO_DEVICE_BUFFERS" value="3"/>
-      <define name="VIEWVIDEO_DEVICE_SIZE" value="320,240"/>
+      <define name="VIEWVIDEO_QUALITY_FACTOR" value="55"/>
+      <define name="VIEWVIDEO_DEVICE_BUFFERS" value="2"/>
+      <!-- <define name="VIEWVIDEO_DEVICE_SIZE" value="320,240"/> --><!-- no longer used?-->
       <configure name="VIEWVIDEO_HOST" value="192.168.3.2"/>
       <configure name="VIEWVIDEO_BROADCAST" value="FALSE" />
 
-      <define name="VIEWVIDEO_FPS" value="30" />
+      <define name="VIEWVIDEO_FPS" value="1" />
 
       <define name="VIEWVIDEO_STREAM_VIDEO" value="TRUE" />
       <define name="VIEWVIDEO_SHOT_PATH" value="/data/edu/paparazzi"/>

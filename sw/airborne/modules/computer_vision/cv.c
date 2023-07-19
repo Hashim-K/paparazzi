@@ -202,10 +202,10 @@ uint8_t *dest = img->buf;
 
 for (uint32_t i = 0; i < ((img->buf_size/2)-2); i += 2)
 {
-    ctmp=dest[i];
+  ctmp=dest[i];
 	dest[i] = dest[i+1];
 	dest[i+1] =ctmp;
-    ctmp=dest[i+2];
+  ctmp=dest[i+2];
 	dest[i+2] = dest[i+3];
 	dest[i+3] =ctmp;
 	dest += 2;

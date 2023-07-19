@@ -38,6 +38,7 @@
 #include <math.h>
 
 #include BOARD_CONFIG
+PRINT_CONFIG_VAR(BOARD_CONFIG)
 
 // Video
 #include "lib/vision/image.h"
