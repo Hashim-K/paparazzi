@@ -60,8 +60,7 @@
 #include "boards/parrot_minidrone/mt9v117.h"
 extern struct video_config_t bottom_camera;
 
-//#include "boards/parrot_minidrone/mt9f002.h"
-//extern struct video_config_t front_camera;
+extern struct video_config_t front_camera;
 
 /* by default activate onboard baro */
 #ifndef USE_BARO_BOARD

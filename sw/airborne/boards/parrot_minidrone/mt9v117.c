@@ -51,39 +51,39 @@
 // #endif
 
 /* Camera structure */
-struct video_config_t bottom_camera = {
-  .output_size = {
-    .w = 240,
-    .h = 240
-  },
-  .sensor_size = {
-    .w = 320,
-    .h = 240,
-  },
-  .crop = {
-    .x = 40,
-    .y = 0,
-    .w = 240,
-    .h = 240
-  },
-  .dev_name = "/dev/video0",
-  .subdev_name = "",
-  //.subdev_name = NULL,
-  .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support?
-  //.format = V4L2_PIX_FMT_UYVY,
-  //.subdev_format = V4L2_MBUS_FMT_UYVY8_2X8,
-  .buf_cnt = 5,
-  .filters = 0,
-  .cv_listener = NULL,
-  .fps = MT9V117_TARGET_FPS,
-  .camera_intrinsics = {
-    .focal_x = MT9V117_FOCAL_X,
-    .focal_y = MT9V117_FOCAL_Y,
-    .center_x = MT9V117_CENTER_X,
-    .center_y = MT9V117_CENTER_Y,
-    .Dhane_k = MT9V117_DHANE_K
-  }
-};
+// struct video_config_t bottom_camera = {
+//   .output_size = {
+//     .w = 160,
+//     .h = 240
+//   },
+//   .sensor_size = {
+//     .w = 160,
+//     .h = 240,
+//   },
+//   .crop = {
+//     .x = 40,
+//     .y = 0,
+//     .w = 160,
+//     .h = 240
+//   },
+//   .dev_name = "/dev/video0",
+//   .subdev_name = "",
+//   //.subdev_name = NULL,
+//   .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support?
+//   //.format = V4L2_PIX_FMT_UYVY,
+//   //.subdev_format = V4L2_MBUS_FMT_UYVY8_2X8,
+//   .buf_cnt = 6,
+//   .filters = 0,
+//   .cv_listener = NULL,
+//   .fps = MT9V117_TARGET_FPS,
+//   .camera_intrinsics = {
+//     .focal_x = MT9V117_FOCAL_X,
+//     .focal_y = MT9V117_FOCAL_Y,
+//     .center_x = MT9V117_CENTER_X,
+//     .center_y = MT9V117_CENTER_Y,
+//     .Dhane_k = MT9V117_DHANE_K
+//   }
+// };
 
 struct mt9v117_t mt9v117 = {
   .i2c_periph = &i2c0
@@ -354,8 +354,8 @@ static inline void mt9v117_config(struct mt9v117_t *mt)
   write_reg(mt, MT9V117_AE_TRACK_JUMP_DIVISOR, 0x03, 1);
   write_reg(mt, MT9V117_CAM_AET_SKIP_FRAMES, 0x02, 1);
 
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_OUTPUT_WIDTH_OFFSET, 320, 2);
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_OUTPUT_HEIGHT_OFFSET, 240, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_OUTPUT_WIDTH_OFFSET, 160, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_OUTPUT_HEIGHT_OFFSET, 120, 2);
 
   /* Set gain metric for 111.2 fps
    * The final fps depends on the input clock
@@ -366,8 +366,8 @@ static inline void mt9v117_config(struct mt9v117_t *mt)
   /* set crop window */
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_XOFFSET_OFFSET, 0, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_YOFFSET_OFFSET, 0, 2);
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_WIDTH_OFFSET, 640, 2);//TODO: 320?
-  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_HEIGHT_OFFSET, 240, 2);
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_WIDTH_OFFSET, 160, 2);//TODO: 320..640?
+  write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_WINDOW_HEIGHT_OFFSET, 120, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_CROP_MODE_OFFSET, 3, 1);
 
   /* Enable auto-stats mode */
@@ -379,8 +379,8 @@ static inline void mt9v117_config(struct mt9v117_t *mt)
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YSTART_OFFSET, 2, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 63, 2);
   write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 47, 2);
-  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 65, 2);//TODO: ?
-  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 49, 2);//TODO: ?
+  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_XEND_OFFSET, 65, 2);//TODO: 63 or 65?
+  //write_var(mt, MT9V117_CAM_CTRL_VAR, MT9V117_CAM_STAT_AE_INITIAL_WINDOW_YEND_OFFSET, 49, 2);//TODO: 47 or 49?
 }
 
 }

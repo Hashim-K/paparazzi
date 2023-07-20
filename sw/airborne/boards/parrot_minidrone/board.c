@@ -45,27 +45,26 @@
 #include "modules/computer_vision/lib/v4l/v4l2.h"
 #include "peripherals/video_device.h"
 
-// #include "modules/sensors/baro.h"
-// #include "modules/core/abi.h"
+struct video_config_t front_camera = {};
 
 struct video_config_t bottom_camera = {
   .output_size = {
-    .w = 320,
-    .h = 240
+    .w = 160,
+    .h = 120
   },
   .sensor_size = {
-    .w = 320,
-    .h = 240
+    .w = 160,
+    .h = 120
   },
   .crop = {
     .x = 0,
     .y = 0,
-    .w = 320,
-    .h = 240
+    .w = 160,
+    .h = 120
   },
   .dev_name = "/dev/video0", //TODO start useing the symlink? /dev/vertical_camera
   .subdev_name = NULL,
-  .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support
+  .format = V4L2_PIX_FMT_YUYV, //AFAIK Sadly no UYUV support?
   //.format = V4L2_PIX_FMT_UYVY,
   //.subdev_format = V4L2_MBUS_FMT_UYVY8_2X8,
   .buf_cnt = 60,

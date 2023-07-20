@@ -3,7 +3,7 @@
 <module name="parrot_minidrone" dir="boards">
   <doc>
     <description>
-      Specific configuration for Parrot Minidrone
+      Specific configuration for Parrot Minidrone. Types tested are Swing, Mamabo, RollingSpider. Also used for the Parrot Jumping Sumo as rover.
     </description>
   </doc>
   <dep>
