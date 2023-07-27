@@ -31,14 +31,14 @@
 
 // To be parameter compatible with the Bebop Sonar we added this struct
 struct SonarParrotMinidrone {
-  uint16_t meas;          ///< Raw ADC value
-  uint16_t offset;        ///< Sonar offset in ADC units
-  float distance;         ///< Distance measured in meters
+  uint16_t meas;   ///< Raw ADC value
+  uint16_t offset; ///< Sonar offset in ADC units
+  float distance;  ///< Distance measured in meters
 };
 
 extern struct SonarParrotMinidrone sonar_parrot_minidrone;
 
 extern void sonar_parrot_minidrone_init(void);
-extern void sonar_parrot_minidrone_downlink(void);//Handy for debugging
+extern void sonar_parrot_minidrone_downlink(void);// Can be used for debugging purposes
 
 #endif /* SONAR_PARROT_MINIDRONE_H */

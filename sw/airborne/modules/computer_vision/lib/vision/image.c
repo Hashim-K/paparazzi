@@ -51,12 +51,12 @@ void image_create(struct image_t *img, uint16_t width, uint16_t height, enum ima
   if (type == IMAGE_YUV422)
   {
     img->buf_size = sizeof(uint8_t) * 2 * width * height;
-    printf("[image.c] type == IMAGE_YUV422 width:%d  height:%d\r\n", width, height);
+    //DEBUG only enable printf("[image.c] type == IMAGE_YUV422 width:%d  height:%d\r\n", width, height);
   }
   else if (type == IMAGE_JPEG)
   {
     img->buf_size = sizeof(uint8_t) * 2 * width * height; // At maximum quality this is enough
-    printf("[image.c] type == IMAGE_JPEG width:%d  height:%d\r\n", width, height);
+    //DEBUG onl enable printf("[image.c] type == IMAGE_JPEG width:%d  height:%d\r\n", width, height);
   }
   else if (type == IMAGE_GRADIENT)
   {
@@ -65,13 +65,14 @@ void image_create(struct image_t *img, uint16_t width, uint16_t height, enum ima
   else if (type == IMAGE_INT16)
   {
     img->buf_size = sizeof(int16_t) * width * height;
-     printf("[image.c] type == IMAGE_INT16 width:%d  height:%d\r\n", width, height);
+     //DEBUG onl enable printf("[image.c] type == IMAGE_INT16 width:%d  height:%d\r\n", width, height);
   }
   else
   {
     img->buf_size = sizeof(uint8_t) * width * height;
   }
 
+//TODO: fixme better GLIBC values
   // #if __GLIBC__ > 2 || (__GLIBC__ >= 2 && __GLIBC_MINOR__ >= 16)
   //  aligned memory slightly speeds up any later copies
   // img->buf = aligned_alloc(CACHE_LINE_LENGTH, img->buf_size + (CACHE_LINE_LENGTH - img->buf_size % CACHE_LINE_LENGTH) % CACHE_LINE_LENGTH);

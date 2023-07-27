@@ -151,7 +151,6 @@ void board_init(void)
   /*
    *  Stop original processes using pstop/ptart commands
    *  Don't kill as to avoid automatic restart of the processes
-   *
    */
   int ret __attribute__((unused));
 
@@ -159,7 +158,7 @@ void board_init(void)
   ret = system("pstop dragon-prog");
 
   /* If our OS stack size is not set correctly, we cannot start the UDP thread, so we dynamically set it here
-  an option would be to set it in an init script, but it would require a reboot to take effect */
+  an option would be to set it in an init script, but it would require a drone os change and reboot to take effect */
   char os_commandline[MAXPATHLEN] = "ulimit -s ";
   char response[6] = "";
   FILE *fp;
@@ -175,7 +174,7 @@ void board_init(void)
     exit(EXIT_FAILURE);
   } 
 
-  if(atoi(response)>512) {
+  if(atoi(response)>512) { //NOTE: 512, randome but as for now seems to be the stack size that works
     ret = readlink("/proc/self/exe", os_commandline, sizeof(os_commandline));
     if (ret < 0) {
         fprintf(stderr, "Error resolving symlink /proc/self/exe.\n");
@@ -197,6 +196,7 @@ void board_init(void)
   usleep(50000); /* Give 50ms time to end on a busy system */
 
   /* Start battery reading thread*/
+  //TODO: Optionally move this a module like in ARDrone2
   pthread_t bat_thread;
   if (pthread_create(&bat_thread, NULL, bat_read, NULL) != 0) {
     printf("[parrot_minidrone_board] Could not create battery reading thread!\n");
@@ -210,9 +210,9 @@ void board_init(void)
   }
   pthread_setname_np(button_thread, "pprz_button_thread");
 
-  /* NOTE Baro senor reading is added via common baro */
+  /* NOTE Barometer senor reading is added via common barometric code*/
 
-  /* NOTE: Ultrasonic ranging sensor reading is handled by optional ranging/sonar module */
+  /* NOTE: Ultrasonic ranging sensor reading is handled by optional ranging/sonar module "sonar_parrot_minidrone" */
 
   /* NOTE: Mainboard default camera reading is handled by optional module "Video thread" */
 }
