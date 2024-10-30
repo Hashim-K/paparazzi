@@ -395,8 +395,8 @@
 
         <!-- reference acceleration for attitude control -->
         <define name="REF_ERR_P" value="107.0"/>
-        <define name="REF_ERR_Q" value="70.0"/>
-        <define name="REF_ERR_R" value="70.0"/>
+        <define name="REF_ERR_Q" value="62.0"/>
+        <define name="REF_ERR_R" value="62.0"/>
         <define name="REF_RATE_P" value="9.0"/>
         <define name="REF_RATE_Q" value="9.0"/>
         <define name="REF_RATE_R" value="9.0"/>
@@ -500,7 +500,7 @@
     <section name="BAT">
         <define name="MAX_BAT_CAPACITY" value="2300" unit="mAh"/>
         <!--<define name="MilliAmpereOfAdc(_adc)" value="(_adc-632)*4.14"/>-->
-        <define name="VoltageOfAdc(_adc)" value="(0.000556535 * _adc)"/>
+        <define name="VoltageOfAdc(_adc)" value="(0.000611456 * _adc)"/>
         <define name="MILLIAMP_AT_IDLE_THROTTLE" value="280" unit="mA"/>
         <define name="MILLIAMP_AT_FULL_THROTTLE" value="20000" unit="mA"/>
         <define name="MAX_BAT_LEVEL" value="16.8" unit="V"/>
