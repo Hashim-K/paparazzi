@@ -42,7 +42,7 @@
 
         <!-- * REAL FC TARGET * -->
         <target name="ap" board="cube_orange">
-        <define name="ADC_CURRENT_DISABLE" value="TRUE"/>
+        <define name="ADC_CURUARTRENT_DISABLE" value="TRUE"/>
 
             <!-- If we find time to finish the DPS310 driver... -->
             <!--
@@ -79,13 +79,13 @@
             <module name="gps" type="ublox">
                 <configure name="GPS_BAUD" value="B460800"/><!-- UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data-->
                 <!-- <define name="USE_GPS_UBX_RTCM" value="TRUE"/> -->
-                <configure name="UBX2_GPS_PORT" value="UART_9"/>
+                <!-- <configure name="UBX2_GPS_PORT" value="UART9"/> -->
             </module>
 
 
             <!-- SBUS out is AETR by default, our transmitter sends TAER as per standard so correct in radio file -->
             <module name="radio_control" type="sbus"> <!-- The output type of RX, over the air it can can be all kinds e.g. DSMX, FRSky-->
-                    <configure name="SBUS_PORT" value="UART3"/>
+                    <!-- <configure name="SBUS_PORT" value="UART3"/> -->
                     <define name="RADIO_CONTROL_NB_CHANNEL" value="16"/>
                     <!--<define name="RADIO_MODE" value="RADIO_AUX1"/>-->
                     <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/>
@@ -98,28 +98,11 @@
                 <configure name="MODEM_BAUD" value="B115200"/>
             </module>
 
-            <!--run the chimera mag once every 64 seconds to avoid message spam-->
-            <!-- <define name="MPU9250_MAG_PRESCALER" value="32768"/> -->
-
-            <!--      Module needed for the communication between the raspberry pi and the pixhawk-->
-            <!-- <module name="ca_am7">
-                <configure name="AM7_PORT" value="UART3"/>
-                <configure name="AM7_BAUD" value="B921600"/>
-            </module> -->
-
-            <!-- Module needed for the fly by wire communication between the Teensy T4 and the pixhawk-->
+             <!-- Module needed for the fly by wire communication between the Teensy T4 and the pixhawk-->
             <module name="serial_act_t4">
                 <configure name="SERIAL_ACT_T4_PORT" value="UART8"/>
                 <configure name="SERIAL_ACT_T4_BAUD" value="B921600"/>
             </module>
-
-
-            <!--
-            <module name="pwm_meas">
-                <define name="USE_PWM_INPUT1" value="PWM_PULSE_TYPE_ACTIVE_LOW"/>
-                <define name="USE_PWM_INPUT2" value="PWM_PULSE_TYPE_ACTIVE_LOW"/>
-            </module>
-            -->
 
             <!--
             <module name="tlsf"/>
@@ -168,7 +151,7 @@
 
         <define name="BAT_CHECKER_DELAY" value="80"/>
         <define name="CATASTROPHIC_BATTERY_KILL_DELAY" value="410"/>
-        <configure name="USE_MAGNETOMETER" value="FALSE"/>
+        <configure name="USE_MAGNETOMETER" value="TRUE"/>
 
 
         <module name="overactuated_mixing"/>
@@ -186,14 +169,15 @@
             <define name="RM3100_CHAN_Y_SIGN" value="+"/>
             <define name="RM3100_CHAN_Z_SIGN" value="-"/>
 
-            <define name="MODULE_RM3100_UPDATE_AHRS" value="FALSE"/>
-            <configure name="MODULE_RM3100_SYNC_SEND" value="FALSE"/>
+            <define name="MODULE_RM3100_UPDATE_AHRS" value="TRUE"/>
+            <!-- <configure name="MODULE_RM3100_SYNC_SEND" value="TRUE"/> -->
 
             <!--TODO: Set correct angles-->
-            <!-- <define name="RM3100_MAG_TO_IMU_PHI" value="RadOfDeg\(6.5\)"/>
-            <define name="RM3100_MAG_TO_IMU_THETA" value="RadOfDeg\(28.5\)"/>
-            <define name="RM3100_MAG_TO_IMU_PSI" value="RadOfDeg\(181.0\)"/> -->
+            <define name="RM3100_MAG_TO_IMU_PHI" value="RadOfDeg\(0.0\)"/>
+            <define name="RM3100_MAG_TO_IMU_THETA" value="RadOfDeg\(0.0\)"/>
+            <define name="RM3100_MAG_TO_IMU_PSI" value="RadOfDeg\(0.0\)"/>
         </module>
+
 
         <module name="air_data">
             <define name="USE_AIRSPEED_AIR_DATA" value="FALSE"/>
@@ -221,9 +205,9 @@
         </module>
 
         <module name="ahrs" type="float_cmpl_quat">
-            <define name="AHRS_USE_GPS_HEADING" value="TRUE"/>
-            <configure name="USE_MAGNETOMETER" value="FALSE"/> <!-- if using INS EKF2 this forced already-->
-            <configure name="AHRS_USE_MAGNETOMETER" value="FALSE"/><!-- if using INS EKF2 this forced already-->
+            <!-- <define name="AHRS_USE_GPS_HEADING" value="TRUE"/> -->
+            <configure name="USE_MAGNETOMETER" value="TRUE"/> <!-- if using INS EKF2 this forced already-->
+            <configure name="AHRS_USE_MAGNETOMETER" value="TRUE"/><!-- if using INS EKF2 this forced already-->
             <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/>
             <!-- <define name="AHRS_GPS_SPEED_IN_NEGATIVE_Z_DIRECTION" value="FALSE"/>-->
             <!-- <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="3.0"/> in unit m/s" -->
@@ -333,17 +317,26 @@
         <define name="ACCEL_Y_SENS" value="2.45" integer="16"/>
         <define name="ACCEL_Z_SENS" value="2.45" integer="16"/> -->
 
-        <!-- MPU MAG -->
-        <!-- TODO: Calibrate -->
-        <!-- <define name="MAG_X_SIGN" value="1"/>
-        <define name="MAG_Y_SIGN" value="1"/>
-        <define name="MAG_Z_SIGN" value="-1"/>
-        <define name="MAG_X_NEUTRAL" value="0"/>
-        <define name="MAG_Y_NEUTRAL" value="0"/>
-        <define name="MAG_Z_NEUTRAL" value="0"/>
-        <define name="MAG_X_SENS" value="12.0" integer="16"/>
-        <define name="MAG_Y_SENS" value="12.0" integer="16"/>
-        <define name="MAG_Z_SENS" value="12.0" integer="16"/> -->
+        <!-- External Magnetometer -->
+        <!-- <define name="IMU_MAG_CALIB" type="array">
+            <field type="struct">
+                <field name="abi_id" value="5"/>
+                <field name="calibrated" type="struct">
+                <field name="neutral" value="true"/>
+                <field name="scale" value="true"/>
+                </field>
+                <field name="neutral" value="2077,788,735" type="int[]"/>
+                <field name="scale" value="{{37041,10142,24299},{56410,16075,39221}}"/>
+            </field>
+        </define> -->
+
+        <define name="MAG_X_NEUTRAL" value="-2183"/>
+        <define name="MAG_Y_NEUTRAL" value="-727"/>
+        <define name="MAG_Z_NEUTRAL" value="-268"/>
+        <define name="MAG_X_SENS" value="0.7468911237108754" integer="16"/>
+        <define name="MAG_Y_SENS" value="0.7054135259990132" integer="16"/>
+        <define name="MAG_Z_SENS" value="0.671669482853358" integer="16"/>
+
 
         <!-- TODO: Calibrate -->
         <!-- <define name= "MAG_X_CURRENT_COEF" value="0.0"/>
@@ -360,7 +353,7 @@
     <section name="AUTOPILOT">
         <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
         <!-- <define name="MODE_MANUAL" value="AP_MODE_RC_DIRECT"/> -->
-        <define name="MODE_AUTO1" value="AP_MODE_ATTITUDE_DIRECT"/>
+        <define name="MODE_AUTO1" value="AP_MODE_FORWARD"/>
         <define name="MODE_AUTO2" value="AP_MODE_NAV"/>
         <!-- <define name="MODE_AUTO2" value="AP_MODE_RC_DIRECT"/> -->
         <define name="MODE_STARTUP" value="AP_MODE_ATTITUDE_DIRECT"/>
@@ -368,7 +361,7 @@
 
     <section name="ctrl_eff_scheduling" prefix="FWD_">
         <!-- control effectiveness, scaled by INDI_G_SCALING (1000)-->
-        <define name="G1_ROLL"   value="{    0,     0, -13.0,  13.0}"/>
+        <define name="G1_ROLL"   value="{    0,     0, -10.0,  10.0}"/>
         <define name="G1_PITCH"  value="{-12.0,  12.0,     0,     0}"/>
         <define name="G1_YAW"    value="{-20.0, -20.0,   0.0,   0.0}"/>
         <define name="G1_THRUST" value="{    0,     0,  -0.9,  -0.9}"/>
@@ -387,7 +380,7 @@
     <section name="STABILIZATION_ATTITUDE_INDI" prefix="STABILIZATION_INDI_">
         <!-- control effectiveness, scaled by INDI_G_SCALING (1000)-->
         <define name="G1_ROLL"   value="{   0,    0,   -10,   10}"/>
-        <define name="G1_PITCH"  value="{-2.2,  2.2,      0,     0}"/>
+        <define name="G1_PITCH"  value="{-3,  3,      0,     0}"/>
         <define name="G1_YAW"    value="{-2, -2,    0.0,   0.0}"/>
         <define name="G1_THRUST" value="{   0,    0,   -0.9,  -0.9}"/>
         <!--Counter torque effect of spinning up a rotor-->
@@ -439,18 +432,10 @@
     </section>
 
     <section name="AHRS" prefix="AHRS_">
-    <!-- values used if no GPS fix, on 3D fix is update by geo_mag module if loaded -->
-    <!-- Delft -->
-    
-        <define name="H_X" value="0.3928"/>
-        <define name="H_Y" value="-0.0140"/>
-        <define name="H_Z" value="0.9195"/>
-       
         <define name="ICQ_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
         <define name="AHRS_GRAVITY_UPDATE_COORDINATED_TURN" value="TRUE"/>
         <!--<define name="AHRS_GPS_SPEED_IN_NEGATIVE_Z_DIRECTION" value="TRUE"/>-->
         <!-- <configure name="AHRS_ALIGNER_LED" value="2"/> -->
-        <define name="GRAVITY_HEURISTIC_FACTOR" value="0.0"/>
         <define name="FC_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
         <!-- <define name="HEADING_UPDATE_GPS_MIN_SPEED" value="0"/> -->
         <!-- <define name="USE_GPS_HEADING" value="TRUE"/> -->
@@ -462,13 +447,6 @@
         <define name="H_X" value="0.3928"/>
         <define name="H_Y" value="-0.0140"/>
         <define name="H_Z" value="0.9195"/>
-
-        <!-- TODO: for Bristol -->
-        <!--
-        <define name="H_X" value="0.3928"/>
-        <define name="H_Y" value="-0.0140"/>
-        <define name="H_Z" value="0.9195"/>
-        -->
     </section>
 
     <section name="MISC">
