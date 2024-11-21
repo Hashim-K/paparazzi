@@ -42,7 +42,7 @@
 
         <!-- * REAL FC TARGET * -->
         <target name="ap" board="cube_orange">
-        <define name="ADC_CURUARTRENT_DISABLE" value="TRUE"/>
+            <define name="ADC_CURUARTRENT_DISABLE" value="TRUE"/>
 
             <!-- If we find time to finish the DPS310 driver... -->
             <!--
@@ -97,6 +97,27 @@
                 <!-- <configure name="MODEM_PORT" value="usb_serial"/> -->
                 <configure name="MODEM_BAUD" value="B115200"/>
             </module>
+            <module name="mag" type="rm3100">
+            <configure name="MAG_RM3100_I2C_DEV" value="i2c2"/>
+            <!-- <configure name="MAG_RM3100_PERIODIC_FREQUENCY" value="125"/> -->
+
+            <!-- 0:X, 1:Y, 2:Z; -->
+            <define name="RM3100_CHAN_X" value="1"/>
+            <define name="RM3100_CHAN_Y" value="2"/>
+            <define name="RM3100_CHAN_Z" value="0"/>
+
+            <define name="RM3100_CHAN_X_SIGN" value="-"/>
+            <define name="RM3100_CHAN_Y_SIGN" value="+"/>
+            <define name="RM3100_CHAN_Z_SIGN" value="-"/>
+
+            <define name="MODULE_RM3100_UPDATE_AHRS" value="TRUE"/>
+            <!-- <configure name="MODULE_RM3100_SYNC_SEND" value="TRUE"/> -->
+
+            <!--TODO: Set correct angles-->
+            <define name="RM3100_MAG_TO_IMU_PHI" value="RadOfDeg\(0.0\)"/>
+            <define name="RM3100_MAG_TO_IMU_THETA" value="RadOfDeg\(0.0\)"/>
+            <define name="RM3100_MAG_TO_IMU_PSI" value="RadOfDeg\(0.0\)"/>
+        </module>
 
              <!-- Module needed for the fly by wire communication between the Teensy T4 and the pixhawk-->
             <module name="serial_act_t4">
@@ -156,27 +177,7 @@
 
         <module name="overactuated_mixing"/>
 
-        <module name="mag" type="rm3100">
-            <configure name="MAG_RM3100_I2C_DEV" value="i2c2"/>
-            <!-- <configure name="MAG_RM3100_PERIODIC_FREQUENCY" value="125"/> -->
 
-            <!-- 0:X, 1:Y, 2:Z; -->
-            <define name="RM3100_CHAN_X" value="1"/>
-            <define name="RM3100_CHAN_Y" value="2"/>
-            <define name="RM3100_CHAN_Z" value="0"/>
-
-            <define name="RM3100_CHAN_X_SIGN" value="-"/>
-            <define name="RM3100_CHAN_Y_SIGN" value="+"/>
-            <define name="RM3100_CHAN_Z_SIGN" value="-"/>
-
-            <define name="MODULE_RM3100_UPDATE_AHRS" value="TRUE"/>
-            <!-- <configure name="MODULE_RM3100_SYNC_SEND" value="TRUE"/> -->
-
-            <!--TODO: Set correct angles-->
-            <define name="RM3100_MAG_TO_IMU_PHI" value="RadOfDeg\(0.0\)"/>
-            <define name="RM3100_MAG_TO_IMU_THETA" value="RadOfDeg\(0.0\)"/>
-            <define name="RM3100_MAG_TO_IMU_PSI" value="RadOfDeg\(0.0\)"/>
-        </module>
 
 
         <module name="air_data">
