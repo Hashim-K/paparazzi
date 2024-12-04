@@ -35,6 +35,7 @@ extern "C" {
  * we have that many commands (one per motor),
  * otherwise we default to the number of high level commands (COMMANDS_NB).
  */
+#define ACTUATORS_NB 4
 #ifndef NPS_COMMANDS_NB
 #if defined MOTOR_MIXING_NB_MOTOR
 #define NPS_COMMANDS_NB MOTOR_MIXING_NB_MOTOR

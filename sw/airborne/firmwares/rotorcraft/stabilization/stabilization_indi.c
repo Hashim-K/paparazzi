@@ -246,7 +246,9 @@ int32_t num_thrusters;
 int32_t num_thrusters_x;
 
 static struct Int32Eulers stab_att_sp_euler;
+struct Int32Eulers* stab_att_sp_euler_ptr = &stab_att_sp_euler;
 static struct Int32Quat   stab_att_sp_quat;
+struct Int32Quat* stab_att_sp_quat_ptr = &stab_att_sp_quat;
 
 // Register actuator feedback if we rely on RPM information
 #if STABILIZATION_INDI_RPM_FEEDBACK
