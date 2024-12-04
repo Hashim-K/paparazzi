@@ -215,9 +215,14 @@ static inline struct Int32RMat *orientationGetRMat_i(struct OrientationReps *ori
 /// Get vehicle body attitude euler angles (int).
 static inline struct Int32Eulers *orientationGetEulers_i(struct OrientationReps *orientation)
 {
-  if (!bit_is_set(orientation->status, ORREP_EULER_I)) {
-    orientationCalcEulers_i(orientation);
-  }
+  // This change might not be necessary!
+  // if (!bit_is_set(orientation->status, ORREP_EULER_I)) {
+  //   orientationCalcEulers_i(orientation);
+  // }
+  struct FloatEulers eulers_zxy;
+  float_eulers_of_quat_zxy(&eulers_zxy, &(orientation->quat_f));
+  EULERS_BFP_OF_REAL(orientation->eulers_i, eulers_zxy);
+  
   return &orientation->eulers_i;
 }
 
@@ -242,9 +247,11 @@ static inline struct FloatRMat *orientationGetRMat_f(struct OrientationReps *ori
 /// Get vehicle body attitude euler angles (float).
 static inline struct FloatEulers *orientationGetEulers_f(struct OrientationReps *orientation)
 {
-  if (!bit_is_set(orientation->status, ORREP_EULER_F)) {
-    orientationCalcEulers_f(orientation);
-  }
+  // if (!bit_is_set(orientation->status, ORREP_EULER_F)) {
+  //   orientationCalcEulers_f(orientation);
+  // }
+  float_eulers_of_quat_zxy(&(orientation->eulers_f), &(orientation->quat_f));
+
   return &orientation->eulers_f;
 }
 
