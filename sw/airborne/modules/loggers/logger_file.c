@@ -63,23 +63,16 @@ static FILE *logger_file = NULL;
  * @param file Log file pointer
  */
 static void logger_file_write_header(FILE *file) {
-  fprintf(file, "time,");
-  fprintf(file, "pos_x,pos_y,pos_z,");
-  fprintf(file, "vel_x,vel_y,vel_z,");
-  fprintf(file, "att_phi,att_theta,att_psi,");
-  fprintf(file, "rate_p,rate_q,rate_r,");
-#ifdef BOARD_BEBOP
-  fprintf(file, "rpm_obs_1,rpm_obs_2,rpm_obs_3,rpm_obs_4,");
-  fprintf(file, "rpm_ref_1,rpm_ref_2,rpm_ref_3,rpm_ref_4,");
-#endif
-#ifdef INS_EXT_POSE_H
-  ins_ext_pos_log_header(file);
-#endif
-#ifdef COMMAND_THRUST
-  fprintf(file, "cmd_thrust,cmd_roll,cmd_pitch,cmd_yaw\n");
-#else
-  fprintf(file, "h_ctl_aileron_setpoint,h_ctl_elevator_setpoint\n");
-#endif
+  fprintf(file, "timestamp,");
+  // fprintf(file, "pos_x,pos_y,pos_z,");
+  // fprintf(file, "vel_x,vel_y,vel_z,");
+  // fprintf(file, "att_phi,att_theta,att_psi,");
+  // fprintf(file, "rate_p,rate_q,rate_r,");
+  // fprintf(file, "att_sp_phi,att_sp_theta,att_sp_psi,");
+  fprintf(file, "ref_qi,ref_qx,ref_qy,ref_qz,qi,qx,qy,qz,");
+  fprintf(file, "rc_in_phi,rc_in_theta,rc_in_psi,");
+  // fprintf(file, "rc_sp_phi,rc_sp_theta,rc_sp_psi,");
+  fprintf(file, "rc_roll,rc_pitch,rc_yaw,rc_throttle,rc_mode\n");
 }
 
 /** Write CSV row
@@ -88,33 +81,39 @@ static void logger_file_write_header(FILE *file) {
  * end of the line.
  * @param file Log file pointer
  */
+extern struct Int32Eulers* stab_att_sp_euler_ptr;
+extern struct Int32Quat* stab_att_sp_quat_ptr;
+extern struct RadioControl radio_control;
+extern struct Stabilization stabilization;
+
 static void logger_file_write_row(FILE *file) {
   struct NedCoor_f *pos = stateGetPositionNed_f();
   struct NedCoor_f *vel = stateGetSpeedNed_f();
   struct FloatEulers *att = stateGetNedToBodyEulers_f();
   struct FloatRates *rates = stateGetBodyRates_f();
+  struct FloatEulers att_sp;
+  struct Int32Quat *quat = stateGetNedToBodyQuat_i();
+
+  // EULERS_FLOAT_OF_BFP(att_sp, *stab_att_sp_euler_ptr);
 
   fprintf(file, "%f,", get_sys_time_float());
-  fprintf(file, "%f,%f,%f,", pos->x, pos->y, pos->z);
-  fprintf(file, "%f,%f,%f,", vel->x, vel->y, vel->z);
-  fprintf(file, "%f,%f,%f,", att->phi, att->theta, att->psi);
-  fprintf(file, "%f,%f,%f,", rates->p, rates->q, rates->r);
-#ifdef BOARD_BEBOP
-  fprintf(file, "%d,%d,%d,%d,",actuators_bebop.rpm_obs[0],actuators_bebop.rpm_obs[1],actuators_bebop.rpm_obs[2],actuators_bebop.rpm_obs[3]);
-  fprintf(file, "%d,%d,%d,%d,",actuators_bebop.rpm_ref[0],actuators_bebop.rpm_ref[1],actuators_bebop.rpm_ref[2],actuators_bebop.rpm_ref[3]);
-#endif
-#ifdef INS_EXT_POSE_H
-  ins_ext_pos_log_data(file);
-#endif
-#ifdef COMMAND_THRUST
-  fprintf(file, "%d,%d,%d,%d\n",
-      stabilization.cmd[COMMAND_THRUST], stabilization.cmd[COMMAND_ROLL],
-      stabilization.cmd[COMMAND_PITCH], stabilization.cmd[COMMAND_YAW]);
-#else
-  fprintf(file, "%d,%d\n", h_ctl_aileron_setpoint, h_ctl_elevator_setpoint);
-#endif
+  // fprintf(file, "%f,%f,%f,", pos->x, pos->y, pos->z);
+  // fprintf(file, "%f,%f,%f,", vel->x, vel->y, vel->z);
+  // fprintf(file, "%f,%f,%f,", att->phi, att->theta, att->psi);
+  // fprintf(file, "%f,%f,%f,", rates->p, rates->q, rates->r);
+  // fprintf(file, "%f,%f,%f,", att_sp.phi, att_sp.theta, att_sp.psi);
+  fprintf(file, "%d,%d,%d,%d,%d,%d,%d,%d,",
+                    stab_att_sp_quat_ptr->qi, stab_att_sp_quat_ptr->qx, stab_att_sp_quat_ptr->qy, stab_att_sp_quat_ptr->qz,
+                    quat->qi, quat->qx, quat->qy, quat->qz);
+  fprintf(file, "%f,%f,%f,", stabilization.rc_in.rc_eulers.phi, stabilization.rc_in.rc_eulers.theta, stabilization.rc_in.rc_eulers.psi);
+  // fprintf(file, "%f,%f,%f,", stabilization.rc_sp.sp.eulers_f.phi, stabilization.rc_sp.sp.eulers_f.theta, stabilization.rc_sp.sp.eulers_f.psi);
+  fprintf(file, "%d,%d,%d,%d,%d\n", 
+                radio_control.values[RADIO_ROLL], 
+                radio_control.values[RADIO_PITCH],
+                radio_control.values[RADIO_YAW],
+                radio_control.values[RADIO_THROTTLE],
+                radio_control.values[RADIO_MODE]);
 }
-
 
 /** Start the file logger and open a new file */
 void logger_file_start(void)
