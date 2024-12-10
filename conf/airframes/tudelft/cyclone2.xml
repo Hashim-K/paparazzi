@@ -161,7 +161,7 @@
             <module name="udp"/>
             <module name="radio_control" type="datalink"/>
             <module name="logger_file">
-                <define name="LOGGER_FILE_PATH" value="/home/ntouev/pprz_sim_logs"/>
+                <define name="LOGGER_FILE_PATH" value="/home/ntouev/pprz_sim_logs/"/>
             </module>
             <!--Switch advanced INDI scheduling functions on or off-->
             <!--Take the mode channel for simulation-->
@@ -451,6 +451,7 @@
     </section>
 
     <section name="MISC">
+        <define name="TAILSITTER" value="TRUE"/>
         <!--The airframe uses (when TRUE) a slightly different axis system for the setpoint, to make both hovering and flying forward intuitive-->
         <define name="USE_EARTH_BOUND_RC_SETPOINT" value="TRUE"/>
         <!-- This is the pitch angle that the airframe will have in forward flight, where 0 degrees is hover-->

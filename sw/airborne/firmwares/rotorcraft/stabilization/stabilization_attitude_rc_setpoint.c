@@ -195,11 +195,11 @@ void stabilization_attitude_read_rc_setpoint_earth_bound(struct AttitudeRCInput 
     QUAT_COPY(rc_sp->rc_quat, q_rp_sp);
   }
 }
-#define TAILSITTER // FIX THIS
+
 /// reset to current state
 void stabilization_attitude_reset_rc_setpoint(struct AttitudeRCInput *rc_sp)
 {
-  #ifdef TAILSITTER
+  #if TAILSITTER
   /*Obtain eulers with zxy rotation order*/
   struct FloatEulers eulers_zxy;
   float_eulers_of_quat_zxy(&eulers_zxy, stateGetNedToBodyQuat_f());
