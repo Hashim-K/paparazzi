@@ -147,7 +147,7 @@
             </module> -->
 
             <module name="eff_scheduling_cyfoam">
-                <define name="SQUARED_ROLL_EFF" value="0.0018"/> <!-- ??? -->
+                <define name="SQUARED_ROLL_EFF" value="0.0022"/> <!-- ??? -->
                 <define name="PITCH_EFF_AT_60" value="5.0"/>
                 <define name="YAW_EFF_AT_60" value="8"/> <!-- not enough data, keeping the cyfoam value -->
                 <!--function of the form: A + B*airspeed^2-->
@@ -536,5 +536,19 @@
         <define name="JSBSIM_MODEL" value="cyclone" type="string"/>
         <define name="NO_MOTOR_MIXING" value="TRUE"/>
     </section>
+
+    <checklist>
+        <item name="Goal" type="text">Goal of the flight</item>
+        <item name="No physical damage">Check for no physical damage</item>
+        <item name="Battery Voltage">Check drone's battery voltage</item>
+        <item name="RC Battery">Check the RC battery</item>
+        <item name="Attitude">Check attitude</item>
+        <item name="Heading">Cehck heading</item>
+        <item name="Airspeed">Calibrate airspeed sensor</item>
+        <item name="Geofence">Check geofence</item>
+        <item name="Takeoff location">Put UAV on take-off location</item>
+        <item name="Flight plan">Check flight plan</item>
+        <item name="Announce">Announce flight to other airspace users</item>
+    </checklist>
 
 </airframe>
