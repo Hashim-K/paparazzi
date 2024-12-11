@@ -136,15 +136,25 @@
 
             <module name="imu" type="cube"/>
 
-            <module name="eff_scheduling_cyfoam">
+            <!-- <module name="eff_scheduling_cyfoam">
                 <define name="SQUARED_ROLL_EFF" value="0.0018"/>
                 <define name="PITCH_EFF_AT_60" value="4.0"/>
                 <define name="YAW_EFF_AT_60" value="8.0"/>
-                <!--function of the form: A + B*airspeed^2-->
                 <define name="CE_PITCH_A" value="4.5"/>
                 <define name="CE_PITCH_B" value="0.01"/>
                 <define name="CE_YAW_A" value="5.631"/>
                 <define name="CE_YAW_B" value="0.0515"/>
+            </module> -->
+
+            <module name="eff_scheduling_cyfoam">
+                <define name="SQUARED_ROLL_EFF" value="0.0018"/> <!-- ??? -->
+                <define name="PITCH_EFF_AT_60" value="5.0"/>
+                <define name="YAW_EFF_AT_60" value="8"/> <!-- not enough data, keeping the cyfoam value -->
+                <!--function of the form: A + B*airspeed^2-->
+                <define name="CE_PITCH_A" value="4.6"/>
+                <define name="CE_PITCH_B" value="0.03"/>
+                <define name="CE_YAW_A" value="6.8"/>
+                <define name="CE_YAW_B" value="0.06"/>
             </module>
 
             <!-- Use the external mag (not in NPS target as then it needs to listen to all) -->
