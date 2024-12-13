@@ -148,8 +148,8 @@
 
             <module name="eff_scheduling_cyfoam">
                 <define name="SQUARED_ROLL_EFF" value="0.0022"/> <!-- ??? -->
-                <define name="PITCH_EFF_AT_60" value="5.0"/>
-                <define name="YAW_EFF_AT_60" value="8"/> <!-- not enough data, keeping the cyfoam value -->
+                <define name="PITCH_EFF_AT_60" value="5"/>
+                <define name="YAW_EFF_AT_60" value="3"/>
                 <!--function of the form: A + B*airspeed^2-->
                 <define name="CE_PITCH_A" value="4.6"/>
                 <define name="CE_PITCH_B" value="0.03"/>
@@ -391,8 +391,8 @@
     <section name="STABILIZATION_ATTITUDE_INDI" prefix="STABILIZATION_INDI_">
         <!-- control effectiveness, scaled by INDI_G_SCALING (1000)-->
         <define name="G1_ROLL"   value="{   0,    0,   -10,   10}"/>
-        <define name="G1_PITCH"  value="{-3,  3,      0,     0}"/>
-        <define name="G1_YAW"    value="{-2, -2,    0.0,   0.0}"/>
+        <define name="G1_PITCH"  value="{-3.4,  3.4,      0,     0}"/>
+        <define name="G1_YAW"    value="{-1.9, -1.9,    0.0,   0.0}"/>
         <define name="G1_THRUST" value="{   0,    0,   -0.9,  -0.9}"/>
         <!--Counter torque effect of spinning up a rotor-->
         <define name="G2" value="{0, 0, 0, 0}"/>
@@ -539,11 +539,12 @@
 
     <checklist>
         <item name="Goal" type="text">Goal of the flight</item>
+        <item name="SD Card">Check for SD card</item>
         <item name="No physical damage">Check for no physical damage</item>
         <item name="Battery Voltage">Check drone's battery voltage</item>
         <item name="RC Battery">Check the RC battery</item>
         <item name="Attitude">Check attitude</item>
-        <item name="Heading">Cehck heading</item>
+        <item name="Heading">Check heading</item>
         <item name="Airspeed">Calibrate airspeed sensor</item>
         <item name="Geofence">Check geofence</item>
         <item name="Takeoff location">Put UAV on take-off location</item>
