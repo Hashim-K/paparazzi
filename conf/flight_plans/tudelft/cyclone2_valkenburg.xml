@@ -6,15 +6,15 @@
 </header>
   <waypoints>
     <waypoint name="HOME" x="89.613" y="-119.821"/>
-    <waypoint name="CLIMB" x="113.646" y="-18.963"/>
-    <waypoint name="STDBY" x="235.946" y="-13.783"/>
+    <waypoint name="CLIMB" x="265.779" y="-141.924"/>
+    <waypoint name="STDBY" x="237.816" y="-109.656"/>
     <!-- this is just to avoid a compilation error in overactuated_mixing.c file to be fixed -->
     <waypoint name="ARUCO_HOVER" x="0.733" y="-216.426"/>
     <waypoint name="p1" x="272.378" y="-36.06"/>
     <waypoint name="p2" x="322.877" y="-168.713"/>
     <waypoint name="p3" x="202.893" y="-208.714"/>
     <waypoint name="p4" x="155.474" y="-69.145"/>
-    <waypoint name="TD" x="121.818" y="-25.364"/>
+    <waypoint name="TD" x="245.627" y="-126.181"/>
     <waypoint lat="52.1695" lon="4.4107" name="C1"/>
     <waypoint lat="52.1685" lon="4.40679" name="C2"/>
     <waypoint lat="52.166515" lon="4.408235" name="C3"/>
