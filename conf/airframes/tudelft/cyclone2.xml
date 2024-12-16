@@ -151,10 +151,10 @@
                 <define name="PITCH_EFF_AT_60" value="5"/>
                 <define name="YAW_EFF_AT_60" value="3"/>
                 <!--function of the form: A + B*airspeed^2-->
-                <define name="CE_PITCH_A" value="4.6"/>
-                <define name="CE_PITCH_B" value="0.03"/>
-                <define name="CE_YAW_A" value="6.8"/>
-                <define name="CE_YAW_B" value="0.06"/>
+                <define name="CE_PITCH_A" value="6"/>
+                <define name="CE_PITCH_B" value="0.01"/>
+                <define name="CE_YAW_A" value="3"/>
+                <define name="CE_YAW_B" value="0.0515"/>
             </module>
 
             <!-- Use the external mag (not in NPS target as then it needs to listen to all) -->
@@ -393,7 +393,7 @@
         <define name="G1_ROLL"   value="{   0,    0,   -10,   10}"/>
         <define name="G1_PITCH"  value="{-3.4,  3.4,      0,     0}"/>
         <define name="G1_YAW"    value="{-1.9, -1.9,    0.0,   0.0}"/>
-        <define name="G1_THRUST" value="{   0,    0,   -0.9,  -0.9}"/>
+        <define name="G1_THRUST" value="{   0,    0,   -1.8,  -1.8}"/>
         <!--Counter torque effect of spinning up a rotor-->
         <define name="G2" value="{0, 0, 0, 0}"/>
 
