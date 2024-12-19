@@ -103,10 +103,10 @@
 
             <!-- 0:X, 1:Y, 2:Z; -->
             <define name="RM3100_CHAN_X" value="1"/>
-            <define name="RM3100_CHAN_Y" value="2"/>
-            <define name="RM3100_CHAN_Z" value="0"/>
+            <define name="RM3100_CHAN_Y" value="0"/>
+            <define name="RM3100_CHAN_Z" value="2"/>
 
-            <define name="RM3100_CHAN_X_SIGN" value="-"/>
+            <define name="RM3100_CHAN_X_SIGN" value="+"/>
             <define name="RM3100_CHAN_Y_SIGN" value="+"/>
             <define name="RM3100_CHAN_Z_SIGN" value="-"/>
 
@@ -184,14 +184,10 @@
         <define name="CATASTROPHIC_BATTERY_KILL_DELAY" value="410"/>
         <configure name="USE_MAGNETOMETER" value="TRUE"/>
 
-
         <module name="overactuated_mixing"/>
 
-
-
-
         <module name="air_data">
-            <define name="USE_AIRSPEED_AIR_DATA" value="FALSE"/>
+            <define name="USE_AIRSPEED_AIR_DATA" value="TRUE"/>
         </module>
 
         <module name="geo_mag"/>
@@ -391,9 +387,9 @@
     <section name="STABILIZATION_ATTITUDE_INDI" prefix="STABILIZATION_INDI_">
         <!-- control effectiveness, scaled by INDI_G_SCALING (1000)-->
         <define name="G1_ROLL"   value="{   0,    0,   -10,   10}"/>
-        <define name="G1_PITCH"  value="{-3.4,  3.4,      0,     0}"/>
-        <define name="G1_YAW"    value="{-1.9, -1.9,    0.0,   0.0}"/>
-        <define name="G1_THRUST" value="{   0,    0,   -1.8,  -1.8}"/>
+        <define name="G1_PITCH"  value="{-2.5,  2.5,      0,     0}"/>
+        <define name="G1_YAW"    value="{-1.6, -1.6,    0.0,   0.0}"/>
+        <define name="G1_THRUST" value="{   0,    0,   -1.5,  -1.5}"/>
         <!--Counter torque effect of spinning up a rotor-->
         <define name="G2" value="{0, 0, 0, 0}"/>
 

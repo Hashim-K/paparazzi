@@ -98,15 +98,24 @@ static void eff_scheduling_periodic_b(void)
   if(airspeed < 6.0) {
     float_eulers_of_quat_zxy(&eulers_zxy, stateGetNedToBodyQuat_f());
     float pitch_interp = DegOfRad(eulers_zxy.theta);
-    Bound(pitch_interp, -60.0, -30.0);
-    float ratio = (pitch_interp + 30.0)/(-30.);
+    float ratio;
+    
+    if (pitch_interp <= 0) {
+      // pitch forward
+      Bound(pitch_interp, -60.0, -20.0);
+      ratio = (pitch_interp + 20.0)/(-40.);
+    } else {
+      // pitch backward
+      Bound(pitch_interp, 20.0, 60.0);
+      ratio = (pitch_interp - 20.0)/(+40.);
+    }
 
     /*pitch*/
-    g1g2[1][0] = g1g2_hover[1][0]*(1-ratio) + -PITCH_EFF_AT_60/1000*ratio;
-    g1g2[1][1] = g1g2_hover[1][1]*(1-ratio) +  PITCH_EFF_AT_60/1000*ratio;
+    g1g2[1][0] = g1g2_hover[1][0]*(1-ratio) + -PITCH_EFF_AT_60/1000.0f*ratio;
+    g1g2[1][1] = g1g2_hover[1][1]*(1-ratio) +  PITCH_EFF_AT_60/1000.0f*ratio;
     /*yaw*/
-    g1g2[2][0] = g1g2_hover[2][0]*(1-ratio) + -YAW_EFF_AT_60/1000*ratio;
-    g1g2[2][1] = g1g2_hover[2][1]*(1-ratio) + -YAW_EFF_AT_60/1000*ratio;
+    g1g2[2][0] = g1g2_hover[2][0]*(1-ratio) + -YAW_EFF_AT_60/1000.0f*ratio;
+    g1g2[2][1] = g1g2_hover[2][1]*(1-ratio) + -YAW_EFF_AT_60/1000.0f*ratio;
   } else {
     // calculate squared airspeed
     Bound(airspeed, 0.0, 30.0);
@@ -126,12 +135,13 @@ static void eff_scheduling_periodic_b(void)
   Bound(g1g2[0][2], -30.0/1000, -2.0/1000);
   Bound(g1g2[0][3], 2.0/1000,  30.0/1000);
 
-  /*Make pitch gain equal to roll gain for turns forward flight*/
-  if(airspeed > 12.0) {
-    indi_gains.att.q = 107.0;
-  } else {
-    indi_gains.att.q = 200.0;
-  }
+  // ???
+  // /*Make pitch gain equal to roll gain for turns forward flight*/
+  // if(airspeed > 12.0) {
+  //   indi_gains.att.q = 107.0;
+  // } else {
+  //   indi_gains.att.q = 200.0;
+  // }
 
 }
 
