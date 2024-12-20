@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Check if argument Z (number of files to copy) is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <Z: number of files to copy>"
+    exit 1
+fi
+
+Z=$1  # Number of files to copy
+MOUNT_DIR="/media/ntouev/SDLOG"
+SRC_DIR="$MOUNT_DIR/FLIGHT_RECORDER"
+DEST_DIR_BASE="/home/ntouev/pprz_temp_logs"
+PAPARAZZI_DIR="$HOME/paparazzi"
+LOGALIZER_CMD="$PAPARAZZI_DIR/sw/logalizer/sd2log"
+LATEST_LOG_DIR="$PAPARAZZI_DIR/var/logs"
+
+# Find the latest Z files and copy them
+LATEST_FILES=$(ls "$SRC_DIR"/fr_*.LOG 2>/dev/null | sort -V | tail -n "$Z")
+if [ -z "$LATEST_FILES" ]; then
+    echo "No log files found in $SRC_DIR"
+    exit 1
+fi
+
+for FILE in $LATEST_FILES; do
+    BASENAME=$(basename "$FILE")
+    LOG_ID=$(echo "$BASENAME" | grep -oP 'fr_\K[0-9]+(?=\.LOG)')
+    DEST_DIR="$DEST_DIR_BASE/$LOG_ID"
+    
+    # Create a subdirectory for the log ID
+    mkdir -p "$DEST_DIR"
+
+    DEST_PATH="$DEST_DIR/$BASENAME"
+    echo "Copying $FILE to $DEST_PATH"
+    cp "$FILE" "$DEST_PATH"
+
+    # Run the logalizer command
+    echo "Running $LOGALIZER_CMD $DEST_PATH"
+    "$LOGALIZER_CMD" "$DEST_PATH"
+
+    # Find the latest .data and .log files in the Paparazzi log directory
+    LATEST_DATA_FILE=$(ls -t "$LATEST_LOG_DIR"/*.data 2>/dev/null | head -n 1)
+    LATEST_LOG_FILE=$(ls -t "$LATEST_LOG_DIR"/*.log 2>/dev/null | head -n 1)
+
+    if [ -n "$LATEST_DATA_FILE" ]; then
+        DATA_BASENAME=$(basename "$LATEST_DATA_FILE")
+        echo "Copying $LATEST_DATA_FILE to $DEST_DIR"
+        cp "$LATEST_DATA_FILE" "$DEST_DIR/$DATA_BASENAME"
+    else
+        echo "No .data file found in $LATEST_LOG_DIR"
+    fi
+
+    if [ -n "$LATEST_LOG_FILE" ]; then
+        LOG_BASENAME=$(basename "$LATEST_LOG_FILE")
+        echo "Copying $LATEST_LOG_FILE to $DEST_DIR"
+        cp "$LATEST_LOG_FILE" "$DEST_DIR/$LOG_BASENAME"
+    else
+        echo "No .log file found in $LATEST_LOG_DIR"
+    fi
+done
+
+# Unmount the SDLOG directory
+echo "Unmounting $MOUNT_DIR"
+umount "$MOUNT_DIR"
+
+if [ $? -eq 0 ]; then
+    echo "Unmounted successfully. Please remove the SD card and place it in the Flight Controller!"
+else
+    echo "Failed to unmount $MOUNT_DIR. Please check manually."
+fi
+
+echo "Process completed."
+
