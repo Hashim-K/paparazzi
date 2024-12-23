@@ -148,7 +148,7 @@
 
             <module name="eff_scheduling_cyfoam">
                 <define name="SQUARED_ROLL_EFF" value="0.0022"/> <!-- ??? -->
-                <define name="PITCH_EFF_AT_60" value="5"/>
+                <define name="PITCH_EFF_AT_60" value="5.5"/>
                 <define name="YAW_EFF_AT_60" value="3"/>
                 <!--function of the form: A + B*airspeed^2-->
                 <define name="CE_PITCH_A" value="6"/>
