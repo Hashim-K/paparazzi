@@ -151,10 +151,10 @@
                 <define name="PITCH_EFF_AT_60" value="5.5"/>
                 <define name="YAW_EFF_AT_60" value="3"/>
                 <!--function of the form: A + B*airspeed^2-->
-                <define name="CE_PITCH_A" value="6"/>
-                <define name="CE_PITCH_B" value="0.01"/>
-                <define name="CE_YAW_A" value="3"/>
-                <define name="CE_YAW_B" value="0.0515"/>
+                <define name="CE_PITCH_A" value="3.042"/>
+                <define name="CE_PITCH_B" value="0.0444"/>
+                <define name="CE_YAW_A" value="-1.023"/>
+                <define name="CE_YAW_B" value="0.0717"/>
             </module>
 
             <!-- Use the external mag (not in NPS target as then it needs to listen to all) -->
@@ -461,7 +461,7 @@
         <!--The airframe uses (when TRUE) a slightly different axis system for the setpoint, to make both hovering and flying forward intuitive-->
         <define name="USE_EARTH_BOUND_RC_SETPOINT" value="TRUE"/>
         <!-- This is the pitch angle that the airframe will have in forward flight, where 0 degrees is hover-->
-        <define name="TRANSITION_MAX_OFFSET" value="-75.0" unit="deg"/>
+        <define name="TRANSITION_MAX_OFFSET" value="-80.0" unit="deg"/>
         <define name="NO_RC_THRUST_LIMIT" value="TRUE"/>
         <define name="COORDINATED_TURN_AIRSPEED" value="18.0"/>
 
@@ -535,6 +535,8 @@
 
     <checklist>
         <item name="Goal" type="text">Goal of the flight</item>
+        <item name="UAV" type="text">UAV Name</item>
+        <item name="Mass" type="text">Mass in kg of the UAV</item>
         <item name="SD Card">Check for SD card</item>
         <item name="No physical damage">Check for no physical damage</item>
         <item name="Battery Voltage">Check drone's battery voltage</item>
