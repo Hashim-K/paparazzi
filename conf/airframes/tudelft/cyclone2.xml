@@ -87,7 +87,6 @@
             <module name="radio_control" type="sbus"> <!-- The output type of RX, over the air it can can be all kinds e.g. DSMX, FRSky-->
                     <!-- <configure name="SBUS_PORT" value="UART3"/> -->
                     <define name="RADIO_CONTROL_NB_CHANNEL" value="16"/>
-                    <!--<define name="RADIO_MODE" value="RADIO_AUX1"/>-->
                     <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/>
                     <define name="INDI_FUNCTIONS_RC_CHANNEL" value="RADIO_AUX2"/>
                     <define name="RADIO_MANUAL_PITCH_CMD" value="RADIO_AUX3"/>
@@ -135,16 +134,6 @@
             <module name="flight_recorder"/>
 
             <module name="imu" type="cube"/>
-
-            <!-- <module name="eff_scheduling_cyfoam">
-                <define name="SQUARED_ROLL_EFF" value="0.0018"/>
-                <define name="PITCH_EFF_AT_60" value="4.0"/>
-                <define name="YAW_EFF_AT_60" value="8.0"/>
-                <define name="CE_PITCH_A" value="4.5"/>
-                <define name="CE_PITCH_B" value="0.01"/>
-                <define name="CE_YAW_A" value="5.631"/>
-                <define name="CE_YAW_B" value="0.0515"/>
-            </module> -->
 
             <module name="eff_scheduling_cyfoam">
                 <define name="SQUARED_ROLL_EFF" value="0.0022"/> <!-- ??? -->
