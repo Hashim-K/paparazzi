@@ -3,7 +3,7 @@
    name="Cyclone2"
    ac_id="44"
    airframe="airframes/tudelft/cyclone2.xml"
-   radio="radios/OPENUAS/openuas_openrxsr_sbus_16_out.xml"
+   radio="radios/elrs.xml"
    telemetry="telemetry/tudelft/cyclone2_telem.xml"
    flight_plan="flight_plans/tudelft/cyclone2_valkenburg.xml"
    settings="settings/rotorcraft_basic.xml"
