@@ -351,8 +351,10 @@ void autopilot_static_on_rc_frame(void)
     INFO("Using RADIO_AUTO_MODE to switch between AUTO1 and AUTO2.")
     uint8_t new_autopilot_mode = ap_mode_of_two_switches();
 #else
-#ifdef RADIO_MODE_2x3
+#ifdef RADIO_MODE_3x2
     uint8_t new_autopilot_mode = ap_mode_of_3x2way_switch();
+#elif RADIO_MODE_2x3
+    uint8_t new_autopilot_mode = ap_mode_of_2x3way_switch();
 #else
     uint8_t new_autopilot_mode = ap_mode_of_3way_switch();
 #endif

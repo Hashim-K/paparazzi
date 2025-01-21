@@ -37,7 +37,7 @@ PRINT_CONFIG_VAR(FAILSAFE_DESCENT_SPEED)
 
 #if (defined MODE_MANUAL) && (defined MODE_AUTO1)
 
-#if defined RADIO_MODE_2x3
+#if defined RADIO_MODE_3x2
 
 #define THRESHOLD_1d3_PPRZ (MAX_PPRZ / 3)
 #define THRESHOLD_2d3_PPRZ ((MAX_PPRZ / 3) * 2)
@@ -65,6 +65,26 @@ uint8_t ap_mode_of_3x2way_switch(void)
     return MODE_AUTO1;
   } else {
     return autopilot_mode_auto2;
+  }
+}
+
+#elif defined RADIO_MODE_2x3
+
+#define THRESHOLD_1_PPRZ (MIN_PPRZ / 2)
+#define THRESHOLD_2_PPRZ (MAX_PPRZ / 2)
+
+uint8_t ap_mode_of_2x3way_switch(void)
+{
+  if (radio_control.values[RADIO_AUX3] <= THRESHOLD_1_PPRZ) {
+    if (radio_control.values[RADIO_MODE] > THRESHOLD_2_PPRZ) {
+      return MODE_MANUAL;
+    } else if (radio_control.values[RADIO_MODE] > THRESHOLD_1_PPRZ) {
+      return MODE_AUTO1;
+    } else {
+      return MODE_MANUAL;
+    }
+  } else {
+    return MODE_AUTO3;
   }
 }
 

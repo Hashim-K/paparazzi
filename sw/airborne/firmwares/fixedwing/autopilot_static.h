@@ -39,6 +39,7 @@
 #define  AP_MODE_HOME 3
 #define  AP_MODE_GPS_OUT_OF_ORDER 4
 #define  AP_MODE_NB 5
+#define  AP_MODE_AUTO3 6
 
 /** Static autopilot functions
  */

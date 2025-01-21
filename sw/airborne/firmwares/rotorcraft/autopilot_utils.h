@@ -39,6 +39,8 @@
 
 #if defined RADIO_MODE_2x3
 extern uint8_t ap_mode_of_3x2way_switch(void);
+#elif
+extern uint8_t ap_mode_of_2x3way_switch(void);
 #else
 extern uint8_t ap_mode_of_3way_switch(void);
 #endif
