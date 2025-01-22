@@ -43,16 +43,16 @@ for FILE in $LATEST_FILES; do
 
     if [ -n "$LATEST_DATA_FILE" ]; then
         DATA_BASENAME=$(basename "$LATEST_DATA_FILE")
-        echo "Copying $LATEST_DATA_FILE to $DEST_DIR"
-        cp "$LATEST_DATA_FILE" "$DEST_DIR/$DATA_BASENAME"
+        echo "Moving $LATEST_DATA_FILE to $DEST_DIR"
+        mv "$LATEST_DATA_FILE" "$DEST_DIR/$DATA_BASENAME"
     else
         echo "No .data file found in $LATEST_LOG_DIR"
     fi
 
     if [ -n "$LATEST_LOG_FILE" ]; then
         LOG_BASENAME=$(basename "$LATEST_LOG_FILE")
-        echo "Copying $LATEST_LOG_FILE to $DEST_DIR"
-        cp "$LATEST_LOG_FILE" "$DEST_DIR/$LOG_BASENAME"
+        echo "Moving $LATEST_LOG_FILE to $DEST_DIR"
+        mv "$LATEST_LOG_FILE" "$DEST_DIR/$LOG_BASENAME"
     else
         echo "No .log file found in $LATEST_LOG_DIR"
     fi
