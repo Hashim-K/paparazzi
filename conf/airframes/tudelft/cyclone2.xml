@@ -88,9 +88,8 @@
             <module name="radio_control" type="sbus"> <!-- The output type of RX, over the air it can can be all kinds e.g. DSMX, FRSky-->
                     <!-- <configure name="SBUS_PORT" value="UART3"/> -->
                     <define name="RADIO_CONTROL_NB_CHANNEL" value="16"/>
-                    <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/>
+                    <define name="RADIO_KILL_SWITCH" value="RADIO_AUX1"/> <!-- AUXx is defined in elrs.xml file -->
                     <define name="INDI_FUNCTIONS_RC_CHANNEL" value="RADIO_AUX2"/>
-                    <!-- <define name="RADIO_MANUAL_PITCH_CMD" value="RADIO_AUX3"/> -->
             </module>
 
             <module name="telemetry" type="transparent">

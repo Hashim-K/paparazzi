@@ -77,7 +77,7 @@ uint8_t ap_mode_of_2x3way_switch(void)
 {
   if (radio_control.values[RADIO_AUX3] <= THRESHOLD_1_PPRZ) {
     if (radio_control.values[RADIO_MODE] > THRESHOLD_2_PPRZ) {
-      return MODE_MANUAL;
+      return MODE_AUTO2;
     } else if (radio_control.values[RADIO_MODE] > THRESHOLD_1_PPRZ) {
       return MODE_AUTO1;
     } else {

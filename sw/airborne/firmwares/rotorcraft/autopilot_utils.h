@@ -37,9 +37,9 @@
 #define FAILSAFE_DESCENT_SPEED 1.5
 #endif
 
-#if defined RADIO_MODE_2x3
+#if defined RADIO_MODE_3x2
 extern uint8_t ap_mode_of_3x2way_switch(void);
-#elif
+#elif defined RADIO_MODE_2x3
 extern uint8_t ap_mode_of_2x3way_switch(void);
 #else
 extern uint8_t ap_mode_of_3way_switch(void);
