@@ -81,8 +81,8 @@ static void logger_file_write_header(FILE *file) {
  * end of the line.
  * @param file Log file pointer
  */
-extern struct Int32Eulers* stab_att_sp_euler_ptr;
-extern struct Int32Quat* stab_att_sp_quat_ptr;
+// extern struct Int32Eulers* stab_att_sp_euler_ptr;
+// extern struct Int32Quat* stab_att_sp_quat_ptr;
 extern struct RadioControl radio_control;
 extern struct Stabilization stabilization;
 
@@ -102,9 +102,9 @@ static void logger_file_write_row(FILE *file) {
   // fprintf(file, "%f,%f,%f,", att->phi, att->theta, att->psi);
   // fprintf(file, "%f,%f,%f,", rates->p, rates->q, rates->r);
   // fprintf(file, "%f,%f,%f,", att_sp.phi, att_sp.theta, att_sp.psi);
-  fprintf(file, "%d,%d,%d,%d,%d,%d,%d,%d,",
-                    stab_att_sp_quat_ptr->qi, stab_att_sp_quat_ptr->qx, stab_att_sp_quat_ptr->qy, stab_att_sp_quat_ptr->qz,
-                    quat->qi, quat->qx, quat->qy, quat->qz);
+  // fprintf(file, "%d,%d,%d,%d,%d,%d,%d,%d,",
+  //                   stab_att_sp_quat_ptr->qi, stab_att_sp_quat_ptr->qx, stab_att_sp_quat_ptr->qy, stab_att_sp_quat_ptr->qz,
+  //                   quat->qi, quat->qx, quat->qy, quat->qz);
   fprintf(file, "%f,%f,%f,", stabilization.rc_in.rc_eulers.phi, stabilization.rc_in.rc_eulers.theta, stabilization.rc_in.rc_eulers.psi);
   // fprintf(file, "%f,%f,%f,", stabilization.rc_sp.sp.eulers_f.phi, stabilization.rc_sp.sp.eulers_f.theta, stabilization.rc_sp.sp.eulers_f.psi);
   fprintf(file, "%d,%d,%d,%d,%d\n", 
