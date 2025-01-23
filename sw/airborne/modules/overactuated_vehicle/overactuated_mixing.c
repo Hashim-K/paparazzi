@@ -41,7 +41,7 @@
  * Variables declaration
  */
 
-#define UPDATE_WP_WITH_ARUCO
+// #define UPDATE_WP_WITH_ARUCO
 
 // #define GOTO_ARUCO_AUTO
 
