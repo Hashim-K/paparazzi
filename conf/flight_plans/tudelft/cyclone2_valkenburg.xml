@@ -1,29 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
-<flight_plan alt="40" ground_alt="0" lat0="52.169348" lon0="4.411563" max_dist_from_home="500" name="Rotorcraft Basic (Enac)" security_height="2">
+<flight_plan alt="40" ground_alt="0" lat0="52.168212" lon0="4.412785" max_dist_from_home="5000" name="Cyclone2 Valkenburg Basic" security_height="2">
   <header>
 #include "autopilot.h"
 </header>
   <waypoints>
-    <waypoint name="HOME" x="89.613" y="-119.821"/>
-    <waypoint name="CLIMB" x="265.779" y="-141.924"/>
-    <waypoint name="STDBY" x="237.816" y="-109.656"/>
-    <!-- this is just to avoid a compilation error in overactuated_mixing.c file to be fixed -->
-    <waypoint name="ARUCO_HOVER" x="0.733" y="-216.426"/>
-    <waypoint name="p1" x="272.378" y="-36.06"/>
-    <waypoint name="p2" x="322.877" y="-168.713"/>
-    <waypoint name="p3" x="202.893" y="-208.714"/>
-    <waypoint name="p4" x="155.474" y="-69.145"/>
-    <waypoint name="TD" x="245.627" y="-126.181"/>
-    <waypoint lat="52.1695" lon="4.4107" name="C1"/>
-    <waypoint lat="52.1685" lon="4.40679" name="C2"/>
-    <waypoint lat="52.166515" lon="4.408235" name="C3"/>
-    <waypoint lat="52.163255" lon="4.407668" name="C4"/>
-    <waypoint lat="52.161908" lon="4.410082" name="C5"/>
-    <waypoint lat="52.162641" lon="4.416992" name="C6"/>
-    <waypoint lat="52.164861" lon="4.427268" name="C7"/>
-    <waypoint lat="52.170422" lon="4.427511" name="C8"/>
-    <waypoint lat="52.1727" lon="4.42367" name="C9"/>
+    <waypoint name="HOME" x="46.647" y="13.326"/>
+    <waypoint name="CLIMB" x="62.27" y="93.518"/>
+    <waypoint name="STDBY" x="41.32" y="67.352"/>
+    <waypoint name="p1" x="116.277" y="108.925"/>
+    <waypoint name="p2" x="269.314" y="167.472"/>
+    <waypoint name="p3" x="334.002" y="3.987"/>
+    <waypoint name="p4" x="168.734" y="-53.325"/>
+    <waypoint name="TD" x="8.207" y="3.905"/>
+    <waypoint lat="52.1709" lon="4.41543" name="C1"/>
+    <waypoint lat="52.1708" lon="4.4124" name="C2"/>
+    <waypoint lat="52.1683" lon="4.40487" name="C3"/>
+    <waypoint lat="52.1633" lon="4.40672" name="C4"/>
+    <waypoint lat="52.1611" lon="4.40963" name="C5"/>
+    <waypoint lat="52.1621" lon="4.42081" name="C6"/>
+    <waypoint lat="52.1654" lon="4.42979" name="C7"/>
+    <waypoint lat="52.1707" lon="4.42876" name="C8"/>
+    <waypoint lat="52.1739" lon="4.4257" name="C9"/>
   </waypoints>
   <sectors>
     <sector color="red" name="Flyzone">
