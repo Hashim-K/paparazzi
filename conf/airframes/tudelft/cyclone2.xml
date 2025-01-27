@@ -3,7 +3,7 @@
     <description>
         Cyclone 2 airframe
 
-        + Model:       Cyclone 2 is a flatplate wing with a ~1m wingspan
+        + Model:       Cyclone 2 is a wing with a ~1m wingspan
         + Autopilot:   Cube orange
         + Actuators:   Feetech sts3032
         + GNSS         Ublox F9P GNSS with RTK
@@ -14,7 +14,7 @@
         + TELEMETRY:   RFDesign 868X
         + CURRENT:     Standard FC Power sensor
         + RANGER:      None
-        + MOTOR:       2x 1250KV Outrunner Brushless
+        + MOTOR:       2 x 1250KV Outrunner Brushless
         + PROP:        2 blade thin electric 8 x 6
         + BAT:         Li-Po 4S1P 2300mAh
 
@@ -36,8 +36,6 @@
 
         <!-- * REAL FC TARGET * -->
         <target name="ap" board="cube_orange">
-            
-            <define name="ADC_CURUARTRENT_DISABLE" value="TRUE"/>
 
             <module name="actuators" type="dummy">
                 <define name="HAL_USE_PWM" value="FALSE"/>
@@ -61,11 +59,12 @@
                 <define name="MS45XX_SYNC_SEND" value="TRUE"/><!-- TODO: Disable after tuning -->
             </module>
 
-            <module name="gps" type="ublox">
-                <configure name="GPS_BAUD" value="B460800"/><!-- UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data-->
+            <!-- <module name="gps" type="ublox"> -->
+                <!-- <configure name="GPS_BAUD" value="B460800"/>UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data -->
                 <!-- <define name="USE_GPS_UBX_RTCM" value="TRUE"/> -->
                 <!-- <configure name="UBX2_GPS_PORT" value="UART9"/> -->
-            </module>
+            <!-- </module> -->
+            <module name="gps" type="datalink"/>   
 
             <module name="radio_control" type="sbus">
                     <!-- <configure name="SBUS_PORT" value="UART3"/> -->
@@ -146,7 +145,6 @@
         <!-- * COMMON stuff * -->
         <define name="BAT_CHECKER_DELAY" value="80"/>
         <define name="CATASTROPHIC_BATTERY_KILL_DELAY" value="410"/>
-        <configure name="USE_MAGNETOMETER" value="TRUE"/>
 
         <module name="overactuated_mixing"/>
 
@@ -169,14 +167,12 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module>
 
-        <module name="ahrs" type="float_cmpl_quat">
-            <!-- <define name="AHRS_USE_GPS_HEADING" value="TRUE"/> -->
-            <configure name="USE_MAGNETOMETER" value="TRUE"/> <!-- if using INS EKF2 this forced already-->
-            <configure name="AHRS_USE_MAGNETOMETER" value="TRUE"/><!-- if using INS EKF2 this forced already-->
+        <module name="ahrs" type="int_cmpl_quat">
+            <configure name="USE_MAGNETOMETER" value="FALSE"/>
             <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/>
-            <!-- <define name="AHRS_GPS_SPEED_IN_NEGATIVE_Z_DIRECTION" value="FALSE"/>-->
-            <!-- <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="3.0"/> in unit m/s" -->
-            <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0.0"/>
+            <define name="AHRS_USE_GPS_HEADING" value="TRUE"/>
+            <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="0"/>
+            <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0"/>
         </module>
 
         <module name="stabilization" type="indi">
@@ -220,10 +216,6 @@
         <module name="traffic_info"/>
 
         <module name="sys_mon"/>
-       
-        <!-- <module name="shell">
-            <configure name="SHELL_PORT" value="usb_serial_debug"/>
-        </module> -->
 
     </firmware>
 
@@ -347,6 +339,10 @@
         <define name="H_X" value="0.3928"/>
         <define name="H_Y" value="-0.0140"/>
         <define name="H_Z" value="0.9195"/>
+
+        <define name="USE_GPS_ALT" value="1"/>
+        <define name="USE_GPS_ALT_SPEED" value="1"/>
+        <define name="VFF_R_GPS" value="0.01"/>
     </section>
 
     <section name="MISC">
@@ -387,7 +383,7 @@
         <define name="MAX_BAT_LEVEL" value="16.8" unit="V"/>
         <define name="LOW_BAT_LEVEL" value="14.0" unit="V"/>
         <define name="CRITIC_BAT_LEVEL" value="13.5" unit="V"/>
-        <define name="CATASTROPHIC_BAT_LEVEL" value="12.5" unit="V"/>
+        <define name="CATASTROPHIC_BAT_LEVEL" value="13.2" unit="V"/>
         <define name="CURRENT_ESTIMATION_NONLINEARITY" value="1.0"/>
     </section>
 
