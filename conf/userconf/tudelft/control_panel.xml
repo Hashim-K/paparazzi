@@ -78,6 +78,20 @@
       <program name="Server">
         <arg flag="-n"/>
       </program>
+      <program name="PprzGCS"/>
+    </session>
+    <session name="Cyclone2 - Simulation - RC">
+      <program name="Simulator">
+        <arg flag="-a" constant="Cyclone2"/>
+        <arg flag="-t" constant="nps"/>
+      </program>
+      <program name="Data Link">
+        <arg flag="-udp"/>
+        <arg flag="-udp_broadcast"/>
+      </program>
+      <program name="Server">
+        <arg flag="-n"/>
+      </program>
       <program name="Joystick">
         <arg flag="-ac" constant="Cyclone2"/>
         <arg flag="radiomaster_tx12.xml"/>
@@ -86,14 +100,42 @@
         <arg flag="-layout" constant="bottom_settings.xml"/>
       </program>
     </session>
+    <session name="Cyclone2 - optitrack">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyUSB0"/>
+        <arg flag="-s" constant="115200"/>
+      </program>
+      <program name="Server"/>
+      <program name="PprzGCS"/>
+      <program name="Messages">
+        <arg flag="-c" constant="datalink"/>
+      </program>
+      <program name="Messages"/>
+    </session>
+    <session name="Cyclone2 - optitrack - py">
+      <program name="Data Link">
+        <arg flag="-d" constant="/dev/ttyUSB0"/>
+        <arg flag="-s" constant="115200"/>
+      </program>
+      <program name="Server"/>
+      <program name="PprzGCS"/>
+      <program name="Messages">
+        <arg flag="-c" constant="datalink"/>
+      </program>
+      <program name="NatNet3">
+        <arg flag="--long_edge" constant="right"/>
+        <arg flag="--x_side" constant="right"/>
+        <arg flag="--ac_nose" constant="far"/>
+        <arg flag="-ac" constant="19"/>
+        <arg flag="44"/>
+      </program>
+    </session>
     <session name="Cyclone2 @115200">
       <program name="Data Link">
         <arg flag="-d" constant="/dev/ttyUSB0"/>
         <arg flag="-s" constant="115200"/>
       </program>
       <program name="Server"/>
-      <program name="Messages"/>
-      <program name="Real-time Plotter"/>
       <program name="PprzGCS"/>
     </session>
     <session name="EKF Full">
