@@ -37,6 +37,11 @@
         <!-- * REAL FC TARGET * -->
         <target name="ap" board="cube_orange">
 
+            <define name="INS_EXT_POSE_MAG_ID"      value="MAG_RM3100_SENDER_ID"/>
+            <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
+            <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
+            <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
+
             <module name="actuators" type="dummy">
                 <define name="HAL_USE_PWM" value="FALSE"/>
                 <define name="USE_PWM1" value="FALSE"/>
@@ -162,18 +167,19 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <module name="ins" type="extended">
+        <!-- <module name="ins" type="extended">
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
-        </module>
+        </module> -->
+         <module name="ins" type="ext_pose"/>
 
-        <module name="ahrs" type="int_cmpl_quat">
-            <configure name="USE_MAGNETOMETER" value="FALSE"/>
-            <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/>
-            <define name="AHRS_USE_GPS_HEADING" value="TRUE"/>
-            <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="0"/>
-            <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0"/>
-        </module>
+        <!-- <module name="ahrs" type="int_cmpl_quat"> -->
+            <!-- <configure name="USE_MAGNETOMETER" value="FALSE"/> -->
+            <!-- <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/> -->
+            <!-- <define name="AHRS_USE_GPS_HEADING" value="TRUE"/> -->
+            <!-- <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="0" unit="m/s"/> -->
+            <!-- <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0"/> -->
+        <!-- </module> -->
 
         <module name="stabilization" type="indi">
             <define name="INDI_THRUST_ON_PITCH_EFF" value="23.0"/>
