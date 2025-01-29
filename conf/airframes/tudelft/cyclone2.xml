@@ -31,16 +31,11 @@
 
     <firmware name="rotorcraft">
 
-        <!-- <configure name="RTOS_DEBUG" value="1"/>  --> <!-- TODO: Disable or Enable when needed -->
+        <!-- <configure name="RTOS_DEBUG" value="1"/>  -->
         <configure name="PERIODIC_FREQUENCY" value="500"/>
-
+        
         <!-- * REAL FC TARGET * -->
         <target name="ap" board="cube_orange">
-
-            <define name="INS_EXT_POSE_MAG_ID"      value="MAG_RM3100_SENDER_ID"/>
-            <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
-            <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
-            <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
 
             <module name="actuators" type="dummy">
                 <define name="HAL_USE_PWM" value="FALSE"/>
@@ -171,14 +166,17 @@
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
-         <module name="ins" type="ext_pose"/>
 
-        <!-- <module name="ahrs" type="int_cmpl_quat"> -->
-            <!-- <configure name="USE_MAGNETOMETER" value="FALSE"/> -->
+        <module name="ins" type="ext_pose">
+            <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
+            <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
+            <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
+        </module>
+
+        <!-- <module name="ahrs" type="float_cmpl_quat"> -->
+            <!-- <configure name="USE_MAGNETOMETER" value="TRUE"/> -->
             <!-- <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/> -->
-            <!-- <define name="AHRS_USE_GPS_HEADING" value="TRUE"/> -->
-            <!-- <define name="AHRS_HEADING_UPDATE_GPS_MIN_SPEED" value="0" unit="m/s"/> -->
-            <!-- <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0"/> -->
+            <!-- <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0.0"/> -->
         <!-- </module> -->
 
         <module name="stabilization" type="indi">
@@ -329,26 +327,12 @@
         <define name="NAV_DESCEND_VSPEED" value="-0.8"/>
     </section>
 
-    <!-- <section name="AHRS" prefix="AHRS_"> -->
-        <!-- <define name="ICQ_MAG_ID" value="MAG_RM3100_SENDER_ID"/> -->
-        <!-- <define name="AHRS_GRAVITY_UPDATE_COORDINATED_TURN" value="TRUE"/> -->
-        <!--<define name="AHRS_GPS_SPEED_IN_NEGATIVE_Z_DIRECTION" value="TRUE"/>-->
-        <!-- <configure name="AHRS_ALIGNER_LED" value="2"/> -->
-        <!-- <define name="FC_MAG_ID" value="MAG_RM3100_SENDER_ID"/> -->
-        <!-- <define name="HEADING_UPDATE_GPS_MIN_SPEED" value="0"/> -->
-        <!-- <define name="USE_GPS_HEADING" value="TRUE"/> -->
-    <!-- </section> -->
-
     <section name="INS" prefix="INS_">
         <!-- values used if no GPS fix, on 3D fix is update by geo_mag module if loaded -->
         <!-- Delft -->
         <define name="H_X" value="0.3928"/>
         <define name="H_Y" value="-0.0140"/>
         <define name="H_Z" value="0.9195"/>
-
-        <define name="USE_GPS_ALT" value="1"/>
-        <define name="USE_GPS_ALT_SPEED" value="1"/>
-        <define name="VFF_R_GPS" value="0.01"/>
     </section>
 
     <section name="MISC">
