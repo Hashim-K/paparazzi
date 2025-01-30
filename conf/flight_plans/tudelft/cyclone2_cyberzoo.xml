@@ -12,11 +12,14 @@
  
   <waypoints>
     <waypoint lat="51.990631" lon="4.376808" name="HOME"/>
-    <waypoint name="CLIMB" x="0.0" y="0.0"/>
+    <waypoint name="CLIMB" x="1.0" y="1.0"/>
     <waypoint name="STDBY" x="0.0" y="0.0"/>
     <waypoint name="ROPE" x="51.9906304" y="4.3767851"/>
-    <waypoint name="TD" x="0.0" y="0.0"/>
-    <waypoint name="p1" x="1" y="0"/>
+    <waypoint name="TD" x="-1.0" y="-1.0"/>
+    <waypoint name="p1" x="-0.5" y="-1.5"/>
+    <waypoint name="p2" x="-0.5" y="1.5"/>
+    <waypoint name="p3" x="2.5" y="1.5"/>
+    <waypoint name="p4" x="2.5" y="-1.5"/>
     <waypoint lat="51.9905981" lon="4.3767320" name="_CZ1"/>
     <waypoint lat="51.9906672" lon="4.3767327" name="_CZ2"/>
     <waypoint lat="51.9906670" lon="4.3768486" name="_CZ3"/>
@@ -31,7 +34,7 @@
       <corner name="_CZ4"/>
     </sector>
   </sectors>
-  
+
   <blocks>
     <block name="Wait GPS">
       <call_once fun="NavKillThrottle()"/>
@@ -58,6 +61,16 @@
     <block name="Standby" strip_button="Standby" strip_icon="home.png">
       <set value="false" var="force_forward"/>
       <stay wp="STDBY"/>
+    </block>
+    <block name="route">
+      <set value="true" var="force_forward"/>
+      <while cond="true">
+        <go from="p1" hmode="route" wp="p2"/>
+        <go from="p2" hmode="route" wp="p3"/>
+        <go from="p3" hmode="route" wp="p4"/>
+        <go from="p4" hmode="route" wp="p1"/>
+      </while>
+      <deroute block="Standby"/>
     </block>
     <block name="go_p1">
       <set value="false" var="force_forward"/>
