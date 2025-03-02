@@ -59,12 +59,13 @@
                 <define name="MS45XX_SYNC_SEND" value="TRUE"/><!-- TODO: Disable after tuning -->
             </module>
 
-            <!-- <module name="gps" type="ublox"> -->
-                <!-- <configure name="GPS_BAUD" value="B460800"/>UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data -->
+            <!-- For optitrack use gps type datalink-->
+            <!-- <module name="gps" type="datalink"/>    -->
+            <module name="gps" type="ublox">
+                <configure name="GPS_BAUD" value="B460800"/><!-- UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data-->
                 <!-- <define name="USE_GPS_UBX_RTCM" value="TRUE"/> -->
                 <!-- <configure name="UBX2_GPS_PORT" value="UART9"/> -->
-            <!-- </module> -->
-            <module name="gps" type="datalink"/>   
+            </module>
 
             <module name="radio_control" type="sbus">
                     <!-- <configure name="SBUS_PORT" value="UART3"/> -->
@@ -162,22 +163,23 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <!-- <module name="ins" type="extended">
+        <!-- For optitrack use ins ext and comment out ahrs module below-->
+        <!-- <module name="ins" type="ext_pose">
+            <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <module name="ins" type="ext_pose">
-            <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
+        <module name="ins" type="extended">
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module>
 
-        <!-- <module name="ahrs" type="float_cmpl_quat"> -->
-            <!-- <configure name="USE_MAGNETOMETER" value="TRUE"/> -->
-            <!-- <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/> -->
-            <!-- <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0.0"/> -->
-        <!-- </module> -->
+        <module name="ahrs" type="float_cmpl_quat">
+            <configure name="USE_MAGNETOMETER" value="TRUE"/>
+            <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/>
+            <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0.0"/>
+        </module>
 
         <module name="stabilization" type="indi">
             <define name="INDI_THRUST_ON_PITCH_EFF" value="23.0"/>
@@ -291,7 +293,7 @@
         <define name="REF_RATE_Q" value="8.8"/>
         <define name="REF_RATE_R" value="8.8"/>
 
-        <!--Maxium yaw rate, to avoid instability-->
+        <!--Maximum yaw rate, to avoid instability-->
         <define name="MAX_R" value="100.0" unit="deg/s"/>
 
         <define name="ESTIMATION_FILT_CUTOFF" value="4.0"/>
