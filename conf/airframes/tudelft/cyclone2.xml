@@ -202,6 +202,7 @@
             <define name="GUIDANCE_INDI_HEADING_BANK_GAIN" value="15.0"/>
             <define name="GUIDANCE_INDI_SPECIFIC_FORCE_GAIN" value="-500.0"/>
             <define name="GUIDANCE_INDI_THRUST_DYNAMICS_FREQ" value="23.6"/>
+            <define name="GUIDANCE_INDI_FILTER_CUTOFF" value="1.5"/>
         </module>
 
         <module name="nav" type="hybrid">
@@ -337,7 +338,7 @@
 
     <section name="MISC">
         <define name="TAILSITTER" value="TRUE"/>
-        <define name="RADIO_MODE_2x3" value="TRUE"/>
+        <!-- <define name="RADIO_MODE_2x3" value="TRUE"/> -->
         <!--The airframe uses (when TRUE) a slightly different axis system for the setpoint, to make both hovering and flying forward intuitive-->
         <define name="USE_EARTH_BOUND_RC_SETPOINT" value="TRUE"/>
 
