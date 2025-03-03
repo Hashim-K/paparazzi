@@ -163,7 +163,7 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <!-- For optitrack use ins ext and comment out ahrs module below-->
+        <!-- For optitrack use ins ext_pose and comment out ahrs module below-->
         <!-- <module name="ins" type="ext_pose">
             <define name="INS_EXT_POSE_IMU_ID"      value="IMU_CUBE1_ID"/>
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
