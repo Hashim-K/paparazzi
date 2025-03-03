@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 Z=$1  # Number of files to copy
-MOUNT_DIR="/media/ntouev/SDLOG"
+MOUNT_DIR="/media/ntouev/CYCL2_V1_B"
 SRC_DIR="$MOUNT_DIR/FLIGHT_RECORDER"
 DEST_DIR_BASE="/home/ntouev/pprz_temp_logs"
 PAPARAZZI_DIR="$HOME/paparazzi"
@@ -37,26 +37,31 @@ for FILE in $LATEST_FILES; do
     echo "Running $LOGALIZER_CMD $DEST_PATH"
     "$LOGALIZER_CMD" "$DEST_PATH"
 
-    # Find the latest .data and .log files in the Paparazzi log directory
-    LATEST_DATA_FILE=$(ls -t "$LATEST_LOG_DIR"/*.data 2>/dev/null | head -n 1)
-    LATEST_LOG_FILE=$(ls -t "$LATEST_LOG_DIR"/*.log 2>/dev/null | head -n 1)
+    # Find the latest _SD.data and _SD.log files in the Paparazzi log directory
+    LATEST_SD_DATA_FILE=$(ls -t "$LATEST_LOG_DIR"/*_SD.data 2>/dev/null | head -n 1)
+    LATEST_SD_LOG_FILE=$(ls -t "$LATEST_LOG_DIR"/*_SD.log 2>/dev/null | head -n 1)
 
-    if [ -n "$LATEST_DATA_FILE" ]; then
-        DATA_BASENAME=$(basename "$LATEST_DATA_FILE")
-        echo "Moving $LATEST_DATA_FILE to $DEST_DIR"
-        mv "$LATEST_DATA_FILE" "$DEST_DIR/$DATA_BASENAME"
+    if [ -n "$LATEST_SD_DATA_FILE" ]; then
+        SD_DATA_BASENAME=$(basename "$LATEST_SD_DATA_FILE")
+        echo "Moving $LATEST_SD_DATA_FILE to $DEST_DIR"
+        mv "$LATEST_SD_DATA_FILE" "$DEST_DIR/$SD_DATA_BASENAME"
     else
-        echo "No .data file found in $LATEST_LOG_DIR"
+        echo "No _SD.data file found in $LATEST_LOG_DIR"
     fi
 
-    if [ -n "$LATEST_LOG_FILE" ]; then
-        LOG_BASENAME=$(basename "$LATEST_LOG_FILE")
-        echo "Moving $LATEST_LOG_FILE to $DEST_DIR"
-        mv "$LATEST_LOG_FILE" "$DEST_DIR/$LOG_BASENAME"
+    if [ -n "$LATEST_SD_LOG_FILE" ]; then
+        SD_LOG_BASENAME=$(basename "$LATEST_SD_LOG_FILE")
+        echo "Moving $LATEST_SD_LOG_FILE to $DEST_DIR"
+        mv "$LATEST_SD_LOG_FILE" "$DEST_DIR/$SD_LOG_BASENAME"
     else
-        echo "No .log file found in $LATEST_LOG_DIR"
+        echo "No _SD.log file found in $LATEST_LOG_DIR"
     fi
+
 done
+
+# Delete all .tlm files from LATEST_LOG_DIR
+echo "Deleting all .tlm files in $LATEST_LOG_DIR"
+find "$LATEST_LOG_DIR" -type f -name "*.tlm" -exec rm -f {} \;
 
 # Unmount the SDLOG directory
 echo "Unmounting $MOUNT_DIR"
