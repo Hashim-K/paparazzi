@@ -62,9 +62,7 @@
             <!-- For optitrack use gps type datalink-->
             <!-- <module name="gps" type="datalink"/>    -->
             <module name="gps" type="ublox">
-                <configure name="GPS_BAUD" value="B460800"/><!-- UBX message only but rate set to ~?HZ with GPS, GLONASS, BEIDU and GALILEIO at the SAME time is a LOT of GNSS message data-->
-                <!-- <define name="USE_GPS_UBX_RTCM" value="TRUE"/> -->
-                <!-- <configure name="UBX2_GPS_PORT" value="UART9"/> -->
+                <configure name="GPS_BAUD" value="B460800"/>
             </module>
 
             <module name="radio_control" type="sbus">
@@ -237,12 +235,25 @@
     </commands>
 
     <section name="IMU" prefix="IMU_">
-        <define name="MAG_X_NEUTRAL" value="-2183"/>
-        <define name="MAG_Y_NEUTRAL" value="-727"/>
-        <define name="MAG_Z_NEUTRAL" value="-268"/>
-        <define name="MAG_X_SENS" value="0.7468911237108754" integer="16"/>
-        <define name="MAG_Y_SENS" value="0.7054135259990132" integer="16"/>
-        <define name="MAG_Z_SENS" value="0.671669482853358" integer="16"/>
+
+        <define name="IMU_MAG_CALIB" type="array">
+            <field type="struct">
+                <field name="abi_id" value="5"/>
+                <field name="calibrated" type="struct">
+                    <field name="neutral" value="true"/>
+                    <field name="scale" value="true"/>
+                </field>
+                <field name="neutral" type="int[]" value="-2044,169,119"/>
+                <field name="scale" type="int[][]" value="{{5666,15649,36949},{9069,27419,63039}}"/>
+            </field>
+        </define>
+
+        <define name="MAG_X_NEUTRAL" value="-2044"/>
+        <define name="MAG_Y_NEUTRAL" value="169"/>
+        <define name="MAG_Z_NEUTRAL" value="119"/>
+        <define name="MAG_X_SENS" value="0.6247656861993671" integer="16"/>
+        <define name="MAG_Y_SENS" value="0.570735621337003" integer="16"/>
+        <define name="MAG_Z_SENS" value="0.5861292217757148" integer="16"/>
 
         <!-- TODO: Set correct values -->
         <define name="BODY_TO_IMU_PHI" value="0." unit="deg"/>
@@ -254,7 +265,7 @@
         <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
         <define name="MODE_AUTO1" value="AP_MODE_FORWARD"/>
         <define name="MODE_AUTO2" value="AP_MODE_NAV"/>
-        <define name="MODE_AUTO3" value="AP_MODE_ATTITUDE_RC_CLIMB"/>
+        <define name="MODE_AUTO3" value="AP_MODE_HOVER_CLIMB"/>
         <define name="MODE_STARTUP" value="AP_MODE_ATTITUDE_DIRECT"/>
     </section>
 
