@@ -12,6 +12,7 @@
     <waypoint name="p2" x="269.314" y="167.472"/>
     <waypoint name="p3" x="334.002" y="3.987"/>
     <waypoint name="p4" x="168.734" y="-53.325"/>
+    <waypoint name="WP_SPIRAL" x="217.232" y="56.711"/>
     <waypoint name="TD" x="8.207" y="3.905"/>
     <waypoint lat="52.1709" lon="4.41543" name="C1"/>
     <waypoint lat="52.1708" lon="4.4124" name="C2"/>
@@ -36,8 +37,12 @@
       <corner name="C9"/>
     </sector>
   </sectors>
+  <variables>
+    <variable var="climbrate" init="1." min="0." max="5." step="0.1"/>
+    <variable var="circle_radius" init="150." min="50." max="500." step="1."/>
+  </variables>
   <exceptions>
-    <exception cond="Or(!InsideFlyzone(GetPosX(), GetPosY()), GetPosAlt() @GT GetAltRef() + 200) @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
+    <exception cond="Or(!InsideFlyzone(GetPosX(), GetPosY()), GetPosAlt() @GT GetAltRef() + 250) @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
     <exception cond="datalink_time @GT 25 @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point')) @AND !(nav_block == IndexOfBlock('Standby'))" deroute="Standby"/>
   </exceptions>
   <blocks>
@@ -84,6 +89,17 @@
         <go from="p4" hmode="route" wp="p1"/>
       </while>
       <deroute block="stay_p1"/>
+    </block>
+    <block name="circle">
+      <circle radius="circle_radius" wp="WP_SPIRAL"/>
+    </block>
+    <block name="spiral_up">
+      <exception cond="GetPosHeight() @GT 100.0" deroute="spiral_down"/>
+      <circle radius="circle_radius" wp="WP_SPIRAL" vmode="climb" climb="climbrate"/>
+    </block>
+    <block name="spiral_down">
+      <exception cond="GetPosHeight() @LT 60.0" deroute="circle"/>
+      <circle radius="circle_radius" wp="WP_SPIRAL" vmode="climb" climb="-climbrate"/>
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call_once fun="NavSetWaypointHere(WP_TD)"/>
