@@ -166,7 +166,7 @@ static inline void UNUSED nav_advance_carrot(void)
 void nav_run(void)
 {
 
-#if GUIDANCE_H_USE_REF
+#if GUIDANCE_H_USE_REF || NAV_NO_CARROT
   // if GUIDANCE_H_USE_REF, CARROT_DIST is not used
   VECT2_COPY(nav.carrot, nav.target);
 #else

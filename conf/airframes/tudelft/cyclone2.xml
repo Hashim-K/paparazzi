@@ -207,6 +207,7 @@
 
         <module name="nav" type="hybrid">
             <define name="GUIDANCE_H_USE_REF" value="FALSE"/>
+            <define name="NAV_NO_CARROT" value="TRUE"/>
         </module>
 
         <module name="nav" type="survey_hybrid">
