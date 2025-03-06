@@ -96,9 +96,7 @@
         <arg flag="-ac" constant="Cyclone2"/>
         <arg flag="radiomaster_tx12.xml"/>
       </program>
-      <program name="GCS">
-        <arg flag="-layout" constant="bottom_settings.xml"/>
-      </program>
+      <program name="PprzGCS"/>
     </session>
     <session name="Cyclone2 - optitrack">
       <program name="Data Link">
