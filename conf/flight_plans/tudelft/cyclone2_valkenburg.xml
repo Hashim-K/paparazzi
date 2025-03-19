@@ -23,9 +23,17 @@
     <waypoint lat="52.1654" lon="4.42979" name="C7"/>
     <waypoint lat="52.1707" lon="4.42876" name="C8"/>
     <waypoint lat="52.1739" lon="4.4257" name="C9"/>
+    <waypoint lat="52.1705" lon="4.41552" name="S1"/>
+    <waypoint lat="52.1703" lon="4.41257" name="S2"/>
+    <waypoint lat="52.1683" lon="4.4062" name="S3"/>
+    <waypoint lat="52.1637" lon="4.40757" name="S4"/>
+    <waypoint lat="52.1617" lon="4.41027" name="S5"/>
+    <waypoint lat="52.1628" lon="4.42049" name="S6"/>
+    <waypoint lat="52.166" lon="4.42884" name="S7"/>
+    <waypoint lat="52.1732" lon="4.42471" name="S8"/>
   </waypoints>
   <sectors>
-    <sector color="red" name="Flyzone">
+    <sector color="red" name="Hard_Geofence">
       <corner name="C1"/>
       <corner name="C2"/>
       <corner name="C3"/>
@@ -36,13 +44,24 @@
       <corner name="C8"/>
       <corner name="C9"/>
     </sector>
+    <sector color="blue" name="Soft_Geofence">
+      <corner name="S1"/>
+      <corner name="S2"/>
+      <corner name="S3"/>
+      <corner name="S4"/>
+      <corner name="S5"/>
+      <corner name="S6"/>
+      <corner name="S7"/>
+      <corner name="S8"/>
+    </sector>
   </sectors>
   <variables>
     <variable var="climbrate" init="1." min="0." max="5." step="0.1"/>
     <variable var="circle_radius" init="150." min="50." max="500." step="1."/>
   </variables>
   <exceptions>
-    <exception cond="Or(!InsideFlyzone(GetPosX(), GetPosY()), GetPosAlt() @GT GetAltRef() + 250) @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
+    <exception cond="Or(!InsideHard_Geofence(GetPosX(), GetPosY()), GetPosAlt() @GT GetAltRef() + 250) @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point'))" deroute="Holding point"/>
+    <exception cond="Or(!InsideSoft_Geofence(GetPosX(), GetPosY()), GetPosAlt() @GT GetAltRef() + 250) @AND      !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init'))" deroute="Standby"/>
     <exception cond="datalink_time @GT 25 @AND !(nav_block == IndexOfBlock('Wait GPS')) @AND !(nav_block == IndexOfBlock('Geo init')) @AND !(nav_block == IndexOfBlock('Holding point')) @AND !(nav_block == IndexOfBlock('Standby'))" deroute="Standby"/>
   </exceptions>
   <blocks>
