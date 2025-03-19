@@ -55,62 +55,35 @@ static uint8_t serial_act_t4_msg_buf_in[sizeof(struct serial_act_t4_in)*2]__attr
     {
         int16_t motor_1_rpm_int_telemetry = myserial_act_t4_in.motor_1_rpm_int;
         int16_t motor_2_rpm_int_telemetry = myserial_act_t4_in.motor_2_rpm_int;
-        int16_t motor_3_rpm_int_telemetry = myserial_act_t4_in.motor_3_rpm_int;
-        int16_t motor_4_rpm_int_telemetry = myserial_act_t4_in.motor_4_rpm_int;
 
         int16_t motor_1_error_code_int_telemetry = myserial_act_t4_in.motor_1_error_code_int;
         int16_t motor_2_error_code_int_telemetry = myserial_act_t4_in.motor_2_error_code_int;
-        int16_t motor_3_error_code_int_telemetry = myserial_act_t4_in.motor_3_error_code_int;
-        int16_t motor_4_error_code_int_telemetry = myserial_act_t4_in.motor_4_error_code_int;
 
         int16_t motor_1_current_int_telemetry = myserial_act_t4_in.motor_1_current_int;
         int16_t motor_2_current_int_telemetry = myserial_act_t4_in.motor_2_current_int;
-        int16_t motor_3_current_int_telemetry = myserial_act_t4_in.motor_3_current_int;
-        int16_t motor_4_current_int_telemetry = myserial_act_t4_in.motor_4_current_int;
 
         int16_t motor_1_voltage_int_telemetry = myserial_act_t4_in.motor_1_voltage_int;
         int16_t motor_2_voltage_int_telemetry = myserial_act_t4_in.motor_2_voltage_int;
-        int16_t motor_3_voltage_int_telemetry = myserial_act_t4_in.motor_3_voltage_int;
-        int16_t motor_4_voltage_int_telemetry = myserial_act_t4_in.motor_4_voltage_int;
 
         int16_t rotor_1_az_angle_int_telemetry = myserial_act_t4_in.servo_1_angle_int;
-        int16_t rotor_1_el_angle_int_telemetry = myserial_act_t4_in.servo_2_angle_int;
         int16_t rotor_2_az_angle_int_telemetry = myserial_act_t4_in.servo_5_angle_int;
-        int16_t rotor_2_el_angle_int_telemetry = myserial_act_t4_in.servo_6_angle_int;
-        int16_t rotor_3_az_angle_int_telemetry = myserial_act_t4_in.servo_7_angle_int; 
-        int16_t rotor_3_el_angle_int_telemetry = myserial_act_t4_in.servo_8_angle_int;
-        int16_t rotor_4_az_angle_int_telemetry = myserial_act_t4_in.servo_3_angle_int;
-        int16_t rotor_4_el_angle_int_telemetry = myserial_act_t4_in.servo_4_angle_int;
-        int16_t servo_9_angle_int_telemetry = myserial_act_t4_in.servo_9_angle_int;
-        int16_t servo_10_angle_int_telemetry = myserial_act_t4_in.servo_10_angle_int;
 
         int16_t rotor_1_az_angle_update_time_us_telemetry = myserial_act_t4_in.servo_1_update_time_us;
-        int16_t rotor_1_el_angle_update_time_us_telemetry = myserial_act_t4_in.servo_2_update_time_us;
         int16_t rotor_2_az_angle_update_time_us_telemetry = myserial_act_t4_in.servo_5_update_time_us;
-        int16_t rotor_2_el_angle_update_time_us_telemetry = myserial_act_t4_in.servo_6_update_time_us;
-        int16_t rotor_3_az_angle_update_time_us_telemetry = myserial_act_t4_in.servo_7_update_time_us;
-        int16_t rotor_3_el_angle_update_time_us_telemetry = myserial_act_t4_in.servo_8_update_time_us;
-        int16_t rotor_4_az_angle_update_time_us_telemetry = myserial_act_t4_in.servo_3_update_time_us;
-        int16_t rotor_4_el_angle_update_time_us_telemetry = myserial_act_t4_in.servo_4_update_time_us;
-        int16_t servo_9_update_time_us_telemetry = myserial_act_t4_in.servo_9_update_time_us;
-        int16_t servo_10_update_time_us_telemetry = myserial_act_t4_in.servo_10_update_time_us;
+
         float rolling_msg_in_telemetry = myserial_act_t4_in.rolling_msg_in;
         uint8_t rolling_msg_in_id_telemetry = myserial_act_t4_in.rolling_msg_in_id; 
 
 
         pprz_msg_send_SERIAL_ACT_T4_IN(trans, dev, AC_ID, 
-                &motor_1_rpm_int_telemetry, &motor_2_rpm_int_telemetry, &motor_3_rpm_int_telemetry, &motor_4_rpm_int_telemetry,
-                &rotor_1_az_angle_int_telemetry, &rotor_1_el_angle_int_telemetry, &rotor_2_az_angle_int_telemetry, &rotor_2_el_angle_int_telemetry,
-                &rotor_3_az_angle_int_telemetry, &rotor_3_el_angle_int_telemetry, &rotor_4_az_angle_int_telemetry, &rotor_4_el_angle_int_telemetry,
-                &servo_9_angle_int_telemetry, &servo_10_angle_int_telemetry, 
+                &motor_1_rpm_int_telemetry, &motor_2_rpm_int_telemetry,
+                &rotor_1_az_angle_int_telemetry, &rotor_2_az_angle_int_telemetry,
                 &serial_act_t4_missed_packets_in, &serial_act_t4_message_frequency_in,
                 &rolling_msg_in_telemetry, &rolling_msg_in_id_telemetry,
-                &motor_1_error_code_int_telemetry, &motor_2_error_code_int_telemetry, &motor_3_error_code_int_telemetry, &motor_4_error_code_int_telemetry,
-                &rotor_1_az_angle_update_time_us_telemetry, &rotor_1_el_angle_update_time_us_telemetry, &rotor_2_az_angle_update_time_us_telemetry, &rotor_2_el_angle_update_time_us_telemetry,
-                &rotor_3_az_angle_update_time_us_telemetry, &rotor_3_el_angle_update_time_us_telemetry, &rotor_4_az_angle_update_time_us_telemetry, &rotor_4_el_angle_update_time_us_telemetry,
-                &servo_9_update_time_us_telemetry, &servo_10_update_time_us_telemetry,
-                &motor_1_current_int_telemetry, &motor_2_current_int_telemetry, &motor_3_current_int_telemetry, &motor_4_current_int_telemetry,
-                &motor_1_voltage_int_telemetry, &motor_2_voltage_int_telemetry, &motor_3_voltage_int_telemetry, &motor_4_voltage_int_telemetry);
+                &motor_1_error_code_int_telemetry, &motor_2_error_code_int_telemetry,
+                &rotor_1_az_angle_update_time_us_telemetry, &rotor_2_az_angle_update_time_us_telemetry,
+                &motor_1_current_int_telemetry, &motor_2_current_int_telemetry,
+                &motor_1_voltage_int_telemetry, &motor_2_voltage_int_telemetry);
     }
 
     static void serial_act_t4_uplink(struct transport_tx *trans, struct link_device *dev)
@@ -120,29 +93,17 @@ static uint8_t serial_act_t4_msg_buf_in[sizeof(struct serial_act_t4_in)*2]__attr
     int8_t servo_arm_int_telemetry = myserial_act_t4_out.servo_arm_int;
     int16_t motor_1_dshot_cmd_int_telemetry = myserial_act_t4_out.motor_1_dshot_cmd_int; 
     int16_t motor_2_dshot_cmd_int_telemetry = myserial_act_t4_out.motor_2_dshot_cmd_int; 
-    int16_t motor_3_dshot_cmd_int_telemetry = myserial_act_t4_out.motor_3_dshot_cmd_int; 
-    int16_t motor_4_dshot_cmd_int_telemetry = myserial_act_t4_out.motor_4_dshot_cmd_int; 
 
     int16_t rotor_1_az_angle_cmd_int_telemetry = myserial_act_t4_out.servo_1_cmd_int; 
-    int16_t rotor_1_el_angle_cmd_int_telemetry = myserial_act_t4_out.servo_2_cmd_int;  
     int16_t rotor_2_az_angle_cmd_int_telemetry = myserial_act_t4_out.servo_5_cmd_int; 
-    int16_t rotor_2_el_angle_cmd_int_telemetry = myserial_act_t4_out.servo_6_cmd_int; 
-    int16_t rotor_3_az_angle_cmd_int_telemetry = myserial_act_t4_out.servo_7_cmd_int; 
-    int16_t rotor_3_el_angle_cmd_int_telemetry = myserial_act_t4_out.servo_8_cmd_int; 
-    int16_t rotor_4_az_angle_cmd_int_telemetry = myserial_act_t4_out.servo_3_cmd_int; 
-    int16_t rotor_4_el_angle_cmd_int_telemetry = myserial_act_t4_out.servo_4_cmd_int;  
-    int16_t servo_9_cmd_int_telemetry = myserial_act_t4_out.servo_9_cmd_int; 
-    int16_t servo_10_cmd_int_telemetry = myserial_act_t4_out.servo_10_cmd_int;
 
     float rolling_msg_out_telemetry = myserial_act_t4_out.rolling_msg_out;
     uint8_t rolling_msg_out_id_telemetry = myserial_act_t4_out.rolling_msg_out_id;
 
 	   pprz_msg_send_SERIAL_ACT_T4_OUT(trans, dev, AC_ID, 
                     &motor_arm_int_telemetry, &servo_arm_int_telemetry,
-                    &motor_1_dshot_cmd_int_telemetry, &motor_2_dshot_cmd_int_telemetry, &motor_3_dshot_cmd_int_telemetry, &motor_4_dshot_cmd_int_telemetry, 
-                    &rotor_1_az_angle_cmd_int_telemetry, &rotor_1_el_angle_cmd_int_telemetry, &rotor_2_az_angle_cmd_int_telemetry, &rotor_2_el_angle_cmd_int_telemetry, 
-                    &rotor_3_az_angle_cmd_int_telemetry, &rotor_3_el_angle_cmd_int_telemetry, &rotor_4_az_angle_cmd_int_telemetry, &rotor_4_el_angle_cmd_int_telemetry, 
-                    &servo_9_cmd_int_telemetry, &servo_10_cmd_int_telemetry, 
+                    &motor_1_dshot_cmd_int_telemetry, &motor_2_dshot_cmd_int_telemetry, 
+                    &rotor_1_az_angle_cmd_int_telemetry, &rotor_2_az_angle_cmd_int_telemetry, 
                     &rolling_msg_out_telemetry, &rolling_msg_out_id_telemetry);
 
     }
