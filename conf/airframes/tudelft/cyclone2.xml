@@ -174,11 +174,11 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <module name="ahrs" type="float_cmpl_quat">
+        <!-- <module name="ahrs" type="float_cmpl_quat">
             <configure name="USE_MAGNETOMETER" value="TRUE"/>
             <define name="AHRS_MAG_UPDATE_ALL_AXES" value="FALSE"/>
             <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="0.0"/>
-        </module>
+        </module> -->
 
         <module name="stabilization" type="indi">
             <define name="INDI_THRUST_ON_PITCH_EFF" value="23.0"/>
