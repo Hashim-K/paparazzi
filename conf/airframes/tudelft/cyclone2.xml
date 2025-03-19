@@ -121,7 +121,7 @@
 
             <!-- Use the external mag (not in NPS target as then it needs to listen to all) -->
             <define name="INS_FINV_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
-            <define name="INS_EKF2_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
+            <!-- <define name="INS_EKF2_MAG_ID" value="MAG_RM3100_SENDER_ID"/> -->
             <define name="AHRS_ICQ_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
         </target> <!-- * REAL FC TARGET * -->
 
@@ -153,13 +153,14 @@
 
         <module name="geo_mag"/>
 
-        <!-- <module name="ins" type="ekf2">
+        <module name="ins" type="ekf2">
             <define name="INS_EKF2_MAG_ID" value="MAG_RM3100_SENDER_ID"/>
             <define name="INS_EKF2_ACCEL_ID" value="IMU_CUBE1_ID"/>
             <define name="INS_EKF2_GYRO_ID" value="IMU_CUBE1_ID"/>
+            <define name="INS_EKF2_IMU_ID" value="IMU_CUBE1_ID"/>
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
-        </module> -->
+        </module>
 
         <!-- For optitrack use ins ext_pose and comment out ahrs module below-->
         <!-- <module name="ins" type="ext_pose">
@@ -168,10 +169,10 @@
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
         </module> -->
 
-        <module name="ins" type="extended">
+        <!-- <module name="ins" type="extended">
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE1_ID"/>
             <define name="IMU_ACCEL_ABI_SEND_ID"    value= "IMU_CUBE1_ID"/>
-        </module>
+        </module> -->
 
         <module name="ahrs" type="float_cmpl_quat">
             <configure name="USE_MAGNETOMETER" value="TRUE"/>
@@ -423,6 +424,7 @@
         <item name="No physical damage">Check for no physical damage</item>
         <item name="Battery Voltage">Check drone's battery voltage</item>
         <item name="RC Battery">Check the RC battery</item>
+        <item name="RC Switches">Check the RC switches position</item>
         <item name="Attitude">Check attitude</item>
         <item name="Heading">Check heading</item>
         <item name="Airspeed">Calibrate airspeed sensor</item>
