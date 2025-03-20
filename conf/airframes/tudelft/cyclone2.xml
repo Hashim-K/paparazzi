@@ -110,13 +110,13 @@
 
             <module name="eff_scheduling_cyfoam">
                 <define name="SQUARED_ROLL_EFF" value="0.0022"/> <!-- ??? -->
-                <define name="PITCH_EFF_AT_60" value="5.5"/>
-                <define name="YAW_EFF_AT_60" value="3"/>
+                <define name="PITCH_EFF_AT_60" value="7"/>
+                <define name="YAW_EFF_AT_60" value="3.7"/>
                 <!--function of the form: A + B*airspeed^2-->
-                <define name="CE_PITCH_A" value="3.042"/>
-                <define name="CE_PITCH_B" value="0.0444"/>
-                <define name="CE_YAW_A" value="-0.5"/>
-                <define name="CE_YAW_B" value="0.07"/>
+                <define name="CE_PITCH_A" value="4.5"/>
+                <define name="CE_PITCH_B" value="0.04"/>
+                <define name="CE_YAW_A" value="1.07"/>
+                <define name="CE_YAW_B" value="0.065"/>
             </module>
 
             <!-- Use the external mag (not in NPS target as then it needs to listen to all) -->
@@ -293,8 +293,8 @@
     <section name="STABILIZATION_ATTITUDE_INDI" prefix="STABILIZATION_INDI_">
         <!-- control effectiveness, scaled by INDI_G_SCALING (1000)-->
         <define name="G1_ROLL"   value="{   0,    0,   -10,   10}"/>
-        <define name="G1_PITCH"  value="{-3.5,  3.5,      0,     0}"/>
-        <define name="G1_YAW"    value="{-2, -2,    0.0,   0.0}"/>
+        <define name="G1_PITCH"  value="{-4.7,  4.7,      0,     0}"/>
+        <define name="G1_YAW"    value="{-2.7, -2.7,    0.0,   0.0}"/>
         <define name="G1_THRUST" value="{   0,    0,   -1.5,  -1.5}"/>
         <!--Counter torque effect of spinning up a rotor-->
         <define name="G2" value="{0, 0, 0, 0}"/>
