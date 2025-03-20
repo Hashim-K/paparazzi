@@ -76,5 +76,14 @@
       <set value="false" var="force_forward"/>
       <stay wp="p1"/>
     </block>
+    <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
+      <call_once fun="NavSetWaypointHere(WP_TD)"/>
+    </block>
+    <block name="flare">
+      <stay climb="nav.descend_vspeed" vmode="climb" wp="TD"/>
+    </block>
+    <block name="landed">
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
   </blocks>
 </flight_plan>
