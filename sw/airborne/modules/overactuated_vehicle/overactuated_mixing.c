@@ -149,15 +149,93 @@ void overactuated_mixing_run(void)
 /**
  * Run the overactuated mixing
  */
+bool armed = false;
+bool initiate_steps = false;
+bool initiate_sweep = false;
+
+float sweep_duration;
+float freq_low;
+float freq_high;
+float amplitude;
+
+int32_t step_duration;
+int32_t step_perc_low;
+int32_t step_perc_high;
+int32_t nbr_steps;
+
 void assign_and_send_cmds(void)
 {
-  //Send values to FBW system:
+  int16_t throttle_level_pprz = 0;
+  static uint32_t cnt_sweep = 0;
+  static uint32_t cnt_step = 0;
+  static int16_t prev_throttle_level_pprz = 0;
+  static float prev_angle = 0;
+
   struct serial_act_t4_out myserial_act_t4_out_local;
   float serial_act_t4_extra_data_out_local[255] __attribute__((aligned));
+
+  // - 1st value is at perc_low and then does x steps reaching almost to the 
+  // perc_high value. The difference is due to integer division below (this is intentional).
+  // - Giving a perc_high lower than perc_low the steps are done downward.
+  // - step duration 0 -> perc_low constant throttle
+  if (!initiate_sweep) {
+    if (initiate_steps) {
+      cnt_step++;
+      
+      int step = cnt_step / (500 * step_duration);
+      if (step <= nbr_steps) {
+        int32_t step_perc = (step_perc_high - step_perc_low)/nbr_steps;
+        throttle_level_pprz = (int16_t)(2000/100 * (step * step_perc + step_perc_low));
+      } else {
+        if (prev_throttle_level_pprz > 0) {
+          throttle_level_pprz = prev_throttle_level_pprz - 1; //ramp down to 0
+        } else {
+          initiate_steps = 0;
+        }
+      }
+    }
+    else {
+      throttle_level_pprz = 0;
+      cnt_step = 0;
+    }
+  }
+
+  if (!initiate_steps) {
+    if (initiate_sweep) {
+      cnt_sweep++;
+      float time = cnt_sweep/500;
+
+      float freq = freq_low + (freq_high - freq_low) * (time / sweep_duration);
+      if (time < sweep_duration) {
+          float angle = prev_angle + 2 * 3.14 * freq * 0.002;
+          float sine_value = amplitude * sinf(angle) + 1000;  // Sine wave equation
+          throttle_level_pprz = (int16_t)sine_value;
+          prev_angle = angle;
+      } else {
+        if (prev_throttle_level_pprz > 0) {
+          throttle_level_pprz = prev_throttle_level_pprz - 1; //ramp down to 0
+        }
+        else {
+          initiate_sweep = 0;
+        }
+      }
+    }
+    else {
+      throttle_level_pprz = 0;
+      cnt_sweep = 0;
+      prev_angle = 0;
+    }
+  }
+
+  prev_throttle_level_pprz = throttle_level_pprz;
+
+  // Send values to FBW system:
+  // struct serial_act_t4_out myserial_act_t4_out_local;
+  // float serial_act_t4_extra_data_out_local[255] __attribute__((aligned));
   for(int i = 0; i<254; i++){
     serial_act_t4_extra_data_out_local[i] = 0.0f;
   }
-  if(autopilot_get_motors_on()) {
+  if(armed) {
     //Arm motor:
     myserial_act_t4_out_local.motor_arm_int = 1;
   }
@@ -167,15 +245,19 @@ void assign_and_send_cmds(void)
   }
   myserial_act_t4_out_local.servo_arm_int = 1;
 
-  myserial_act_t4_out_local.motor_1_dshot_cmd_int = (int16_t) ((2*actuators_pprz[2])/9.6);
-  myserial_act_t4_out_local.motor_2_dshot_cmd_int = (int16_t) ((2*actuators_pprz[3])/9.6);
+  // myserial_act_t4_out_local.motor_1_dshot_cmd_int = (int16_t) ((2*actuators_pprz[2])/9.6);
+  // myserial_act_t4_out_local.motor_2_dshot_cmd_int = (int16_t) ((2*actuators_pprz[3])/9.6);
+  myserial_act_t4_out_local.motor_1_dshot_cmd_int = throttle_level_pprz;
+  myserial_act_t4_out_local.motor_2_dshot_cmd_int = 0;
   myserial_act_t4_out_local.motor_3_dshot_cmd_int = (int16_t) (0);
   myserial_act_t4_out_local.motor_4_dshot_cmd_int = (int16_t) (0);
 
-  if(autopilot_get_motors_on()) {
+  if(armed) {
     //Arm servos:
-    myserial_act_t4_out_local.servo_1_cmd_int = (int16_t) ((actuators_pprz[0])/96.0)*MAX_RANGE_SERVOS_DEG;
-    myserial_act_t4_out_local.servo_5_cmd_int = (int16_t) ((actuators_pprz[1])/96.0)*MAX_RANGE_SERVOS_DEG;
+    // myserial_act_t4_out_local.servo_1_cmd_int = (int16_t) ((actuators_pprz[0])/96.0)*MAX_RANGE_SERVOS_DEG;
+    // myserial_act_t4_out_local.servo_5_cmd_int = (int16_t) ((actuators_pprz[1])/96.0)*MAX_RANGE_SERVOS_DEG;
+    myserial_act_t4_out_local.servo_1_cmd_int = 0;
+    myserial_act_t4_out_local.servo_5_cmd_int = 0;
   }
   else {
     //Disarm servos:

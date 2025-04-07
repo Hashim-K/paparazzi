@@ -35,7 +35,7 @@
         <configure name="PERIODIC_FREQUENCY" value="500"/>
         
         <!-- * REAL FC TARGET * -->
-        <target name="ap" board="cube_orange">
+        <target name="ap" board="cube_orangeplus">
 
             <module name="actuators" type="dummy">
                 <define name="HAL_USE_PWM" value="FALSE"/>
@@ -63,6 +63,8 @@
             <!-- <module name="gps" type="datalink"/>    -->
             <module name="gps" type="ublox">
                 <configure name="GPS_BAUD" value="B460800"/>
+                <!-- <define name="USE_GPS_UBX_RTCM" value="TRUE"/> -->
+                <configure name="UBX2_GPS_PORT" value=""/>
             </module>
 
             <module name="radio_control" type="sbus">

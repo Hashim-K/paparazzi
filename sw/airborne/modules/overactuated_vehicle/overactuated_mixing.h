@@ -36,4 +36,16 @@ extern void overactuated_mixing_init(void);
 extern void overactuated_mixing_run(void);
 extern void assign_and_send_cmds(void);
 
+extern bool armed;
+extern bool initiate_steps;
+extern bool initiate_sweep;
+extern float sweep_duration;
+extern float freq_low;
+extern float freq_high;
+extern float amplitude;
+extern int32_t step_duration;
+extern int32_t step_perc_low;
+extern int32_t step_perc_high;
+extern int32_t nbr_steps;
+
 #endif
