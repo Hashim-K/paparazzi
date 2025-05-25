@@ -29,9 +29,17 @@ include ../../Makefile.ocaml
 OCAMLPATH:=$(shell echo $(PAPARAZZI_SRC)/sw/ground_segment/cockpit/lib:$(OCAMLPATH))
 export OCAMLPATH
 
+ifneq ($(USE_LABELGTK),lablgtk2)
+all :
+	@echo Skipping legacy GCS build \(missing lablgtk2\)
+
+opt :
+	@echo Skipping legacy GCS.opt build \(missing lablgtk2\)
+
+else
 INCLUDES=
-PKG = -package pprzlink,gcslib
-LINKPKG = $(PKG) -linkpkg -dllpath-pkg pprzlink,gcslib,pprz
+PKG = -package lablgtk2,pprzlink,gcslib
+LINKPKG = $(PKG) -linkpkg -dllpath-pkg lablgtk2,pprzlink,gcslib,pprz
 
 LABLGTK2INIT = $(shell ocamlfind query -p-format lablgtk2.init 2>/dev/null)
 ifeq ($(LABLGTK2INIT),)
@@ -39,6 +47,7 @@ LABLGTK2INIT = $(shell ocamlfind query -p-format lablgtk2.auto-init 2>/dev/null)
 endif
 
 LABLGTK2GLADE = $(shell ocamlfind query -p-format lablgtk2.glade 2>/dev/null)
+LABLGTK2CANVAS = $(shell ocamlfind query -p-format lablgtk2-gnome.gnomecanvas 2>/dev/null)
 
 ML= gtk_setting_time.ml gtk_strip.ml horizon.ml strip.ml gtk_save_settings.ml saveSettings.ml page_settings.ml pages.ml speech.ml plugin.ml sectors.ml map2d.ml editFP.ml intruders.ml shapes.ml live.ml particules.ml papgets.ml gcs.ml
 MAIN=gcs
@@ -64,10 +73,22 @@ opt :
 	@echo Skipping legacy GCS.opt build \(missing lablgtk2.glade\)
 
 else
+
+ifeq ($(LABLGTK2CANVAS),)
+
+all :
+	@echo Skipping legacy GCS build \(missing lablgtk2-gnome.gnomecanvas\)
+
+opt :
+	@echo Skipping legacy GCS.opt build \(missing lablgtk2-gnome.gnomecanvas\)
+
+else
 all : $(MAIN)
 
 opt : $(MAIN).opt
 
+endif
+endif
 endif
 endif
 

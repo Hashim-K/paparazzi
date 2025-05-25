@@ -66,20 +66,16 @@ config file.
 
   <variables>
     <!-- manual by default and when pressing X, AUTO1 on Square, AUTO2 on Triangle -->
-    <var name="mode" default="0"/>
-    <set var="mode" value="0" on_event="X"/>
-    <set var="mode" value="1" on_event="Square"/>
-    <set var="mode" value="2" on_event="Triangle"/>
+    <var name="mode" default="-127"/>
+    <set var="mode" value="-127" on_event="X"/>
+    <set var="mode" value="0" on_event="Square"/>
+    <set var="mode" value="127" on_event="Triangle"/>
   </variables>
 
   <messages period="0.05">
 
-    <message class="datalink" name="RC_4CH" send_always="true">
-      <field name="mode" value="mode"/>
-      <field name="throttle" value="Fit(-LeftStickVertical,-127,127,0,127)"/>
-      <field name="roll" value="RightStickHorizontal"/>
-      <field name="pitch" value="RightStickVertical"/>
-      <field name="yaw" value="LeftStickHorizontal"/>
+    <message class="datalink" name="RC_UP" send_always="true">
+      <field name="channels" value="RightStickHorizontal;RightStickVertical;LeftStickHorizontal;Fit(-LeftStickVertical,-127,127,0,127);mode"/>
     </message>
 
     <!-- go to "Start Engine" block if in AUTO2 and pressing Options button -->

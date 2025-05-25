@@ -1,0 +1,101 @@
+
+<!DOCTYPE flight_plan SYSTEM "flight_plan.dtd">
+
+<flight_plan alt="720.5" ground_alt="720" lat0="37.296981" lon0="-3.683133" max_dist_from_home="200" name="Rotorcraft GVF" security_height="0.1">
+
+  <waypoints>
+    <waypoint name="HOME" x="0.0" y="0.0"/>
+    <!--waypoint name="STDBY" x="0.0" y="0.0"/-->
+    <waypoint name="S1_START" lat="37.2972243" lon="-3.6831055"/>
+    <waypoint name="S1_END" lat="37.2974372" lon="-3.6825632"/>
+    <!--waypoint name="TD" x="0.0" y="0.0"/-->
+  </waypoints>
+
+  <variables>
+    <variable var="nominal_alt" init="0.5" type="float" min="0." max="10." step="0.1"/>
+  </variables>
+
+  <modules>
+    <module name="gvf_classic">
+      <define name="GVF_OCAML_GCS" value="FALSE"/>
+      
+      <define name="GVF_ELLIPSE_A" value="8"/>
+      <define name="GVF_ELLIPSE_B" value="8"/>
+      <define name="GVF_LINE_KE" value="15"/>
+    </module>
+    
+    <!--module name="gvf_parametric"/--> <!-- Not implemented yet -->
+  </modules>
+
+  <blocks>
+
+    <!-- ## INIT ## -->
+
+    <block name="FPInit">
+      <call_once fun="NavKillThrottle()"/>
+      <while cond="!GpsFixValid()"/>
+      <while cond="TRUE"/>
+    </block>
+
+    <block name="Holding point">
+      <call_once fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+
+    <block name="Start Engine" strip_button="Start Engine" strip_icon="resurrect.png" group="home">
+      <call_once fun="NavResurrect()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+    </block>
+
+    <!-- ## AUTO TAKEOFF ## -->
+
+    <block name="Take off" strip_button="Takeoff" strip_icon="takeoff.png" group="home">
+      <call_once fun="NavVerticalAltitudeMode(nominal_alt, 0.0)"/>
+    </block>
+
+    <block name="Standby" strip_button="Standby" strip_icon="home.png" group="home">
+      <stay wp="HOME"/>
+    </block>
+
+    <!-- ## MISSION ## -->
+
+    <block name="GVF Line STBY_S1" strip_icon="line.png"> 
+      <call_once fun="NavVerticalAltitudeMode(nominal_alt, 0.0)"/>
+      <call fun="nav_gvf_line_wp1_wp2(WP_HOME, WP_S1_START)"/>
+    </block>
+    
+    <block name="GVF Segment S1" strip_icon="line.png"> 
+      <call_once fun="NavVerticalAltitudeMode(nominal_alt, 0.0)"/>
+      <call fun="nav_gvf_segment_loop_wp1_wp2(WP_S1_START, WP_S1_END, gvf_segment_par.d1, gvf_segment_par.d2)"/>
+    </block>
+
+    <block name="GVF Ellipse HOME">
+      <call_once fun="NavVerticalAltitudeMode(nominal_alt, 0.0)"/>
+      <call fun="nav_gvf_ellipse_wp(WP_HOME, gvf_ellipse_par.a, gvf_ellipse_par.b, gvf_ellipse_par.alpha)"/>
+    </block>
+
+    <!-- ## AUTO LANDING ## -->
+
+    <block name="Land here" key="l" strip_button="Land Here" strip_icon="land-right.png">
+      <call_once fun="NavSetWaypointHere(WP_HOME)"/>
+    </block>
+
+    <block name="Land">
+      <go wp="HOME"/>
+    </block>
+
+    <block name="Land Target" strip_button="Land Target" group="target">
+      <exception cond="!nav_is_in_flight()" deroute="Kill Engine"/>
+      <stay climb="nav.descend_vspeed" vmode="climb" wp="HOME"/>
+    </block>
+
+    <block name="Kill Engine" key="k">
+      <call_once fun="NavKillThrottle()"/>
+      <while cond="1"/>
+    </block>
+
+    <!-- ########################### -->
+
+  </blocks>
+
+</flight_plan>

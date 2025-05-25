@@ -52,20 +52,16 @@ The "mode" button swaps the axes on the left stick and the d pad.
 
 <variables>
   <!-- manual by default and when pressing A, AUTO1 on B, AUTO2 on Y -->
-  <var name="mode" default="2"/>
-  <set var="mode" value="0" on_event="b0"/>
-  <set var="mode" value="1" on_event="b1"/>
-  <set var="mode" value="2" on_event="b3"/>
+  <var name="mode" default="127"/>
+  <set var="mode" value="-127" on_event="b0"/>
+  <set var="mode" value="0" on_event="b1"/>
+  <set var="mode" value="127" on_event="b3"/>
 </variables>
 
 <messages period="0.017">
 
-  <message class="datalink" name="RC_4CH" send_always="true">
-   <field name="mode" value="mode"/>
-   <field name="throttle" value="Fit(0-ly,-127,127,0,127)"/>
-   <field name="roll" value="rx"/>
-   <field name="yaw" value="Fit(lx,-127,127,-64,64)"/>
-   <field name="pitch" value="ry"/>
+  <message class="datalink" name="RC_UP" send_always="true">
+    <field name="channels" value="rx;ry;Fit(lx,-127,127,-64,64);Fit(0-ly,-127,127,0,127);mode"/>
   </message>
 
   <!-- trim commands -->
