@@ -714,6 +714,9 @@ void stabilization_indi_rate_run(bool in_flight, struct StabilizationSetpoint *s
   /*Commit the actuator command*/
   for (i = 0; i < INDI_NUM_ACT; i++) {
     actuators_pprz[i] = (int16_t) indi_u[i];
+#if STABILIZATION_INDI_USE_COMMANDS
+    cmd[i] = (int16_t) indi_u[i]; // Requires an override for the default implementation of set_rotorcraft_commands() function in autopilot_utils
+#endif
   }
 
   //update thrust command such that the current is correctly estimated
