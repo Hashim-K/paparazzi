@@ -52,7 +52,7 @@
 	url = https://github.com/PX4/Matrix.git
 [submodule "sw/ext/dronecan/DSDL"]
 	path = sw/ext/dronecan/DSDL
-	url = https://github.com/dronecan/DSDL.git
+	url = https://github.com/hashim-k/DSDL.git
 [submodule "sw/ext/dronecan/dronecan_dsdlc"]
 	path = sw/ext/dronecan/dronecan_dsdlc
 	url = https://github.com/dronecan/dronecan_dsdlc.git
