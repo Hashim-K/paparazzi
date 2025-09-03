@@ -1,0 +1,44 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="feetech_rotmech" dir="rotwing_drone" task="sensors">
+  <doc>
+    <description>
+      Feetech rotating mechanism (wing skew) over DroneCAN.
+      Subscribes to com.feetech.servo.Status and publishes wing rotation over ABI (WING_ROTATION).
+    </description>
+    <configure name="FEETECH_ROTMECH_ACTUATOR_ID" value="1" description="Feetech servo actuator_id to accept"/>
+  </doc>
+  <settings>
+    <dl_settings>
+      <dl_settings name="FeetechRotmech">
+        <!-- Match SuperCAN config fields -->
+        <dl_setting var="feetech_cfg_can_freq" min="0.1" max="1000.0" step="0.1" shortname="can_hz" module="rotwing_drone/feetech_rotmech" handler="cmd_can_freq_hz"/>
+        <dl_setting var="feetech_cfg_log_level" min="0" max="1" step="1" values="SHORT|LONG" shortname="log" module="rotwing_drone/feetech_rotmech" handler="cmd_log_level"/>
+        <!-- <dl_setting var="feetech_cfg_serial_freq" min="1.0" max="1000.0" step="1.0" shortname="ser_hz" module="rotwing_drone/feetech_rotmech" handler="cmd_serial_freq_hz"/> -->
+        <!-- <dl_setting var="feetech_cfg_min_angle" min="0" max="180" step="1" shortname="min_ang" module="rotwing_drone/feetech_rotmech" handler="cmd_min_angle"/> -->
+        <!-- <dl_setting var="feetech_cfg_max_angle" min="0" max="180" step="1" shortname="max_ang" module="rotwing_drone/feetech_rotmech" handler="cmd_max_angle"/> -->
+
+        <!-- Command helpers -->
+        <dl_setting var="feetech_cfg_arm" min="0" max="1" step="1" values="DISARM|ARM" shortname="arm" module="rotwing_drone/feetech_rotmech" handler="cmd_arm"/>
+        <dl_setting var="feetech_cfg_target_angle" min="0" max="18000" step="100" shortname="angle" module="rotwing_drone/feetech_rotmech" handler="cmd_target_angle_deg"/>
+      </dl_settings>
+    </dl_settings>
+  </settings>
+  <dep>
+    <depends>uavcan</depends>
+  </dep>
+  <header>
+    <file name="feetech_rotmech.h"/>
+  </header>
+  <init fun="feetech_rotmech_init()"/>
+  <makefile target="ap">
+    <file name="feetech_rotmech.c"/>
+
+    <!-- Load DSDL generated files for Feetech messages -->
+    <include name="$(PAPARAZZI_HOME)/var/include/DSDLcode/include"/>
+    <file name="com.feetech.servo.Instruction.c" dir="$(PAPARAZZI_HOME)/var/include/DSDLcode/src"/>
+    <file name="com.feetech.servo.Config.c" dir="$(PAPARAZZI_HOME)/var/include/DSDLcode/src"/>
+    <file name="com.feetech.servo.Status.c" dir="$(PAPARAZZI_HOME)/var/include/DSDLcode/src"/>
+    <file name="com.feetech.servo.Debug.c" dir="$(PAPARAZZI_HOME)/var/include/DSDLcode/src"/>
+  </makefile>
+</module>

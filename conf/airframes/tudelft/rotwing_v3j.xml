@@ -40,7 +40,7 @@
             <!-- EKF2 configure inputs -->
             <define name="INS_EKF2_GYRO_ID"     value="IMU_CUBE2_ID"/>
             <define name="INS_EKF2_ACCEL_ID"    value="IMU_CUBE2_ID"/>
-            <define name="INS_EKF2_MAG_ID"      value="MAG_RM3100_SENDER_ID"/>
+            <define name="INS_EKF2_MAG_ID"      value="2"/>
 
             <!--Only send gyro and accel that is being used-->
             <define name="IMU_GYRO_ABI_SEND_ID"     value= "IMU_CUBE2_ID"/>
@@ -80,6 +80,7 @@
 
         <!-- Herelink datalink -->
         <module name="telemetry" type="transparent">
+            <configure name="MODEM_PORT" value="usb_serial"/>
             <configure name="MODEM_BAUD" value="B460800"/>
         </module>
         
@@ -134,6 +135,24 @@
         <module name="parachute"/>
         <module name="ekf_aw"/>
 
+        <module name="mag" type="hmc58xx">
+            <configure name="MAG_HMC58XX_I2C_DEV" value="i2c2"/>
+            <!-- <define name="MODULE_HMC58XX_UPDATE_AHRS"/> -->
+
+            <define name="HMC58XX_CHAN_X" value="1"/>
+            <define name="HMC58XX_CHAN_Y" value="0"/>
+            <define name="HMC58XX_CHAN_Z" value="2"/>
+
+            <define name="HMC58XX_CHAN_X_SIGN" value="-"/>
+            <define name="HMC58XX_CHAN_Y_SIGN" value="+"/>
+            <define name="HMC58XX_CHAN_Z_SIGN" value="+"/>
+
+            <!-- Current calibration -->
+            <define name="MILLIAMP_AT_IDLE_THROTTLE" value="1000"/>
+            <define name="MILLIAMP_AT_FULL_THROTTLE" value="30000"/>
+            <define name="CURRENT_ESTIMATION_NONLINEARITY" value="1.5"/>
+        </module>
+
         <!-- Actuators on dual CAN bus -->
         <module name="actuators" type="uavcan">
             <configure value="TRUE" name="UAVCAN_USE_CAN1"/>
@@ -172,6 +191,11 @@
         <module name="pfc_actuators"/>
         <module name="airspeed_consistency"/>
         <module name="agl_dist"/>
+        <!-- Feetech CAN rotating mechanism feedback -->
+        <module name="feetech_rotmech">
+            <!-- Set the actuator_id from the Feetech node if different -->
+            <!-- <configure name="FEETECH_ROTMECH_ACTUATOR_ID" value="1"/> -->
+        </module>
         <!-- <module name="approach_moving_target"/> -->
     </firmware>
 
@@ -182,7 +206,6 @@
         <servo no="2"  name="MOTOR_BACK"      min="0"     neutral="1000" max="7372"/>
         <servo no="3"  name="MOTOR_LEFT"      min="0"     neutral="1000" max="7372"/>
         <servo no="4"  name="MOTOR_PUSH"      min="0"     neutral="1000" max="7372"/>
-        <servo no="5"  name="ROTATION_MECH"   min="-1966" neutral="-123"  max="1720"/>
     </servos>
 
      <!-- CAN BUS 1 command outputs-->
@@ -197,7 +220,6 @@
         <servo no="1" name="BMOTOR_RIGHT"   min="0" neutral="1000" max="7372"/>
         <servo no="2" name="BMOTOR_BACK"    min="0" neutral="1000" max="7372"/>
         <servo no="3" name="BMOTOR_LEFT"    min="0" neutral="1000" max="7372"/>
-        <servo no="5" name="BROTATION_MECH" min="-1966" neutral="-123"  max="1720"/>
     </servos>
 
     <!-- CAN BUS 2 command outputs-->
@@ -244,7 +266,8 @@
         <set VALUE="($servo_hold? RadioControlValues(RADIO_YAW) : pfc_actuators_value(1, actuators_pprz[4]))" SERVO="SERVO_RUDDER"/>
         <set VALUE="($servo_hold? (RadioControlValues(RADIO_PITCH)/4+7200) : (!autopilot_in_flight()? pfc_actuators_value(0, 0) : actuators_pprz[5]))" SERVO="SERVO_ELEVATOR"/>
         <set VALUE="($th_hold? ($servo_hold? -9600 : pfc_actuators_value(11, -9600)) : actuators_pprz[8])" SERVO="MOTOR_PUSH"/>
-        <set VALUE="pfc_actuators_value(6, rotwing_state.skew_cmd)"  SERVO="ROTATION_MECH"/>
+        <!-- TODO -->
+        <!-- <set VALUE="pfc_actuators_value(6, rotwing_state.skew_cmd)"  SERVO="ROTATION_MECH"/> -->
         <set VALUE="$ail_limit_hit? pfc_actuators_value(2, 0) : ($servo_hold? RadioControlValues(RADIO_ROLL) : actuators_pprz[6])" SERVO="AIL_LEFT"/>
         <set VALUE="$ail_limit_hit? pfc_actuators_value(5, 0) : ($servo_hold? RadioControlValues(RADIO_ROLL) : actuators_pprz[6])" SERVO="AIL_RIGHT"/>
         <set VALUE="$flap_limit_hit? pfc_actuators_value(3, 0) : ($servo_hold? RadioControlValues(RADIO_ROLL) : actuators_pprz[7])" SERVO="FLAP_LEFT"/>
@@ -255,7 +278,8 @@
         <set VALUE="($hover_off? ($servo_hold? -9600 : pfc_actuators_value(8, -9600)) : actuators_pprz[1])" SERVO="BMOTOR_RIGHT"/>
         <set VALUE="($hover_off? ($servo_hold? -9600 : pfc_actuators_value(9, -9600)) : actuators_pprz[2])" SERVO="BMOTOR_BACK"/>
         <set VALUE="($hover_off? ($servo_hold? -9600 : pfc_actuators_value(10, -9600)) : actuators_pprz[3])" SERVO="BMOTOR_LEFT"/>
-        <set VALUE="pfc_actuators_value(6, rotwing_state.skew_cmd)"  SERVO="BROTATION_MECH"/>
+        <!-- TODO -->
+        <!-- <set VALUE="pfc_actuators_value(6, rotwing_state.skew_cmd)"  SERVO="BROTATION_MECH"/> -->
     </command_laws>
 
     <section PREFIX="SYS_ID_" NAME="SYS_ID">
@@ -429,8 +453,9 @@
                 <field name="timeout" value="1"/>
             </field>
 
+            <!-- TODO -->
             <!-- Rotation -->
-            <field type="struct">
+            <!-- <field type="struct">
                 <field name="feedback_id" value="SERVO_ROTATION_MECH_IDX"/>
                 <field name="feedback_id2" value="SERVO_BROTATION_MECH_IDX"/>
                 <field name="low" value="-9600"/>
@@ -438,7 +463,7 @@
                 <field name="low_feedback" value="1.57"/>
                 <field name="high_feedback" value="0"/>
                 <field name="timeout" value="5"/>
-            </field>
+            </field> -->
 
             <!-- Motors -->
             <field type="struct">
