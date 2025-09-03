@@ -121,7 +121,7 @@
 #define ROTWING_STATE_ACT_FEEDBACK_ID ABI_BROADCAST
 #endif
 
-struct rotmech_feetech_state rotmech_feetech_state = {0};
+struct rotmech_feetech_state myrotmech_feetech_state = {0};
 
 static abi_event rotwing_position_ev;
 static void rotwing_position_cb(uint8_t sender_id UNUSED, struct rotmech_feetech_state *abi_feetech_state);
@@ -155,24 +155,24 @@ static void send_rotating_wing_state(struct transport_tx *trans, struct link_dev
                                     &gi_unbounded_airspeed_sp,
                                     &rotwing_state.min_airspeed,
                                     &rotwing_state.max_airspeed,
-                                    &rotmech_feetech_state.status.timestamp,
-                                    &rotmech_feetech_state.status.actuator_id,
-                                    &rotmech_feetech_state.debug.current_angle,
-                                    &rotmech_feetech_state.debug.debug_enabled,
-                                    &rotmech_feetech_state.debug.armed,
-                                    &rotmech_feetech_state.debug.calculation_offset,
-                                    &rotmech_feetech_state.debug.target_wing_angle,
-                                    &rotmech_feetech_state.debug.revolution_count,
-                                    &rotmech_feetech_state.debug.target_servo_position,
-                                    &rotmech_feetech_state.debug.current_position_global,
-                                    &rotmech_feetech_state.debug.current_position,
-                                    &rotmech_feetech_state.debug.previous_servo_position,
-                                    &rotmech_feetech_state.debug.current_speed,
-                                    &rotmech_feetech_state.debug.latest_load,
-                                    &rotmech_feetech_state.debug.voltage,
-                                    &rotmech_feetech_state.debug.temp,
-                                    &rotmech_feetech_state.debug.errcode,
-                                    &rotmech_feetech_state.debug.health_state
+                                    &myrotmech_feetech_state.status.timestamp,
+                                    &myrotmech_feetech_state.status.actuator_id,
+                                    &myrotmech_feetech_state.status.current_angle,
+                                    &myrotmech_feetech_state.debug.debug_enabled,
+                                    &myrotmech_feetech_state.debug.armed,
+                                    &myrotmech_feetech_state.debug.calculation_offset,
+                                    &myrotmech_feetech_state.debug.target_wing_angle,
+                                    &myrotmech_feetech_state.debug.revolution_count,
+                                    &myrotmech_feetech_state.debug.target_servo_position,
+                                    &myrotmech_feetech_state.debug.current_position_global,
+                                    &myrotmech_feetech_state.debug.current_position,
+                                    &myrotmech_feetech_state.debug.previous_servo_position,
+                                    &myrotmech_feetech_state.debug.current_speed,
+                                    &myrotmech_feetech_state.debug.latest_load,
+                                    &myrotmech_feetech_state.debug.voltage,
+                                    &myrotmech_feetech_state.debug.temp,
+                                    &myrotmech_feetech_state.debug.errcode,
+                                    &myrotmech_feetech_state.debug.health_state
                                   );
 }
 #endif // PERIODIC_TELEMETRY
@@ -198,6 +198,7 @@ void rotwing_state_init(void)
   rotwing_state.fail_hover_motor = false;
   rotwing_state.fail_pusher_motor = false;
   rotwing_state.ref_model_skew_angle_deg = 0;
+  
   // Bind ABI messages
   AbiBindMsgWING_SKEW_STATE(ABI_BROADCAST, &rotwing_position_ev, rotwing_position_cb);
   AbiBindMsgACT_FEEDBACK(ROTWING_STATE_ACT_FEEDBACK_ID, &rotwing_state_feedback_ev, rotwing_state_feedback_cb);
@@ -431,12 +432,12 @@ void rotwing_state_periodic(void)
 
 static void rotwing_position_cb(uint8_t sender_id UNUSED, struct rotmech_feetech_state *abi_feetech_state)
 {
-  rotmech_feetech_state = memcpy(&rotmech_feetech_state, abi_feetech_state, sizeof(struct rotmech_feetech_state));
-  float angle_deg = rotmech_feetech_state.status.current_angle * 0.01f;
+  memcpy(&myrotmech_feetech_state, abi_feetech_state, sizeof(struct rotmech_feetech_state));
+  float angle_deg = myrotmech_feetech_state.status.current_angle * 0.01f;
   // Get wing rotation angle from sensor
   float skew_angle_rad = 0.5 * M_PI - angle_deg * M_PI / 180.0;
   rotwing_state.meas_skew_angle_deg = DegOfRad(skew_angle_rad);
-  rotwing_state.meas_skew_angle_time = timestamp;
+  rotwing_state.meas_skew_angle_time = myrotmech_feetech_state.status.timestamp;
 }
 
 static void rotwing_state_feedback_cb(uint8_t __attribute__((unused)) sender_id,

@@ -20,7 +20,6 @@
 
         <!-- Command helpers -->
         <dl_setting var="feetech_cfg_arm" min="0" max="1" step="1" values="DISARM|ARM" shortname="arm" module="rotwing_drone/feetech_rotmech" handler="cmd_arm"/>
-        <dl_setting var="feetech_cfg_target_angle" min="0" max="18000" step="100" shortname="angle" module="rotwing_drone/feetech_rotmech" handler="cmd_target_angle_deg"/>
       </dl_settings>
     </dl_settings>
   </settings>

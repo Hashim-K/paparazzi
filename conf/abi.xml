@@ -274,7 +274,7 @@
 
     <!-- Wing skew angle in centidegrees -->
     <message name="WING_SKEW_STATE" id="41">
-      <field name="feetech_state" type="struct feetech_rotmech_state *"/>
+      <field name="feetech_state" type="struct rotmech_feetech_state *"/>
     </message>
 
     <!-- Wing skew CMD in centidegrees -->

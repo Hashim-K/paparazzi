@@ -23,13 +23,12 @@ static uavcan_event feetech_config_ev;
 struct feetech_rotmech_status feetech_status = {0};
 struct feetech_rotmech_debug feetech_debug = {0};
 struct rotmech_feetech_state feetech_state = {0};
-uint8_t feetech_debug_enabled = 0;
 
 static struct com_feetech_servo_Status feetech_status_uavcan = {0};
 static struct com_feetech_servo_Debug feetech_debug_uavcan = {0};
 
 abi_event wing_skew_cmd_ev;
-static void wing_skew_cmd_cb(uint8_t sender_id, float angle_deg)
+static void wing_skew_cmd_cb(uint8_t sender_id UNUSED, float angle_deg)
 {
   int16_t angle_cdg = (int16_t)(angle_deg * 100.0f);
   feetech_rotmech_cmd_target_angle_deg(angle_cdg);
@@ -49,7 +48,6 @@ uint8_t  feetech_cfg_log_level = 0; // 0=short,1=long
 // uint8_t  feetech_cfg_max_angle = 90;
 
 bool     feetech_cfg_arm = true;
-int16_t  feetech_cfg_target_angle = 0;
 
 
 static void feetech_status_cb(struct uavcan_iface_t *iface __attribute__((unused)), CanardRxTransfer *transfer)
@@ -66,7 +64,7 @@ static void feetech_status_cb(struct uavcan_iface_t *iface __attribute__((unused
   feetech_status.timestamp = get_sys_time_usec();
   feetech_status.actuator_id =  feetech_status_uavcan.actuator_id;
   feetech_status.current_angle =  feetech_status_uavcan.current_angle;
-  feetech_debug_enabled = 0;
+  feetech_debug.debug_enabled = 0;
 
   feetech_state.status = feetech_status;
   feetech_state.debug = feetech_debug;
@@ -88,8 +86,8 @@ static void feetech_debug_cb(struct uavcan_iface_t *iface __attribute__((unused)
   feetech_status.timestamp = get_sys_time_usec();
   feetech_status.actuator_id =  feetech_debug_uavcan.actuator_id;
   feetech_status.current_angle =  feetech_debug_uavcan.current_angle;
-  feetech_debug_enabled = 1;
 
+  feetech_debug.debug_enabled = 1;
   feetech_debug.armed = feetech_debug_uavcan.armed;
   feetech_debug.calculation_offset = feetech_debug_uavcan.calculation_offset;
   feetech_debug.target_wing_angle = feetech_debug_uavcan.target_wing_angle;
@@ -156,7 +154,6 @@ void feetech_rotmech_cmd_arm(bool arm)
 
 void feetech_rotmech_cmd_target_angle_deg(int16_t angle_deg)
 {
-  feetech_cfg_target_angle = angle_deg;
   feetech_send_instruction(1, angle_deg & 0xFF, (angle_deg >> 8) & 0xFF); // SET_TARGET_ANGLE
 }
 
