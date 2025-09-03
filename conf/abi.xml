@@ -275,12 +275,12 @@
     <!-- Wing skew angle in centidegrees -->
     <message name="WING_SKEW_STATE" id="41">
       <field name="stamp" type="uint32_t" unit="us"/>
-      <field name="angle_deg" type="int16_t" unit="centi_deg"/>
+      <field name="angle_deg" type="float" unit="deg"/>
     </message>
 
     <!-- Wing skew CMD in centidegrees -->
     <message name="WING_SKEW_CMD" id="42">
-      <field name="angle_deg" type="int16_t" unit="centi_deg"/>
+      <field name="angle_deg" type="float" unit="deg"/>
     </message>
   </msg_class>
 

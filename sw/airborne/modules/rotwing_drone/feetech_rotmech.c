@@ -28,17 +28,16 @@ static struct com_feetech_servo_Status feetech_status_uavcan = {0};
 static struct com_feetech_servo_Debug feetech_debug_uavcan = {0};
 
 abi_event wing_skew_cmd_ev;
-static void wing_skew_cmd_cb(uint8_t sender_id, int16_t angle_deg)
+static void wing_skew_cmd_cb(uint8_t sender_id, float angle_deg)
 {
-  feetech_rotmech_cmd_target_angle_deg(angle_deg);
+  int16_t angle_cdg = (int16_t)(angle_deg * 100.0f);
+  feetech_rotmech_cmd_target_angle_deg(angle_cdg);
 }
 
 #if PERIODIC_TELEMETRY
 #include "modules/datalink/telemetry.h"
 static void feetech_send_angle(struct transport_tx *trans, struct link_device *dev)
 {
-  uint32_t now_ts = get_sys_time_usec();
-
   pprz_msg_send_FEETECH_ROTWING(trans, dev, AC_ID,
                 &feetech_status.timestamp,
                 &feetech_status.actuator_id,
@@ -96,8 +95,7 @@ static void feetech_status_cb(struct uavcan_iface_t *iface __attribute__((unused
   feetech_status.current_angle =  feetech_status_uavcan.current_angle;
   feetech_debug_enabled = 0;
 
-  // Also publish dedicated wing rotation ABI (deg), inspired by range_sensor AGL
-  // AbiSendMsgWING_ROTATION(WING_ROTATION_FEETECH_ID, now_ts, feetech_status.current_angle);
+  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, feetech_status.timestamp, (float)feetech_status.current_angle*0.01f);
 }
 
 static void feetech_debug_cb(struct uavcan_iface_t *iface __attribute__((unused)), CanardRxTransfer *transfer)
@@ -131,8 +129,7 @@ static void feetech_debug_cb(struct uavcan_iface_t *iface __attribute__((unused)
   feetech_debug.errcode = feetech_debug_uavcan.errcode;
   feetech_debug.health_state = feetech_debug_uavcan.health_state;
 
-  // Also publish dedicated wing rotation ABI (deg), inspired by range_sensor AGL
-  // AbiSendMsgWING_ROTATION(WING_ROTATION_FEETECH_ID, now_ts, feetech_status.current_angle);
+  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, feetech_status.timestamp, (float)feetech_status.current_angle*0.01f);
 }
 
 static void feetech_config_cb(struct uavcan_iface_t *iface __attribute__((unused)), CanardRxTransfer *transfer)

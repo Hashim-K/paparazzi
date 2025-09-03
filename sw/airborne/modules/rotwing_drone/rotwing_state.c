@@ -28,6 +28,7 @@
 #include "modules/core/commands.h"
 #include "modules/actuators/actuators.h"
 #include "modules/core/abi.h"
+#include "modules/core/abi_common.h"
 
 
 /* Minimum measured RPM to consider the hover motors running (RPM) */
@@ -118,6 +119,9 @@
 #ifndef ROTWING_STATE_ACT_FEEDBACK_ID
 #define ROTWING_STATE_ACT_FEEDBACK_ID ABI_BROADCAST
 #endif
+static abi_event rotwing_position_ev;
+static void rotwing_position_cb(uint8_t sender_id UNUSED, uint32_t timestamp, float angle_deg);
+
 abi_event rotwing_state_feedback_ev;
 static void rotwing_state_feedback_cb(uint8_t sender_id, struct act_feedback_t *feedback_msg, uint8_t num_act);
 struct rotwing_state_t rotwing_state;
@@ -172,6 +176,7 @@ void rotwing_state_init(void)
   rotwing_state.fail_pusher_motor = false;
   rotwing_state.ref_model_skew_angle_deg = 0;
   // Bind ABI messages
+  AbiBindMsgWING_SKEW_STATE(ABI_BROADCAST, &rotwing_position_ev, rotwing_position_cb);
   AbiBindMsgACT_FEEDBACK(ROTWING_STATE_ACT_FEEDBACK_ID, &rotwing_state_feedback_ev, rotwing_state_feedback_cb);
 
 #if PERIODIC_TELEMETRY
@@ -334,47 +339,46 @@ void rotwing_state_periodic(void)
 
 
   /* Calculate the skew command */
-  float servo_pprz_cmd = MAX_PPRZ * (rotwing_state.sp_skew_angle_deg - 45.f) / 45.f;
-  BoundAbs(servo_pprz_cmd, MAX_PPRZ);
+  AbiSendMsgWING_SKEW_CMD(ABI_BROADCAST, (90.0f-rotwing_state.sp_skew_angle_deg));
 
-  // Rotate with second order filter
-  static float rotwing_state_skew_p_cmd = -MAX_PPRZ;
-  static float rotwing_state_skew_d_cmd = 0;
+//   // Rotate with second order filter
+//   static float rotwing_state_skew_p_cmd = -MAX_PPRZ;
+//   static float rotwing_state_skew_d_cmd = 0;
 
-  float speed_sp = ROTWING_SKEW_REF_MODEL_P_GAIN * (servo_pprz_cmd - rotwing_state_skew_p_cmd);
-  BoundAbs(speed_sp, ROTWING_SKEW_REF_MODEL_MAX_SPEED);
-  rotwing_state_skew_d_cmd += ROTWING_SKEW_REF_MODEL_D_GAIN * (speed_sp - rotwing_state_skew_d_cmd);
-  rotwing_state_skew_p_cmd += rotwing_state_skew_d_cmd;
-  BoundAbs(rotwing_state_skew_p_cmd, MAX_PPRZ);
-  rotwing_state.ref_model_skew_angle_deg = 45.0 / MAX_PPRZ * rotwing_state_skew_p_cmd + 45.0;
+//   float speed_sp = ROTWING_SKEW_REF_MODEL_P_GAIN * (servo_pprz_cmd - rotwing_state_skew_p_cmd);
+//   BoundAbs(speed_sp, ROTWING_SKEW_REF_MODEL_MAX_SPEED);
+//   rotwing_state_skew_d_cmd += ROTWING_SKEW_REF_MODEL_D_GAIN * (speed_sp - rotwing_state_skew_d_cmd);
+//   rotwing_state_skew_p_cmd += rotwing_state_skew_d_cmd;
+//   BoundAbs(rotwing_state_skew_p_cmd, MAX_PPRZ);
+//   rotwing_state.ref_model_skew_angle_deg = 45.0 / MAX_PPRZ * rotwing_state_skew_p_cmd + 45.0;
 
-#if (ROTWING_SKEW_REF_MODEL || USE_NPS)
-  rotwing_state.skew_cmd  = rotwing_state_skew_p_cmd;
-#else
-  rotwing_state.skew_cmd = servo_pprz_cmd;
-#endif
-#ifdef COMMAND_ROT_MECH
-  commands[COMMAND_ROT_MECH] = rotwing_state.skew_cmd;
-#endif
+// #if (ROTWING_SKEW_REF_MODEL || USE_NPS)
+//   rotwing_state.skew_cmd  = rotwing_state_skew_p_cmd;
+// #else
+//   rotwing_state.skew_cmd = servo_pprz_cmd;
+// #endif
+// #ifdef COMMAND_ROT_MECH
+//   commands[COMMAND_ROT_MECH] = rotwing_state.skew_cmd;
+// #endif
 
-  /* Add simulation feedback for the skewing and RPM */
+//   /* Add simulation feedback for the skewing and RPM */
 #if USE_NPS
-  // Export to the index of the SKEW in the NPS_ACTUATOR_NAMES array
-#ifdef COMMAND_ROT_MECH
-  commands[COMMAND_ROT_MECH] = (rotwing_state.skew_cmd + MAX_PPRZ) / 2.f; // Scale to simulation command
-#else
-  actuators_pprz[INDI_NUM_ACT] = (rotwing_state.skew_cmd + MAX_PPRZ) / 2.f; // Scale to simulation command
-#endif
-  // SEND ABI Message to ctr_eff_sched, ourself and other modules that want Actuator position feedback
-  struct act_feedback_t feedback;
-  feedback.idx =  SERVO_ROTATION_MECH_IDX;
-  feedback.position = 0.5f * M_PI - RadOfDeg((float) rotwing_state.skew_cmd / MAX_PPRZ * 45.f + 45.f);
-  feedback.set.position = true;
+//   // Export to the index of the SKEW in the NPS_ACTUATOR_NAMES array
+// #ifdef COMMAND_ROT_MECH
+//   commands[COMMAND_ROT_MECH] = (rotwing_state.skew_cmd + MAX_PPRZ) / 2.f; // Scale to simulation command
+// #else
+//   actuators_pprz[INDI_NUM_ACT] = (rotwing_state.skew_cmd + MAX_PPRZ) / 2.f; // Scale to simulation command
+// #endif
+//   // SEND ABI Message to ctr_eff_sched, ourself and other modules that want Actuator position feedback
+//   struct act_feedback_t feedback;
+//   feedback.idx =  SERVO_ROTATION_MECH_IDX;
+//   feedback.position = 0.5f * M_PI - RadOfDeg((float) rotwing_state.skew_cmd / MAX_PPRZ * 45.f + 45.f);
+//   feedback.set.position = true;
 
-  // Send ABI message (or simulate failure)
-  if(!rotwing_state.fail_skew_angle) {
-    AbiSendMsgACT_FEEDBACK(ACT_FEEDBACK_BOARD_ID, &feedback, 1);
-  }
+//   // Send ABI message (or simulate failure)
+//   if(!rotwing_state.fail_skew_angle) {
+//     AbiSendMsgACT_FEEDBACK(ACT_FEEDBACK_BOARD_ID, &feedback, 1);
+//   }
 
   // Simulate to always have RPM if on and active feedback
   rotwing_state.meas_rpm[0] = (actuators[SERVO_MOTOR_FRONT_IDX].pprz_val >= 0)? (ROTWING_QUAD_MIN_RPM + 100) : 0;
@@ -402,6 +406,14 @@ void rotwing_state_periodic(void)
 #endif
 }
 
+static void rotwing_position_cb(uint8_t sender_id UNUSED, uint32_t timestamp, float angle_deg)
+{
+    // Get wing rotation angle from sensor
+    float skew_angle_rad = 0.5 * M_PI - angle_deg * M_PI / 180.0;
+    rotwing_state.meas_skew_angle_deg = DegOfRad(skew_angle_rad);
+    rotwing_state.meas_skew_angle_time = timestamp;
+}
+
 static void rotwing_state_feedback_cb(uint8_t __attribute__((unused)) sender_id,
                                       struct act_feedback_t UNUSED *feedback_msg, uint8_t UNUSED num_act_message)
 {
@@ -410,12 +422,8 @@ static void rotwing_state_feedback_cb(uint8_t __attribute__((unused)) sender_id,
     int idx = feedback_msg[i].idx;
 
     // Check for wing rotation feedback
-    if ((feedback_msg[i].set.position) && (idx == SERVO_ROTATION_MECH_IDX || idx == SERVO_BROTATION_MECH_IDX)) {
-      // Get wing rotation angle from sensor
-      float skew_angle_rad = 0.5 * M_PI - feedback_msg[i].position;
-      rotwing_state.meas_skew_angle_deg = DegOfRad(skew_angle_rad);
-      rotwing_state.meas_skew_angle_time = current_time;
-    }
+
+
 
     // Get the RPM feedbacks of the motors
     if (feedback_msg[i].set.rpm) {

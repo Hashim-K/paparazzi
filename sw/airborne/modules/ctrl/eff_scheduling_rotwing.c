@@ -36,10 +36,6 @@
 #include "modules/actuators/actuators.h"
 #include "modules/core/abi.h"
 
-#ifndef SERVO_ROTATION_MECH_IDX
-#error ctrl_eff_sched_rotwing requires a servo named ROTATION_MECH_IDX
-#endif
-
 #ifndef ROTWING_EFF_SCHED_IXX_BODY
 #error "NO ROTWING_EFF_SCHED_IXX_BODY defined"
 #endif
@@ -195,24 +191,17 @@ inline void guidance_indi_hybrid_set_wls_settings(float body_v[3], float roll_an
 
 /** ABI binding wing position data.
  */
-#ifndef WING_ROTATION_CAN_ROTWING_ID
-#define WING_ROTATION_CAN_ROTWING_ID ABI_BROADCAST
-#endif
-PRINT_CONFIG_VAR(WING_ROTATION_CAN_ROTWING_ID)
 static abi_event wing_position_ev;
 
-static void wing_position_cb(uint8_t sender_id UNUSED, struct act_feedback_t *pos_msg, uint8_t num_act)
+static void wing_position_cb(uint8_t sender_id UNUSED, uint32_t timestamp, float angle_deg)
 {
-  for (int i=0; i<num_act; i++){
-    if (pos_msg[i].set.position && (pos_msg[i].idx == SERVO_ROTATION_MECH_IDX))
-    {
-      // Get wing rotation angle from sensor
-      eff_sched_var.wing_rotation_rad = 0.5 * M_PI - pos_msg[i].position;
+  eff_sched_var.wing_rotation_rad =  0.5 * M_PI - angle_deg*M_PI/180.0;
 
-      // Bound wing rotation angle
-      Bound(eff_sched_var.wing_rotation_rad, 0, 0.5 * M_PI);
-    }
-  }
+  // Bound wing rotation angle
+  Bound(eff_sched_var.wing_rotation_rad, 0, 0.5 * M_PI);
+  
+  //TODO
+  timestamp=timestamp;
 }
 
 void eff_scheduling_rotwing_init(void)
@@ -242,7 +231,7 @@ void eff_scheduling_rotwing_init(void)
   eff_sched_var.airspeed2 = 0;
 
   // Get wing angle
-  AbiBindMsgACT_FEEDBACK(WING_ROTATION_CAN_ROTWING_ID, &wing_position_ev, wing_position_cb);
+  AbiBindMsgWING_SKEW_STATE(ABI_BROADCAST, &wing_position_ev, wing_position_cb);
 }
 
 void eff_scheduling_rotwing_periodic(void)

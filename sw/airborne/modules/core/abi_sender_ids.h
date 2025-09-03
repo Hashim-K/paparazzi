@@ -676,4 +676,8 @@
 #define LANDING_ALGORITHM_ID 2
 #endif
 
+#ifndef ROTWING_STATE_ID
+#define ROTWING_STATE_ID 1
+#endif
+
 #endif /* ABI_SENDER_IDS_H */
