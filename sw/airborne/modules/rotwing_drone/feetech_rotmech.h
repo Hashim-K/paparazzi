@@ -56,4 +56,10 @@ struct feetech_rotmech_debug
   uint8_t errcode;
   uint8_t health_state;
 };
+
+struct rotmech_feetech_state{
+  struct feetech_rotmech_status status;
+  struct feetech_rotmech_debug debug;
+};
+
 #endif /* MODULES_ROTWING_DRONE_FEETECH_ROTMECH_H */

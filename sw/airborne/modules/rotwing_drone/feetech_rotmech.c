@@ -22,6 +22,7 @@ static uavcan_event feetech_config_ev;
 
 struct feetech_rotmech_status feetech_status = {0};
 struct feetech_rotmech_debug feetech_debug = {0};
+struct rotmech_feetech_state feetech_state = {0};
 uint8_t feetech_debug_enabled = 0;
 
 static struct com_feetech_servo_Status feetech_status_uavcan = {0};
@@ -33,34 +34,6 @@ static void wing_skew_cmd_cb(uint8_t sender_id, float angle_deg)
   int16_t angle_cdg = (int16_t)(angle_deg * 100.0f);
   feetech_rotmech_cmd_target_angle_deg(angle_cdg);
 }
-
-#if PERIODIC_TELEMETRY
-#include "modules/datalink/telemetry.h"
-static void feetech_send_angle(struct transport_tx *trans, struct link_device *dev)
-{
-  pprz_msg_send_FEETECH_ROTWING(trans, dev, AC_ID,
-                &feetech_status.timestamp,
-                &feetech_status.actuator_id,
-                &feetech_status.current_angle,
-                &feetech_debug_enabled,
-                &feetech_debug.armed,
-                &feetech_debug.calculation_offset,
-                &feetech_debug.target_wing_angle,
-                &feetech_debug.revolution_count,
-                &feetech_debug.target_servo_position,
-                &feetech_debug.current_position_global,
-                &feetech_debug.current_position,
-                &feetech_debug.previous_servo_position,
-                &feetech_debug.current_speed,
-                &feetech_debug.latest_load,
-                &feetech_debug.voltage,
-                &feetech_debug.temp,
-                &feetech_debug.errcode,
-                &feetech_debug.health_state);
-
-}
-
-#endif
 
 /* ensure we can broadcast (we will broadcast on all enabled interfaces) */
 
@@ -95,7 +68,10 @@ static void feetech_status_cb(struct uavcan_iface_t *iface __attribute__((unused
   feetech_status.current_angle =  feetech_status_uavcan.current_angle;
   feetech_debug_enabled = 0;
 
-  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, feetech_status.timestamp, (float)feetech_status.current_angle*0.01f);
+  feetech_state.status = feetech_status;
+  feetech_state.debug = feetech_debug;
+
+  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, &feetech_state);
 }
 
 static void feetech_debug_cb(struct uavcan_iface_t *iface __attribute__((unused)), CanardRxTransfer *transfer)
@@ -129,7 +105,10 @@ static void feetech_debug_cb(struct uavcan_iface_t *iface __attribute__((unused)
   feetech_debug.errcode = feetech_debug_uavcan.errcode;
   feetech_debug.health_state = feetech_debug_uavcan.health_state;
 
-  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, feetech_status.timestamp, (float)feetech_status.current_angle*0.01f);
+  feetech_state.status = feetech_status;
+  feetech_state.debug = feetech_debug;
+
+  AbiSendMsgWING_SKEW_STATE(ABI_BROADCAST, &feetech_state);
 }
 
 static void feetech_config_cb(struct uavcan_iface_t *iface __attribute__((unused)), CanardRxTransfer *transfer)
@@ -215,8 +194,4 @@ void feetech_rotmech_init(void)
 
 
   AbiBindMsgWING_SKEW_CMD(ABI_BROADCAST, &wing_skew_cmd_ev, wing_skew_cmd_cb);
-
-#if PERIODIC_TELEMETRY
-  register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_FEETECH_ROTWING, feetech_send_angle);
-#endif
 }

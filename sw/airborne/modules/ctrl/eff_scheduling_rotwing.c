@@ -35,6 +35,7 @@
 
 #include "modules/actuators/actuators.h"
 #include "modules/core/abi.h"
+#include "modules/rotwing_drone/feetech_rotmech.h"
 
 #ifndef ROTWING_EFF_SCHED_IXX_BODY
 #error "NO ROTWING_EFF_SCHED_IXX_BODY defined"
@@ -193,15 +194,13 @@ inline void guidance_indi_hybrid_set_wls_settings(float body_v[3], float roll_an
  */
 static abi_event wing_position_ev;
 
-static void wing_position_cb(uint8_t sender_id UNUSED, uint32_t timestamp, float angle_deg)
+static void wing_position_cb(uint8_t sender_id UNUSED, struct rotmech_feetech_state *feetech_state)
 {
+  float angle_deg = (float)feetech_state->status.current_angle * 0.01f;
   eff_sched_var.wing_rotation_rad =  0.5 * M_PI - angle_deg*M_PI/180.0;
 
   // Bound wing rotation angle
   Bound(eff_sched_var.wing_rotation_rad, 0, 0.5 * M_PI);
-  
-  //TODO
-  timestamp=timestamp;
 }
 
 void eff_scheduling_rotwing_init(void)

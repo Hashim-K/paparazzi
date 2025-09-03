@@ -35,6 +35,7 @@
 #include "modules/gps/gps.h"
 #include "modules/radio_control/radio_control.h"
 #include "modules/actuators/actuators.h"
+#include "modules/rotwing_drone/feetech_rotmech.h"
 /* Include here headers with structure definition you may want to use with ABI
  * Ex: '#include "modules/gps/gps.h"' in order to use the GpsState structure
  */
